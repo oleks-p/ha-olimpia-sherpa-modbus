@@ -223,7 +223,8 @@ inverted) toggles, as expected.
   **01:00 Kyiv summer time**, exactly what register 231 = 60 says.
 - The display photo of 2026-08-12 showed 02:00, but that predates every
   recorded cycle. The evidence now points to "minutes since local midnight".
-  Confirm on the display after the DST change on 2026-10-25.
+- **Confirmed 2026-10-13:** the display shows 01:00 while register 231 reads
+  60. The photo was taken before the start time was changed to 01:00.
 - The start drifted from 22:00 to 21:58 UTC over a month, which suggests the
   unit's clock drifts.
 
