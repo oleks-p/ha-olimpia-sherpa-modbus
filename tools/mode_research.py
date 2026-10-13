@@ -44,10 +44,17 @@ def _names() -> dict[int, str]:
     return names
 
 
-def read(base: str, token: str) -> dict:
+#: Addresses the reference unit refuses (P0 sweep, ADDR220 = 0) near the ones it
+#: answers: where a register that only exists in another mode would be.
+GAPS = ((10, 11), (103, 104), (196, 196), (201, 205), (214, 216), (282, 284), (286, 289),
+        (335, 336), (342, 342), (373, 379), (389, 400), (409, 499), (508, 560))
+
+
+def read(base: str, token: str, address: int | None = None, count: int = 1) -> dict:
+    body = {} if address is None else {"address": address, "count": count}
     req = urllib.request.Request(
         f"{base.rstrip('/')}/api/services/{DOMAIN}/read_registers?return_response",
-        data=b"{}", method="POST",
+        data=json.dumps(body).encode(), method="POST",
         headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=60) as resp:
         return json.loads(resp.read())["service_response"]
@@ -82,7 +89,7 @@ class Session:
         self.dir.mkdir(parents=True, exist_ok=True)
 
     def snapshots(self) -> list[pathlib.Path]:
-        return sorted(p for p in self.dir.glob("*.json") if p.name != "noise.json")
+        return sorted(p for p in self.dir.glob("[0-9][0-9]-*.json"))
 
     def load(self, name: str) -> dict:
         matches = [p for p in self.snapshots() if p.stem == name or p.stem.startswith(name)]
@@ -92,7 +99,8 @@ class Session:
 
     def save(self, label: str, snapshot: dict) -> pathlib.Path:
         snapshot["label"] = label
-        path = self.dir / f"{len(self.snapshots()):02d}-{label}.json"
+        last = self.snapshots()[-1].name[:2] if self.snapshots() else "-1"
+        path = self.dir / f"{int(last) + 1:02d}-{label}.json"
         path.write_text(json.dumps(snapshot, indent=1) + "\n")
         return path
 
@@ -120,6 +128,8 @@ def main(argv=None) -> int:
     diff.add_argument("a")
     diff.add_argument("b")
     sub.add_parser("noise", help="list the registers treated as noise")
+    gaps = sub.add_parser("gaps", help="read every usually-refused address, one at a time")
+    gaps.add_argument("label")
     args = ap.parse_args(argv)
 
     session, names = Session(pathlib.Path(args.dir)), _names()
@@ -133,6 +143,19 @@ def main(argv=None) -> int:
 
     with open(os.path.expanduser(args.token_file), encoding="utf-8") as fh:
         token = fh.read().strip()
+    if args.cmd == "gaps":
+        answered, refused = {}, []
+        for start, end in GAPS:
+            for address in range(start, end + 1):
+                result = read(args.ha, token, address)
+                answered.update(result["registers"])
+                refused += [r["address"] for r in result["refused"]]
+        path = session.dir / f"gaps-{args.label}.json"
+        path.write_text(json.dumps({"label": args.label, "registers": answered,
+                                    "refused": refused}, indent=1) + "\n")
+        print(f"{path.name}: {len(answered)} answered, {len(refused)} refused"
+              + (": " + ", ".join(f"{a}={v}" for a, v in answered.items()) if answered else ""))
+        return 0
     if args.cmd == "baseline":
         first = read(args.ha, token)
         time.sleep(15)
