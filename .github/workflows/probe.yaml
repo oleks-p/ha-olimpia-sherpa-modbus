@@ -11,10 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # The probe runs on the Raspberry Pi host (Debian 12, Python 3.11), not in
-      # the Home Assistant container, so it is tested on that version.
+      # the Home Assistant container, so it is tested there without Home
+      # Assistant installed.
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -r requirements_test.txt
-      - run: ruff check tools tests
-      - run: pytest -q
+      - run: pip install pytest "ruff>=0.6"
+      - run: ruff check tools tests/probe tests/test_fixtures.py tests/legacy.py
+      - run: pytest -q tests/probe tests/test_fixtures.py

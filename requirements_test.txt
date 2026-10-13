@@ -1,2 +1,9 @@
-pytest
+# The Home Assistant release the reference site runs (pins homeassistant==2026.8.2).
+pytest-homeassistant-custom-component==0.13.356
+# What Home Assistant 2026.8.2 ships with; the manifest accepts >=3.6,<4.
+pymodbus==3.13.1
+pyserial>=3.5
 ruff>=0.6
+# tools/legacy_snapshot.py
+websockets
+pyyaml

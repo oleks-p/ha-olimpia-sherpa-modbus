@@ -1,0 +1,404 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Як підключено Sherpa?",
+        "description": "Інтеграція лише читає: вона ніколи не змінює налаштувань агрегату. RS-485 допускає лише одного ведучого, тож перед додаванням зупиніть усе інше, що опитує Sherpa (стару конфігурацію `modbus:`, контролер i3).",
+        "menu_options": {
+          "serial": "USB / RS-485 адаптер",
+          "network": "Мережевий шлюз"
+        }
+      },
+      "serial": {
+        "title": "Адаптер RS-485",
+        "description": "Клеми AB внутрішнього блока, 8N1. Обирайте шлях /dev/serial/by-id: він не змінюється після перезавантаження чи перепідключення.",
+        "data": {
+          "serial_port": "Послідовний порт",
+          "baudrate": "Швидкість",
+          "slave": "Адреса Modbus",
+          "entity_prefix": "Префікс ID сутностей"
+        },
+        "data_description": {
+          "slave": "Параметр ADDR247 на екрані SERVICE агрегату (заводське значення 1).",
+          "entity_prefix": "З нього починається ID кожної сутності, наприклад sensor.sherpa_water_in. Залиште «sherpa», щоб успадкувати ID, історію та статистику наявної YAML-конфігурації."
+        }
+      },
+      "network": {
+        "title": "Мережевий шлюз",
+        "description": "Шлюз, підключений до клем AB внутрішнього блока.",
+        "data": {
+          "host": "Хост",
+          "port": "Порт",
+          "transport": "Тип шлюзу",
+          "slave": "Адреса Modbus",
+          "entity_prefix": "Префікс ID сутностей"
+        },
+        "data_description": {
+          "slave": "Параметр ADDR247 на екрані SERVICE агрегату (заводське значення 1).",
+          "entity_prefix": "З нього починається ID кожної сутності, наприклад sensor.sherpa_water_in. Залиште «sherpa», щоб успадкувати ID, історію та статистику наявної YAML-конфігурації."
+        }
+      },
+      "reconfigure": {
+        "title": "Змінити підключення",
+        "description": "Той самий агрегат, інше підключення. ID сутностей та історія зберігаються.",
+        "data": {
+          "serial_port": "Послідовний порт",
+          "baudrate": "Швидкість",
+          "host": "Хост",
+          "port": "Порт",
+          "transport": "Тип шлюзу",
+          "slave": "Адреса Modbus"
+        },
+        "data_description": {
+          "slave": "Параметр ADDR247 на екрані SERVICE агрегату (заводське значення 1)."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Немає відповіді. Перевірте порт або адресу, підключення клем AB і те, що шину більше ніхто не опитує.",
+      "not_a_sherpa": "Пристрій відповів, але не регістрами ідентифікації Sherpa. Перевірте адресу Modbus.",
+      "unsupported_model": "Агрегат повідомляє код ідентифікації {code}. Поки що підтримується лише 1134 (Sherpa S2, прошивка 0.57); запустіть tools/probe_sherpa.py і створіть issue з результатом.",
+      "invalid_prefix": "Лише малі латинські літери, цифри та підкреслення.",
+      "prefix_in_use": "Цей префікс уже використовує інший Sherpa."
+    },
+    "abort": {
+      "already_configured": "Цей Sherpa вже налаштовано.",
+      "reconfigure_successful": "Підключення оновлено."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Стійкість зв'язку",
+        "description": "Зв'язок RS-485 час від часу зависає на 10-30 с; це нормально. Сутності зберігають останні значення, доки збій не триває довше за цей час.",
+        "data": {
+          "unavailable_after": "Недоступно через"
+        }
+      }
+    }
+  },
+  "selector": {
+    "framing": {
+      "options": {
+        "rtu_over_tcp": "Прозорий серійний сервер (RTU over TCP)",
+        "tcp": "Шлюз Modbus TCP"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "water_in": {
+        "name": "Вода вхід"
+      },
+      "water_out": {
+        "name": "Вода вихід"
+      },
+      "dhw_tank": {
+        "name": "Бак ГВП"
+      },
+      "outdoor_air": {
+        "name": "Зовнішнє повітря"
+      },
+      "dhw_compressor_temp": {
+        "name": "Компресор ГВП"
+      },
+      "dhw_condenser_temp": {
+        "name": "Конденсатор ГВП"
+      },
+      "dhw_evaporator_temp": {
+        "name": "Випарник ГВП"
+      },
+      "solar_temp": {
+        "name": "Сонячний колектор"
+      },
+      "mode": {
+        "name": "Режим",
+        "state": {
+          "standby": "Очікування",
+          "cooling": "Охолодження",
+          "heating": "Опалення",
+          "domestic_hot_water": "Гаряча вода",
+          "anti_legionella": "Антилегіонела"
+        }
+      },
+      "error_code": {
+        "name": "Код помилки"
+      },
+      "override_code": {
+        "name": "Код особливого стану"
+      },
+      "pump_step": {
+        "name": "Ступінь швидкості насоса"
+      },
+      "pump_duty": {
+        "name": "ШІМ насоса"
+      },
+      "water_delta": {
+        "name": "Різниця температур води"
+      },
+      "compressor_rate": {
+        "name": "Темп лічильника компресора"
+      },
+      "compressor_seconds": {
+        "name": "Напрацювання компресора (с)"
+      },
+      "pump_seconds": {
+        "name": "Напрацювання насоса (с)"
+      },
+      "filter_seconds": {
+        "name": "Напрацювання фільтра (с)"
+      },
+      "dhw_compressor_seconds": {
+        "name": "Напрацювання компресора ГВП (с)"
+      },
+      "dhw_pump_seconds": {
+        "name": "Напрацювання насоса ГВП (с)"
+      },
+      "smart_grid_1_seconds": {
+        "name": "Час входу Smart Grid 1"
+      },
+      "smart_grid_2_seconds": {
+        "name": "Час входу Smart Grid 2"
+      },
+      "compressor_hours": {
+        "name": "Напрацювання компресора"
+      },
+      "pump_hours": {
+        "name": "Напрацювання насоса"
+      },
+      "cooling_setpoint": {
+        "name": "Уставка охолодження"
+      },
+      "cooling_eco_setpoint": {
+        "name": "Уставка охолодження (еко)"
+      },
+      "heating_setpoint": {
+        "name": "Уставка опалення"
+      },
+      "heating_eco_setpoint": {
+        "name": "Уставка опалення (еко)"
+      },
+      "dhw_setpoint": {
+        "name": "Уставка ГВП"
+      },
+      "legionella_setpoint": {
+        "name": "Уставка антилегіонели"
+      },
+      "dhw_hysteresis": {
+        "name": "Гістерезис ГВП"
+      },
+      "legionella_start_minutes": {
+        "name": "Початок антилегіонели (хв)"
+      },
+      "legionella_start": {
+        "name": "Початок антилегіонели"
+      },
+      "inputs": {
+        "name": "Слово входів"
+      },
+      "status": {
+        "name": "Слово стану"
+      },
+      "outputs": {
+        "name": "Слово виходів"
+      },
+      "override": {
+        "name": "Слово особливих станів"
+      },
+      "alarm_1": {
+        "name": "Слово аварій 1"
+      },
+      "alarm_2": {
+        "name": "Слово аварій 2"
+      },
+      "identify_code": {
+        "name": "Код ідентифікації"
+      },
+      "remote_controls": {
+        "name": "Дистанційне керування",
+        "state": {
+          "display": "Лише дисплей",
+          "serial": "Послідовний порт",
+          "contacts": "Сухі контакти"
+        }
+      },
+      "dhw_source": {
+        "name": "Джерело запиту ГВП",
+        "state": {
+          "disabled": "Вимкнено",
+          "contact": "Контакт ГВП",
+          "sensor": "Датчик бака T3"
+        }
+      },
+      "legionella_mode": {
+        "name": "Режим антилегіонели",
+        "state": {
+          "heat_pump_and_k5": "Тепловий насос і нагрівач K5",
+          "k5_only": "Лише нагрівач K5",
+          "electric_heaters": "Електронагрівачі EH1/EH2"
+        }
+      },
+      "aux_heaters": {
+        "name": "Додаткові електронагрівачі",
+        "state": {
+          "none": "Немає",
+          "one_backup": "Один, резервний",
+          "two_backup": "Два, резервні",
+          "one_low_temperature_start": "Один, холодний пуск",
+          "two_low_temperature_start": "Два, холодний пуск"
+        }
+      },
+      "dhw_mode": {
+        "name": "Режим ГВП",
+        "state": {
+          "automatic": "Автоматичний",
+          "dhw_module_only": "Лише модуль ГВП",
+          "heat_pump_only": "Лише тепловий насос"
+        }
+      },
+      "smart_grid": {
+        "name": "Вхід Smart Grid / PV",
+        "state": {
+          "disabled": "Вимкнено",
+          "photovoltaic": "Фотоелектрика"
+        }
+      },
+      "boiler_threshold": {
+        "name": "Поріг зовнішнього котла"
+      },
+      "freeze_protection": {
+        "name": "Захист від замерзання"
+      },
+      "legionella_interval": {
+        "name": "Інтервал антилегіонели"
+      },
+      "legionella_duration": {
+        "name": "Тривалість антилегіонели"
+      },
+      "water_setpoint_correction": {
+        "name": "Корекція уставки води"
+      },
+      "cooling_curve_max_water": {
+        "name": "Крива охолодження: макс. вода"
+      },
+      "cooling_curve_max_water_outdoor": {
+        "name": "Крива охолодження: зовнішня при макс. воді"
+      },
+      "cooling_curve_min_water": {
+        "name": "Крива охолодження: мін. вода"
+      },
+      "cooling_curve_min_water_outdoor": {
+        "name": "Крива охолодження: зовнішня при мін. воді"
+      },
+      "heating_curve_max_water": {
+        "name": "Крива опалення: макс. вода"
+      },
+      "heating_curve_max_water_outdoor": {
+        "name": "Крива опалення: зовнішня при макс. воді"
+      },
+      "heating_curve_min_water": {
+        "name": "Крива опалення: мін. вода"
+      },
+      "heating_curve_min_water_outdoor": {
+        "name": "Крива опалення: зовнішня при мін. воді"
+      },
+      "last_successful_read": {
+        "name": "Останнє успішне читання"
+      },
+      "read_failures": {
+        "name": "Помилки читання"
+      }
+    },
+    "binary_sensor": {
+      "in_flow": {
+        "name": "Потік води"
+      },
+      "in_ta": {
+        "name": "Запит термостата"
+      },
+      "mode_cooling": {
+        "name": "Охолодження"
+      },
+      "mode_heating": {
+        "name": "Опалення"
+      },
+      "mode_dhw": {
+        "name": "Цикл ГВП"
+      },
+      "mode_legionella": {
+        "name": "Цикл антилегіонели"
+      },
+      "mode_night": {
+        "name": "Нічний режим"
+      },
+      "mode_pending": {
+        "name": "Режим очікує"
+      },
+      "out_pump": {
+        "name": "Циркуляційний насос"
+      },
+      "out_dhw_pump": {
+        "name": "Насос ГВП"
+      },
+      "out_eh1": {
+        "name": "Електронагрівач 1"
+      },
+      "out_eh2": {
+        "name": "Електронагрівач 2"
+      },
+      "out_3way": {
+        "name": "Триходовий клапан"
+      },
+      "out_k5": {
+        "name": "Нагрівач бака ГВП (K5)"
+      },
+      "out_boiler": {
+        "name": "Запит зовнішнього котла"
+      },
+      "out_alarm": {
+        "name": "Реле аварії"
+      },
+      "defrost": {
+        "name": "Розморожування"
+      },
+      "power": {
+        "name": "Робота"
+      },
+      "error": {
+        "name": "Аварія"
+      },
+      "warning": {
+        "name": "Попередження"
+      },
+      "compressor_running": {
+        "name": "Компресор працює"
+      },
+      "cooling_curve_enabled": {
+        "name": "Кліматична крива охолодження"
+      },
+      "heating_curve_enabled": {
+        "name": "Кліматична крива опалення"
+      },
+      "external_boiler_enabled": {
+        "name": "Зовнішній котел дозволено"
+      }
+    }
+  },
+  "exceptions": {
+    "unsupported_model": {
+      "message": "Sherpa повідомляє код ідентифікації {code} ({model}) — розкладку регістрів, яку ця інтеграція не знає."
+    },
+    "not_a_sherpa": {
+      "message": "За адресою Modbus {slave} не відповів жоден Sherpa."
+    },
+    "cannot_connect": {
+      "message": "Не вдається зв'язатися із Sherpa через {endpoint}."
+    }
+  },
+  "issues": {
+    "unsupported_model": {
+      "title": "Непідтримувана модель Sherpa",
+      "description": "Агрегат повідомляє код ідентифікації {code} ({model}). Інтеграція має карту регістрів лише для коду 1134 (Sherpa S2, прошивка 0.57), і читання іншої розкладки показувало б хибні значення. Зніміть дані цього агрегату за допомогою tools/probe_sherpa.py і створіть issue з результатом."
+    }
+  }
+}
