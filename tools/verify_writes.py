@@ -9,8 +9,8 @@ the register's own value, then one step away, and always restores it.
 The order puts the registers that cannot affect the plant right now first
 (ECO setpoints and cooling parameters, while the curves run heating) and the
 curve enables last. By default it stops at the first result that is not
-roundtrip_ok: with the unit ignoring serial writes (ADDR220 = 0) the first
-answer is the answer for all of them, and the rest would only be more writes.
+roundtrip_ok: the unit is then not behaving as expected, and that deserves a
+look before any more writes.
 
     python3 tools/verify_writes.py --ha http://homeassistant.local:8123 \\
         --token-file ~/.ha-token --only heating_eco_setpoint
