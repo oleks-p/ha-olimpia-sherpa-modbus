@@ -198,6 +198,9 @@
       "pump_duty": {
         "name": "Pump duty"
       },
+      "water_target": {
+        "name": "Water target (calculated)"
+      },
       "water_delta": {
         "name": "Water delta"
       },
@@ -446,6 +449,37 @@
       },
       "external_boiler_enabled": {
         "name": "External boiler enabled"
+      }
+    },
+    "climate": {
+      "heat_pump": {
+        "name": "Heat pump",
+        "state_attributes": {
+          "water_target": {
+            "name": "Water target (calculated)"
+          },
+          "water_target_source": {
+            "name": "Water target from"
+          },
+          "water_in": {
+            "name": "Water in"
+          },
+          "water_out": {
+            "name": "Water out"
+          },
+          "outdoor_air": {
+            "name": "Outdoor air"
+          },
+          "dhw_in_progress": {
+            "name": "Hot water cycle"
+          },
+          "night": {
+            "name": "Night mode"
+          },
+          "remote_controls": {
+            "name": "Remote control"
+          }
+        }
       }
     },
     "number": {

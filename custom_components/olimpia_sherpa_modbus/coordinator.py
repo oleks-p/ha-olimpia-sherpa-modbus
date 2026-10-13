@@ -103,6 +103,8 @@ class SherpaCoordinator(DataUpdateCoordinator[SherpaData]):
         self._rejected: set[str] = set()
         self._last_read: dict[Tier, float] = {}
         self._compressor = derive.CompressorEstimator()
+        #: The panel's last heating/cooling/off selection seen outside a DHW cycle.
+        self._selected: str | None = None
         self._last_inputs: int | None = None
         self._inputs_glitch = False
         # Link health, surfaced as diagnostic entities and in diagnostics.
@@ -231,6 +233,9 @@ class SherpaCoordinator(DataUpdateCoordinator[SherpaData]):
         values["defrost"] = derive.bit(override, DEFROST_BIT)
         values["mode"] = derive.mode(status)
         values["power"] = derive.power(status, outputs)
+        values["selected_mode"] = derive.selected_mode(status, self._selected)
+        if status is not None and not status & 0x0C:
+            self._selected = values["selected_mode"]
 
         alarm_1, alarm_2 = values.get("alarm_1"), values.get("alarm_2")
         values["error"] = derive.any_set(alarm_1, alarm_2)
@@ -255,6 +260,8 @@ class SherpaCoordinator(DataUpdateCoordinator[SherpaData]):
         values["legionella_start"] = derive.clock_text(values.get("legionella_start_minutes"))
         values["compressor_rate"] = self._compressor.rate
         values["compressor_running"] = self._compressor.running
+        values["water_target"], values["water_target_source"] = derive.water_target(
+            values["selected_mode"], values)
         return data
 
     def patch_register(self, address: int, raw: int) -> None:

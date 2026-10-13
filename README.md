@@ -24,6 +24,10 @@ own controller still runs the plant.
 - **Faults:** error codes E01–E27 and override codes OR01–OR13, with their
   descriptions from the manual. Defrost is reported separately.
 - **Runtime counters:** compressor, pump and filter, in seconds and hours.
+- **Heat pump (climate, read-only):** the mode selected on the panel (heating,
+  cooling, off), what the unit is doing, the supply water temperature, and a
+  calculated water target from the climatic curve. The mode itself is set on
+  the panel: Modbus has no mode command while the panel is in control.
 - **Setpoints and service parameters** as sensors. The less common parameters
   are diagnostic entities and disabled by default.
 - **Writable setpoints (opt-in):** heating, cooling and their ECO values, DHW,
@@ -159,7 +163,7 @@ always starts HA again.
 
 ```bash
 uv venv --python 3.14 .venv && uv pip install --python .venv/bin/python -r requirements_test.txt
-.venv/bin/python -m pytest          # 220 tests: integration (HA 2026.8.2) + probe + fixtures
+.venv/bin/python -m pytest          # 245 tests: integration (HA 2026.8.2) + probe + fixtures
 .venv/bin/ruff check custom_components tools tests
 docker compose up -d                # a dev Home Assistant against a simulated unit
 .venv/bin/python tools/gen_translations.py   # strings.json + en/uk from one table

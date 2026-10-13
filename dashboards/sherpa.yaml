@@ -30,6 +30,10 @@ views:
           - type: heading
             heading: State
           - type: tile
+            entity: climate.sherpa_heat_pump
+          - type: tile
+            entity: sensor.sherpa_water_target
+          - type: tile
             entity: sensor.sherpa_mode
           - type: tile
             entity: binary_sensor.sherpa_compressor_running

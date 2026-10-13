@@ -128,6 +128,10 @@ SENSORS: tuple[SherpaSensorDescription, ...] = (
     SherpaSensorDescription(
         key="water_delta", native_unit_of_measurement=CELSIUS, state_class=MEASUREMENT,
         suggested_display_precision=1, value_fn=value("water_delta")),
+    # Calculated, not read: the unit does not report its target (derive.water_target).
+    _temperature("water_target",
+                 attrs_fn=lambda c: {"source": c.data.values.get("water_target_source"),
+                                     "calculated": True}),
     SherpaSensorDescription(
         key="compressor_rate", native_unit_of_measurement="s/min", state_class=MEASUREMENT,
         value_fn=value("compressor_rate")),

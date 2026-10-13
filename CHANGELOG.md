@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.4.0 — 2026-10-13
+
+A read-only climate entity, from what the P5 mode research found
+(`docs/p5_mode_research.md`).
+
+- `climate.<prefix>_heat_pump` shows:
+  - the mode selected on the panel: heating, cooling or off;
+  - what the unit is doing: heating, cooling, idle, defrosting or off. A DHW
+    cycle reads as idle, because the compressor is serving the tank, not the
+    rooms;
+  - the supply water temperature.
+  It offers only the mode the unit is in, and no target to set: Modbus has no
+  mode command while the panel is in control (ADDR220 = 0).
+- During a DHW or legionella cycle, the selection stays what it was before the
+  cycle, because the unit sets the heating bit for every DHW cycle.
+- `sensor.<prefix>_water_target` (calculated). It is the climatic curve's
+  water temperature at the current outdoor temperature, or the fixed setpoint
+  while the curve is off. The unit does not report its target. ECO and the
+  water setpoint correction cannot be seen over Modbus, so they are not
+  included.
+
 ## 0.3.0 — 2026-10-13
 
 For the mode research (P5).

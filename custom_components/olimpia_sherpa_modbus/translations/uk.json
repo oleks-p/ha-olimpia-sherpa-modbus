@@ -198,6 +198,9 @@
       "pump_duty": {
         "name": "ШІМ насоса"
       },
+      "water_target": {
+        "name": "Цільова температура води (розрахункова)"
+      },
       "water_delta": {
         "name": "Різниця температур води"
       },
@@ -446,6 +449,37 @@
       },
       "external_boiler_enabled": {
         "name": "Зовнішній котел дозволено"
+      }
+    },
+    "climate": {
+      "heat_pump": {
+        "name": "Тепловий насос",
+        "state_attributes": {
+          "water_target": {
+            "name": "Цільова температура води (розрахункова)"
+          },
+          "water_target_source": {
+            "name": "Джерело цільової температури"
+          },
+          "water_in": {
+            "name": "Вода вхід"
+          },
+          "water_out": {
+            "name": "Вода вихід"
+          },
+          "outdoor_air": {
+            "name": "Зовнішнє повітря"
+          },
+          "dhw_in_progress": {
+            "name": "Цикл ГВП"
+          },
+          "night": {
+            "name": "Нічний режим"
+          },
+          "remote_controls": {
+            "name": "Дистанційне керування"
+          }
+        }
       }
     },
     "number": {
