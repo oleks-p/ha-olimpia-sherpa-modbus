@@ -130,5 +130,12 @@ checks ran in three runs (16:27, 16:32-16:33, 16:35-16:36). After each run,
 every register read its original value again. The unit stayed in standby with
 no error, and there were no repair issues and no link failures.
 
+**A write shows on the panel.** On 2026-10-13 at 19:20 local time, the DHW setpoint
+was set from Home Assistant (`number.set_value`, 50.0 → 45.0). The write was read
+back as 45.0, register 210 held 450, and the unit's display showed 45 in its
+temperature settings (i2).
+
 Still open:
-- Persistence over a power cycle (EEPROM) is not checked for any register.
+- Persistence over a power cycle (EEPROM) is not checked for any register. An
+  outage that cuts only the outdoor unit (E07) leaves the indoor controller
+  powered, so it does not count.
