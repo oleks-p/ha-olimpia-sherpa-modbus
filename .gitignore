@@ -1,0 +1,11 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.venv/
+*.py[cod]
+*.tmp
+dev-config/
+# Raw probe captures carry the adapter's serial number; commit only the
+# --sanitize'd copy under tests/fixtures/.
+sherpa_observed_*.json
+registers_observed.json
