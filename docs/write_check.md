@@ -117,12 +117,18 @@ the unit in standby.
 | 2026-10-13 16:33 | 238 `dhw_hysteresis` | 10.0 -> 10.0; 10.5 -> 10.5, 10.5 after 5 s; restored 10.0 | 5 s | `roundtrip_ok` |
 | 2026-10-13 16:33 | 210 `dhw_setpoint` | 50.0 -> 50.0; 50.5 -> 50.5, 50.5 after 5 s; restored 50.0 | 5 s | `roundtrip_ok` |
 | 2026-10-13 16:33 | 208 `heating_setpoint` | 35.0 -> 35.0; 35.5 -> 35.5, 35.5 after 5 s; restored 35.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:35 | 369 `water_setpoint_correction` | 0.0 -> 0.0; 0.5 -> 0.5, 0.5 after 5 s; restored 0.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:35 | 243 `heating_curve_max_water_outdoor` | -5.0 -> -5.0; -4.5 -> -4.5, -4.5 after 5 s; restored -5.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:35 | 244 `heating_curve_max_water` | 35.0 -> 35.0; 35.5 -> 35.5, 35.5 after 5 s; restored 35.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:35 | 245 `heating_curve_min_water_outdoor` | 20.0 -> 20.0; 20.5 -> 20.5, 20.5 after 5 s; restored 20.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:35 | 246 `heating_curve_min_water` | 28.0 -> 28.0; 28.5 -> 28.5, 28.5 after 5 s; restored 28.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:35 | 211 `cooling_curve_enabled` | on -> on; off -> off, off after 5 s; restored on | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:36 | 212 `heating_curve_enabled` | on -> on; off -> off, off after 5 s; restored on | 5 s | `roundtrip_ok` |
 
-After the batch, every register read its original value again. The unit stayed
-in standby with no error, and there were no repair issues and no link failures.
+All 19 candidates pass: they are applied, and they hold, with ADDR220 = 0. The
+checks ran in three runs (16:27, 16:32-16:33, 16:35-16:36). After each run,
+every register read its original value again. The unit stayed in standby with
+no error, and there were no repair issues and no link failures.
 
 Still open:
-- 7 candidates are not checked yet. They move the live water target by one
-  step for the hold: the four heating-curve points, `water_setpoint_correction`,
-  and the two curve enables.
 - Persistence over a power cycle (EEPROM) is not checked for any register.
