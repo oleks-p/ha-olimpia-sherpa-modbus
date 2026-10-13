@@ -125,3 +125,13 @@ def test_manifest_and_version():
     assert manifest["domain"] == "olimpia_sherpa_modbus"
     assert manifest["version"] == "0.1.0"
     assert manifest["iot_class"] == "local_polling" and manifest["config_flow"] is True
+
+
+def test_entities_manifest_is_current():
+    """entities.json is what the site platform vendors and checks against."""
+    import subprocess
+    import sys
+
+    result = subprocess.run([sys.executable, str(ROOT / "tools" / "export_entities.py"),
+                             "--check"], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr

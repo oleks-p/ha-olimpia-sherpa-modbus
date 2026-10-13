@@ -1,0 +1,559 @@
+{
+ "domain": "olimpia_sherpa_modbus",
+ "version": "0.1.0",
+ "default_entity_prefix": "sherpa",
+ "read_only": true,
+ "entity_id": "<domain>.<entity_prefix>_<key>",
+ "entities": [
+  {
+   "domain": "sensor",
+   "key": "water_in",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "water_out",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "dhw_tank",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "outdoor_air",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "dhw_compressor_temp",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "conditional": true
+  },
+  {
+   "domain": "sensor",
+   "key": "dhw_condenser_temp",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "conditional": true
+  },
+  {
+   "domain": "sensor",
+   "key": "dhw_evaporator_temp",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "conditional": true
+  },
+  {
+   "domain": "sensor",
+   "key": "solar_temp",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "conditional": true
+  },
+  {
+   "domain": "sensor",
+   "key": "mode",
+   "device_class": "enum",
+   "options": [
+    "standby",
+    "cooling",
+    "heating",
+    "domestic_hot_water",
+    "anti_legionella"
+   ]
+  },
+  {
+   "domain": "sensor",
+   "key": "error_code"
+  },
+  {
+   "domain": "sensor",
+   "key": "override_code"
+  },
+  {
+   "domain": "sensor",
+   "key": "pump_step",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "pump_duty",
+   "unit_of_measurement": "%",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "water_delta",
+   "unit_of_measurement": "°C",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "compressor_rate",
+   "unit_of_measurement": "s/min",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "compressor_seconds",
+   "unit_of_measurement": "s",
+   "device_class": "duration",
+   "state_class": "total_increasing"
+  },
+  {
+   "domain": "sensor",
+   "key": "pump_seconds",
+   "unit_of_measurement": "s",
+   "device_class": "duration",
+   "state_class": "total_increasing"
+  },
+  {
+   "domain": "sensor",
+   "key": "filter_seconds",
+   "unit_of_measurement": "s",
+   "device_class": "duration",
+   "state_class": "total_increasing"
+  },
+  {
+   "domain": "sensor",
+   "key": "dhw_compressor_seconds",
+   "unit_of_measurement": "s",
+   "device_class": "duration",
+   "state_class": "total_increasing",
+   "conditional": true
+  },
+  {
+   "domain": "sensor",
+   "key": "dhw_pump_seconds",
+   "unit_of_measurement": "s",
+   "device_class": "duration",
+   "state_class": "total_increasing",
+   "conditional": true
+  },
+  {
+   "domain": "sensor",
+   "key": "smart_grid_1_seconds",
+   "unit_of_measurement": "s",
+   "device_class": "duration",
+   "state_class": "total_increasing",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "smart_grid_2_seconds",
+   "unit_of_measurement": "s",
+   "device_class": "duration",
+   "state_class": "total_increasing",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "compressor_hours",
+   "unit_of_measurement": "h",
+   "device_class": "duration",
+   "state_class": "total_increasing"
+  },
+  {
+   "domain": "sensor",
+   "key": "pump_hours",
+   "unit_of_measurement": "h",
+   "device_class": "duration",
+   "state_class": "total_increasing"
+  },
+  {
+   "domain": "sensor",
+   "key": "cooling_setpoint",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "cooling_eco_setpoint",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "heating_setpoint",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "heating_eco_setpoint",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "dhw_setpoint",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "legionella_setpoint",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "dhw_hysteresis",
+   "unit_of_measurement": "°C",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "legionella_start_minutes",
+   "unit_of_measurement": "min",
+   "device_class": "duration"
+  },
+  {
+   "domain": "sensor",
+   "key": "legionella_start"
+  },
+  {
+   "domain": "sensor",
+   "key": "inputs",
+   "entity_category": "diagnostic"
+  },
+  {
+   "domain": "sensor",
+   "key": "status",
+   "entity_category": "diagnostic"
+  },
+  {
+   "domain": "sensor",
+   "key": "outputs",
+   "entity_category": "diagnostic"
+  },
+  {
+   "domain": "sensor",
+   "key": "override",
+   "entity_category": "diagnostic"
+  },
+  {
+   "domain": "sensor",
+   "key": "alarm_1",
+   "entity_category": "diagnostic"
+  },
+  {
+   "domain": "sensor",
+   "key": "alarm_2",
+   "entity_category": "diagnostic"
+  },
+  {
+   "domain": "sensor",
+   "key": "identify_code",
+   "entity_category": "diagnostic"
+  },
+  {
+   "domain": "sensor",
+   "key": "remote_controls",
+   "device_class": "enum",
+   "entity_category": "diagnostic",
+   "options": [
+    "display",
+    "serial",
+    "contacts"
+   ]
+  },
+  {
+   "domain": "sensor",
+   "key": "dhw_source",
+   "device_class": "enum",
+   "entity_category": "diagnostic",
+   "options": [
+    "disabled",
+    "contact",
+    "sensor"
+   ]
+  },
+  {
+   "domain": "sensor",
+   "key": "legionella_mode",
+   "device_class": "enum",
+   "entity_category": "diagnostic",
+   "options": [
+    "heat_pump_and_k5",
+    "k5_only",
+    "electric_heaters"
+   ]
+  },
+  {
+   "domain": "sensor",
+   "key": "aux_heaters",
+   "device_class": "enum",
+   "entity_category": "diagnostic",
+   "options": [
+    "none",
+    "one_backup",
+    "two_backup",
+    "one_low_temperature_start",
+    "two_low_temperature_start"
+   ],
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "dhw_mode",
+   "device_class": "enum",
+   "entity_category": "diagnostic",
+   "options": [
+    "automatic",
+    "dhw_module_only",
+    "heat_pump_only"
+   ],
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "smart_grid",
+   "device_class": "enum",
+   "entity_category": "diagnostic",
+   "options": [
+    "disabled",
+    "photovoltaic"
+   ],
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "boiler_threshold",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "freeze_protection",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "legionella_interval",
+   "unit_of_measurement": "d",
+   "device_class": "duration",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "legionella_duration",
+   "unit_of_measurement": "min",
+   "device_class": "duration",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "water_setpoint_correction",
+   "unit_of_measurement": "°C",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "cooling_curve_max_water_outdoor",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "cooling_curve_max_water",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "cooling_curve_min_water_outdoor",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "cooling_curve_min_water",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "heating_curve_max_water_outdoor",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "heating_curve_max_water",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "heating_curve_min_water_outdoor",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "heating_curve_min_water",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "diagnostic",
+   "enabled_default": false
+  },
+  {
+   "domain": "sensor",
+   "key": "last_successful_read",
+   "device_class": "timestamp",
+   "entity_category": "diagnostic"
+  },
+  {
+   "domain": "sensor",
+   "key": "read_failures",
+   "entity_category": "diagnostic"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "in_flow",
+   "device_class": "running"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "in_ta"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "mode_cooling"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "mode_heating"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "mode_dhw"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "mode_legionella"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "mode_night"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "mode_pending"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "out_pump"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "out_dhw_pump"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "out_eh1"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "out_eh2"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "out_3way"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "out_k5"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "out_boiler"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "out_alarm"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "defrost"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "power"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "error",
+   "device_class": "problem"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "warning"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "compressor_running"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "cooling_curve_enabled",
+   "entity_category": "diagnostic"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "heating_curve_enabled",
+   "entity_category": "diagnostic"
+  },
+  {
+   "domain": "binary_sensor",
+   "key": "external_boiler_enabled",
+   "entity_category": "diagnostic"
+  }
+ ]
+}
