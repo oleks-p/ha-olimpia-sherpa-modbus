@@ -31,11 +31,13 @@ from .const import (
     CONF_SLAVE,
     DOMAIN,
     PLATFORMS,
+    SERVICE_READ_REGISTERS,
     SERVICE_VERIFY_WRITE,
 )
 from .coordinator import SherpaCoordinator
 from .model import NotASherpa, UnsupportedModel, async_identify
-from .registers import WRITE_SPECS
+from .raw_read import async_read
+from .registers import MAX_READ, WRITE_SPECS
 from .transport import BusRegistry, Endpoint, SherpaBus, SherpaTransientError
 from .writes import CHECKS, WriteChecks
 
@@ -48,6 +50,12 @@ VERIFY_WRITE_SCHEMA = vol.Schema({
     vol.Required("register"): vol.In(sorted(WRITE_SPECS)),
     vol.Optional("hold_seconds", default=CHECK_HOLD_DEFAULT):
         vol.All(vol.Coerce(int), vol.Range(min=1, max=CHECK_HOLD_MAX)),
+})
+
+READ_REGISTERS_SCHEMA = vol.Schema({
+    vol.Optional("config_entry_id"): cv.string,
+    vol.Optional("address"): vol.All(vol.Coerce(int), vol.Range(min=0, max=0xFFFF)),
+    vol.Optional("count", default=1): vol.All(vol.Coerce(int), vol.Range(min=1, max=MAX_READ)),
 })
 
 #: One bus per physical link, shared by every entry and config flow using it.
@@ -69,16 +77,25 @@ def bus_registry(hass: HomeAssistant) -> BusRegistry:
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
-    """Register the write check, once, for every entry to use."""
+    """Register the admin actions, once, for every entry to use."""
 
     async def verify_write(call: ServiceCall) -> ServiceResponse:
         entry = _target_entry(hass, call.data.get("config_entry_id"))
         return await entry.runtime_data.coordinator.writes.async_check(
             call.data["register"], call.data["hold_seconds"])
 
+    async def read_registers(call: ServiceCall) -> ServiceResponse:
+        entry = _target_entry(hass, call.data.get("config_entry_id"))
+        return await async_read(entry.runtime_data.coordinator, call.data.get("address"),
+                                call.data["count"])
+
     # Admin only: it writes to the unit, however briefly and however carefully.
     async_register_admin_service(hass, DOMAIN, SERVICE_VERIFY_WRITE, verify_write,
                                  schema=VERIFY_WRITE_SCHEMA,
+                                 supports_response=SupportsResponse.ONLY)
+    # Admin only too: it only reads, but at any address and without the map.
+    async_register_admin_service(hass, DOMAIN, SERVICE_READ_REGISTERS, read_registers,
+                                 schema=READ_REGISTERS_SCHEMA,
                                  supports_response=SupportsResponse.ONLY)
     return True
 

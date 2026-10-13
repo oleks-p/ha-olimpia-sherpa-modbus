@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 — 2026-10-13
+
+For the mode research (P5).
+
+- New admin action **Read registers** (`olimpia_sherpa_modbus.read_registers`).
+  It returns raw holding registers through the integration's own connection:
+  one master on the bus, and Home Assistant keeps running.
+  - Without an address it takes a snapshot of every register the unit is known
+    to answer.
+  - Ranges the unit refuses are listed, not raised as errors.
+  - It only ever reads (FC3), and it does not need *Allow writes*.
+- `tools/mode_research.py` takes labelled snapshots through that action and
+  diffs them. Registers that also change on their own are kept apart, so the
+  register that follows the panel stands out.
+
 ## 0.2.0 — 2026-10-13
 
 Opt-in writes, and the write check that has to pass before any.
