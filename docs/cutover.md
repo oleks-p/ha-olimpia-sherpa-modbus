@@ -15,6 +15,29 @@ simulator. Results:
   series.
 - The entity was unavailable for 22 s.
 
+## Done at uahs01, 2026-10-13
+
+| Time (EEST) | Step |
+|---|---|
+| 15:10:55 | HA stopped |
+| 15:11:12 | Backup verified (1.7 GB, `cmp` of the DB and the registry). v0.1.0 installed from the tag tarball (sha256 `4a234826…6eb9`, checked on the host). `sherpa.yaml` retired; `plant.yaml` and `boiler.yaml` deployed; HA started |
+| 15:11:51 | `remove-legacy`: 51 entries (23 modbus, 27 template, 1 derivative), 0 left |
+| 15:11:54 | `add`: entry loaded; the identity check read the unit over `/dev/ttyUSB0` |
+| 15:12:56 | First full poll cycle. `verify` OK: 52 legacy entities, 20 statistics series |
+
+Results:
+- **History:** `sensor.sherpa_water_in` kept history row 48, with 31,304 rows
+  back to 2026-08-17, and its first value under the integration landed on that
+  row. The same holds for `compressor_seconds` and for `compressor_running`,
+  whose legacy history came from the threshold platform.
+- **Statistics:** 20 series, no duplicates.
+- **Gap:** the Sherpa readings were missing for about 20 s.
+- **The unit:** both alarm words read 0, so no E09.
+- **Log:** the 17 duplicate-unique-id errors from the retired `sherpa.yaml` are
+  gone. The 64 i3 MQTT duplicates that remain predate the cutover.
+- **Records:** the backup, plan, window script and log are in
+  `/home/user/homeassistant/backups/cutover-20261013-151055/` on the host.
+
 ## Why it works, and the one thing that must not go wrong
 
 History is keyed by entity id. The integration suggests the legacy ids
