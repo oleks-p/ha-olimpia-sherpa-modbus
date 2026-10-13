@@ -64,6 +64,9 @@
       },
       "last_successful_read": {
         "default": "mdi:lan-check"
+      },
+      "water_target": {
+        "default": "mdi:thermometer-auto"
       }
     },
     "binary_sensor": {
@@ -208,6 +211,11 @@
       },
       "heating_curve_enabled": {
         "default": "mdi:chart-bell-curve-cumulative"
+      }
+    },
+    "climate": {
+      "heat_pump": {
+        "default": "mdi:heat-pump"
       }
     }
   },

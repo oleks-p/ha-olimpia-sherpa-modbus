@@ -10,7 +10,8 @@ DOMAIN: Final = "olimpia_sherpa_modbus"
 MANUFACTURER: Final = "Olimpia Splendid"
 DEFAULT_NAME: Final = "Sherpa"
 
-PLATFORMS: Final = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.NUMBER, Platform.SWITCH]
+PLATFORMS: Final = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.CLIMATE, Platform.NUMBER,
+                     Platform.SWITCH]
 
 # -- connection ---------------------------------------------------------------
 

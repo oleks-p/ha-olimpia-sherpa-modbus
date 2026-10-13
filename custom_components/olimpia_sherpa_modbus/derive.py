@@ -108,6 +108,70 @@ def water_delta(water_out: float | None, water_in: float | None) -> float | None
     return round(water_out - water_in, 1)
 
 
+#: What the panel's modes menu has selected, as far as Modbus can tell (P5,
+#: docs/p5_mode_research.md). ECO and "DHW disabled" are not visible at all.
+SELECTED_OPTIONS: tuple[str, ...] = ("off", "heating", "cooling")
+
+
+def selected_mode(status: int | None, last: str | None) -> str | None:
+    """Heating, cooling or off as selected on the panel, from status register 12.
+
+    Outside a DHW or legionella cycle, bit 1 is heating selected and bit 0
+    cooling selected, while the compressor runs and while it idles; 0 is
+    standby. Inside a cycle the bits describe the cycle instead (a DHW cycle
+    sets the heating bit whatever is selected, see mode()), so the selection
+    seen before the cycle stands. Only with none to keep -- straight out of
+    standby, or after a restart mid-cycle -- are the bits taken as they are.
+    """
+    if status is None:
+        return None
+    if status & 0x0C and last in ("heating", "cooling"):
+        return last
+    if status & 0x02:
+        return "heating"
+    if status & 0x01:
+        return "cooling"
+    return "off"
+
+
+def curve(outdoor: float | None, outdoor_at_max: float | None, max_water: float | None,
+          outdoor_at_min: float | None, min_water: float | None) -> float | None:
+    """A climatic curve's water temperature at this outdoor temperature.
+
+    The manual defines a curve by two points -- the outdoor temperature for the
+    maximum water temperature, and for the minimum -- and the water follows the
+    straight line between them, held at the end values beyond them.
+    """
+    points = (outdoor, outdoor_at_max, max_water, outdoor_at_min, min_water)
+    if any(v is None for v in points) or outdoor_at_max == outdoor_at_min:
+        return None
+    lo, hi = sorted(((outdoor_at_max, max_water), (outdoor_at_min, min_water)))
+    if outdoor <= lo[0]:
+        return lo[1]
+    if outdoor >= hi[0]:
+        return hi[1]
+    return round(lo[1] + (outdoor - lo[0]) * (hi[1] - lo[1]) / (hi[0] - lo[0]), 1)
+
+
+def water_target(selected: str | None, values: dict) -> tuple[float | None, str | None]:
+    """The water temperature the unit aims for, calculated -- the unit does not
+    report it. The curve when it is on, else the fixed setpoint.
+
+    Not included, because Modbus cannot see them: ECO (while the curves are
+    off, ECO would switch to the ECO setpoint) and whatever ADDR369 "water
+    setpoint correction" adds; both read as unknown rather than guessed.
+    """
+    if selected not in ("heating", "cooling"):
+        return None, None
+    if values.get(f"{selected}_curve_enabled"):
+        return curve(values.get("outdoor_air"),
+                     values.get(f"{selected}_curve_max_water_outdoor"),
+                     values.get(f"{selected}_curve_max_water"),
+                     values.get(f"{selected}_curve_min_water_outdoor"),
+                     values.get(f"{selected}_curve_min_water")), f"{selected}_curve"
+    return values.get(f"{selected}_setpoint"), f"{selected}_setpoint"
+
+
 def clock_text(minutes: int | None) -> str | None:
     """Minutes since midnight -> 'HH:MM' (register 231, legionella start)."""
     if minutes is None:

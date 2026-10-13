@@ -24,6 +24,7 @@ OUT = ROOT / "entities.json"
 
 def build() -> dict:
     from custom_components.olimpia_sherpa_modbus.binary_sensor import BINARY_SENSORS
+    from custom_components.olimpia_sherpa_modbus.climate import HEAT_PUMP
     from custom_components.olimpia_sherpa_modbus.const import DEFAULT_ENTITY_PREFIX, DOMAIN
     from custom_components.olimpia_sherpa_modbus.number import NUMBERS
     from custom_components.olimpia_sherpa_modbus.registers import WRITE_SPECS
@@ -64,6 +65,7 @@ def build() -> dict:
         "entity_id": "<domain>.<entity_prefix>_<key>",
         "entities": [record("sensor", d) for d in SENSORS]
         + [record("binary_sensor", d) for d in BINARY_SENSORS]
+        + [record("climate", HEAT_PUMP)]
         + [record("number", d) for d in NUMBERS]
         + [record("switch", d) for d in SWITCHES],
     }

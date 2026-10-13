@@ -43,6 +43,7 @@ SENSOR = {
     "override_code": ("Override code", "Код особливого стану"),
     "pump_step": ("Pump speed step", "Ступінь швидкості насоса"),
     "pump_duty": ("Pump duty", "ШІМ насоса"),
+    "water_target": ("Water target (calculated)", "Цільова температура води (розрахункова)"),
     "water_delta": ("Water delta", "Різниця температур води"),
     "compressor_rate": ("Compressor rate", "Темп лічильника компресора"),
     "compressor_seconds": ("Compressor runtime (s)", "Напрацювання компресора (с)"),
@@ -154,9 +155,24 @@ def writable_name(key, i):
     return spec[i]
 
 
+#: The climate entity, and the names of its own attributes.
+CLIMATE = {"heat_pump": ("Heat pump", "Тепловий насос", {
+    "water_target": ("Water target (calculated)", "Цільова температура води (розрахункова)"),
+    "water_target_source": ("Water target from", "Джерело цільової температури"),
+    "water_in": ("Water in", "Вода вхід"),
+    "water_out": ("Water out", "Вода вихід"),
+    "outdoor_air": ("Outdoor air", "Зовнішнє повітря"),
+    "dhw_in_progress": ("Hot water cycle", "Цикл ГВП"),
+    "night": ("Night mode", "Нічний режим"),
+    "remote_controls": ("Remote control", "Дистанційне керування"),
+})}
+
+
 def entities(lang):
     i = 0 if lang == "en" else 1
     out = {"sensor": {}, "binary_sensor": {}}
+    out["climate"] = {key: {"name": spec[i], "state_attributes": {
+        attr: {"name": names[i]} for attr, names in spec[2].items()}} for key, spec in CLIMATE.items()}
     out["number"] = {k: {"name": writable_name(k, i)} for k in NUMBER_KEYS}
     out["switch"] = {k: {"name": writable_name(k, i)} for k in SWITCH_KEYS}
     for key, spec in SENSOR.items():

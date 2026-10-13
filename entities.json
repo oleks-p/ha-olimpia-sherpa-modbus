@@ -1,6 +1,6 @@
 {
  "domain": "olimpia_sherpa_modbus",
- "version": "0.3.0",
+ "version": "0.4.0",
  "default_entity_prefix": "sherpa",
  "writes": "opt_in",
  "entity_id": "<domain>.<entity_prefix>_<key>",
@@ -100,6 +100,13 @@
    "domain": "sensor",
    "key": "water_delta",
    "unit_of_measurement": "°C",
+   "state_class": "measurement"
+  },
+  {
+   "domain": "sensor",
+   "key": "water_target",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
    "state_class": "measurement"
   },
   {
@@ -554,6 +561,10 @@
    "domain": "binary_sensor",
    "key": "external_boiler_enabled",
    "entity_category": "diagnostic"
+  },
+  {
+   "domain": "climate",
+   "key": "heat_pump"
   },
   {
    "domain": "number",

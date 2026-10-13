@@ -123,7 +123,7 @@ def test_enum_values_are_snake_case_keys():
 def test_manifest_and_version():
     manifest = json.loads((PACKAGE / "manifest.json").read_text())
     assert manifest["domain"] == "olimpia_sherpa_modbus"
-    assert manifest["version"] == "0.3.0"
+    assert manifest["version"] == "0.4.0"
     assert manifest["iot_class"] == "local_polling" and manifest["config_flow"] is True
 
 
@@ -200,7 +200,8 @@ def test_dashboards_bind_only_entities_the_release_creates(board):
     manifest = json.loads((ROOT / "entities.json").read_text())
     provided = {f"{e['domain']}.sherpa_{e['key']}" for e in manifest["entities"]}
     text = (ROOT / "dashboards" / board).read_text()
-    bound = set(re.findall(r"\b(?:sensor|binary_sensor|number|switch)\.sherpa_[a-z0-9_]+", text))
+    bound = set(re.findall(r"\b(?:sensor|binary_sensor|climate|number|switch)\.sherpa_[a-z0-9_]+",
+                           text))
     assert bound and not bound - provided, sorted(bound - provided)
     if board == "sherpa.yaml":     # the household board never offers a control
         assert not {b for b in bound if b.startswith(("number.", "switch."))}
