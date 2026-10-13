@@ -1,7 +1,7 @@
-# Olimpia Splendid Sherpa S2 for Home Assistant (Modbus RTU)
+# Olimpia Splendid Sherpa for Home Assistant (Modbus RTU)
 
-A config-flow integration for the Olimpia Splendid **Sherpa S2** air/water heat
-pump. It talks to the indoor unit over RS-485 (terminal **AB**), either from a
+A config-flow integration for Olimpia Splendid **Sherpa** air/water heat
+pumps. It talks to the indoor unit over RS-485 (terminal **AB**), either from a
 USB adapter on the Home Assistant host or through a network gateway.
 
 It reads by default. **Writes are opt-in:** with *Allow writes* on, a setpoint
@@ -35,9 +35,24 @@ own controller still runs the plant.
   outage longer than 120 s (configurable) does.
 - **Languages:** English and Ukrainian.
 
-Tested against **SHERPA S2 BIG + SHERPA S2 14T, firmware 0.57, identify code
-1134**. Other register layouts are refused with a repair issue rather than read
-wrongly. If you have one, capture it with [the probe](#probe) and open an issue.
+## Supported units
+
+The unit says which register layout it has in register 199 (the identify code),
+and the integration reads only layouts it has a map for. Today that is one:
+
+| Identify code | Layout | Status |
+|---|---|---|
+| 1134 | Sherpa S2 controller | **Verified** on SHERPA S2 BIG + SHERPA S2 14T, firmware 0.57 |
+
+The other indoor units of the S2 range (S2 3W, Tower S2, Aquadue S2) and the
+outdoor units S2 E, S2 and S2 T share the S2 controller: registers 370 and
+371 list them all. They probably report 1134 and work, but that is not verified yet. The
+Aquadue circuit's sensors only appear on an Aquadue.
+
+Any other identify code (Olimpia's documentation gives 1026 for the original
+Sherpa and 1061 for the original Aquadue) is refused with a repair issue, not
+read with the wrong map. If you have such a unit, capture it with
+[the probe](#probe) and open an issue; one capture is enough to add its layout.
 
 ## Install
 
@@ -51,7 +66,7 @@ collide and the unit raises E09.
 
 ## Configure
 
-*Settings → Devices & services → Add integration → Olimpia Splendid Sherpa S2*,
+*Settings → Devices & services → Add integration → Olimpia Splendid Sherpa*,
 then choose:
 
 - **USB / RS-485 adapter**

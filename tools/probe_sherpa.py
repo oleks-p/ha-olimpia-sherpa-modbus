@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only Modbus probe for the Olimpia Splendid Sherpa S2 heat pump.
+"""Read-only Modbus probe for Olimpia Splendid Sherpa heat pumps.
 
 Establishes, on one unit and firmware, which holding registers answer, how the
 controller treats multi-register reads, and how the RS-485 link behaves over

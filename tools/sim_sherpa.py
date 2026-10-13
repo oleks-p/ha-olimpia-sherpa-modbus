@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A simulated Sherpa S2 on an RS-485 line, for tests and for a dev Home Assistant.
+"""A simulated Sherpa on an RS-485 line, for tests and for a dev Home Assistant.
 
 ``FakeSherpa`` answers Modbus requests from a register map and can misbehave on
 demand: stalls, corrupted CRCs, late replies, silent addresses. The servers put

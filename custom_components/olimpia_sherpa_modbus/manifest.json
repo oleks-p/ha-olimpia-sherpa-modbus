@@ -1,6 +1,6 @@
 {
   "domain": "olimpia_sherpa_modbus",
-  "name": "Olimpia Splendid Sherpa S2 (Modbus)",
+  "name": "Olimpia Splendid Sherpa (Modbus)",
   "codeowners": [],
   "config_flow": true,
   "documentation": "https://github.com/oleks-p/ha-olimpia-sherpa-modbus",

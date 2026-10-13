@@ -1,7 +1,7 @@
 # A dev Home Assistant against a simulated Sherpa -- no hardware needed.
 #
 #   docker compose up -d
-#   open http://localhost:8123, onboard, then add "Olimpia Splendid Sherpa S2":
+#   open http://localhost:8123, onboard, then add "Olimpia Splendid Sherpa":
 #   Network gateway -> host "sim", port 5020, "Transparent serial server
 #   (RTU over TCP)", address 201.
 #

@@ -1,4 +1,4 @@
-# Probe runbook: capturing a Sherpa S2 on the Raspberry Pi
+# Probe runbook: capturing a Sherpa on the Raspberry Pi
 
 `tools/probe_sherpa.py` reads the heat pump's holding registers over RS-485 and
 writes a JSON capture. The capture becomes the integration's test fixture, so
