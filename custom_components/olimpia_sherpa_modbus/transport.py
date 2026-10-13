@@ -60,8 +60,9 @@ class SherpaTransientError(SherpaError):
 class SherpaIllegalError(SherpaError):
     """The unit refused the request with a Modbus exception."""
 
-    def __init__(self, address: int, count: int, code: int) -> None:
-        super().__init__(f"read {address}+{count} refused with exception {code}")
+    def __init__(self, address: int, count: int, code: int, *, write: int | None = None) -> None:
+        what = f"read {address}+{count}" if write is None else f"write {address}={write}"
+        super().__init__(f"{what} refused with exception {code}")
         self.address, self.count, self.code = address, count, code
 
 
@@ -168,6 +169,39 @@ class SherpaBus:
                 await self._fail(f"{len(words)} words for {count}")
                 raise SherpaTransientError(f"read {address}+{count}: {len(words)} words")
             return words
+
+    async def write(self, slave: int, address: int, value: int) -> None:
+        """Write one holding register (FC6). The caller reads it back.
+
+        Same lock, quiet gap and failure handling as a read: a write is one more
+        request on the one bus. A refusal (exception 1/2/3) is SherpaIllegalError
+        and leaves the link up; anything else drops it, as for a read.
+        """
+        if not 0 <= value <= 0xFFFF:
+            raise ValueError(f"register value {value} does not fit 16 bits")
+        async with self._lock:
+            delay = self._quiet_until - time.monotonic()
+            if delay > 0:
+                await asyncio.sleep(delay)
+            self.requests += 1
+            try:
+                client = await self._connected()
+                kwargs = {self._unit_argument(client): slave}
+                result = await client.write_register(address, value, **kwargs)
+            except SherpaTransientError as err:
+                await self._fail(str(err))
+                raise
+            except Exception as err:  # pymodbus raises a wide range on a bad link
+                await self._fail(f"{type(err).__name__}: {err}")
+                raise SherpaTransientError(
+                    f"write {address}={value} on {self.endpoint}: {err}") from err
+            self._quiet_until = time.monotonic() + self._gap
+            if result.isError():
+                code = getattr(result, "exception_code", None)
+                if code in ILLEGAL_CODES:
+                    raise SherpaIllegalError(address, 1, code, write=value)
+                await self._fail(f"exception {code}")
+                raise SherpaTransientError(f"write {address}={value}: exception {code}")
 
     async def close(self) -> None:
         async with self._lock:

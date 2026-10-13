@@ -12,8 +12,9 @@
 #         title: Sherpa S2
 #         icon: mdi:heat-pump
 #
-# Setpoints are shown, not edited: this version of the integration is
-# read-only, and the unit's own controller owns them.
+# Setpoints are shown, not edited, on this board. The writable parameters
+# (opt-in, and only once verified on the unit) are on sherpa_service.yaml, for
+# the installer.
 
 title: Sherpa S2
 

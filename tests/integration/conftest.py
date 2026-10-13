@@ -9,7 +9,7 @@ hardware actually does, not against what the code assumes.
 from __future__ import annotations
 
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 import pytest
 from pymodbus.exceptions import ConnectionException, ModbusIOException
@@ -82,6 +82,16 @@ class FakeModbusClient:
             return FakeResponse(code=result)
         return FakeResponse(registers=result)
 
+    async def write_register(self, address, value, *, device_id=1, no_response_expected=False):
+        if not self.connected:
+            raise ConnectionException("not connected")
+        outcome = self.fake.write(device_id, address, value)
+        if outcome is None:
+            raise ModbusIOException("no response")
+        if outcome is True:
+            return FakeResponse(registers=[value])
+        return FakeResponse(code=outcome)
+
 
 @pytest.fixture
 def fake() -> FakeSherpa:
@@ -103,6 +113,8 @@ def modbus_clients(fake):
         patch(f"{TRANSPORT}.AsyncModbusTcpClient", side_effect=factory),
         patch(f"{TRANSPORT}.FRAME_GAP", 0),
         patch(f"{TRANSPORT}.RESYNC_DELAY", 0),
+        # the write check's hold: the fake reverts on its next read, not on a timer
+        patch("custom_components.olimpia_sherpa_modbus.writes._wait", AsyncMock()),
     ):
         yield clients
 

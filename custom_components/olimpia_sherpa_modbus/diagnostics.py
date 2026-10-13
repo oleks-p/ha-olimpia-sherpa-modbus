@@ -41,6 +41,13 @@ async def async_get_config_entry_diagnostics(
             "register_map": REGISTER_MAP_VERSION,
         },
         "link": coordinator.link_stats(),
+        "writes": {
+            "allowed": coordinator.writes.allowed,
+            "writable": sorted(k for k in coordinator.writes.checks
+                               if coordinator.writes.writable(k)),
+            "checks": dict(sorted(coordinator.writes.checks.items())),
+            "recent_writes": list(coordinator.writes.log),
+        },
         "block_plan": describe(coordinator.blocks),
         "stale": data.stale,
         "values": {k: v for k, v in sorted(data.values.items())},

@@ -123,7 +123,7 @@ def test_enum_values_are_snake_case_keys():
 def test_manifest_and_version():
     manifest = json.loads((PACKAGE / "manifest.json").read_text())
     assert manifest["domain"] == "olimpia_sherpa_modbus"
-    assert manifest["version"] == "0.1.0"
+    assert manifest["version"] == "0.2.0"
     assert manifest["iot_class"] == "local_polling" and manifest["config_flow"] is True
 
 
@@ -135,3 +135,87 @@ def test_entities_manifest_is_current():
     result = subprocess.run([sys.executable, str(ROOT / "tools" / "export_entities.py"),
                              "--check"], capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
+
+
+def test_every_write_candidate_can_be_checked_on_the_reference_unit():
+    """Each candidate answered the sweep, and its value there sits on the spec --
+    otherwise the write check would call it unverifiable before it started."""
+    from custom_components.olimpia_sherpa_modbus.registers import WRITE_SPECS
+    from custom_components.olimpia_sherpa_modbus.writes import decode, on_step
+
+    registers = CAPTURE["sweep"]["registers"]
+    for key, spec in WRITE_SPECS.items():
+        reg = BY_KEY[key]
+        assert reg.address in ANSWERING, key
+        assert reg.kind is not Kind.U32, key          # FC6 writes one word
+        value = decode(reg, registers[str(reg.address)]["raw"])
+        if spec.platform == "switch":
+            assert value in (0, 1), key
+        else:
+            assert on_step(spec, value), f"{key}: {value} outside {spec}"
+
+
+@pytest.mark.parametrize("language", ["en", "uk"])
+def test_writes_are_translated(language):
+    from custom_components.olimpia_sherpa_modbus.registers import WRITE_SPECS
+
+    strings = json.loads((PACKAGE / "translations" / f"{language}.json").read_text())
+    for key, spec in WRITE_SPECS.items():
+        assert strings["entity"][spec.platform][key]["name"], key
+        assert strings["selector"]["write_register"]["options"][key], key
+    service = strings["services"]["verify_write"]
+    assert service["name"] and set(service["fields"]) == {"config_entry_id", "register",
+                                                          "hold_seconds"}
+    assert strings["options"]["step"]["init"]["data"]["allow_writes"]
+    for key in ("writes_disabled", "not_writable", "not_a_candidate", "out_of_range",
+                "rate_limited", "write_not_applied", "write_failed", "write_refused",
+                "restore_failed", "choose_entry"):
+        assert strings["exceptions"][key]["message"], key
+    assert strings["issues"]["restore_failed"]["description"]
+
+
+def test_the_service_offers_exactly_the_candidates():
+    import yaml
+
+    from custom_components.olimpia_sherpa_modbus.registers import WRITE_SPECS
+
+    services = yaml.safe_load((PACKAGE / "services.yaml").read_text())
+    options = services["verify_write"]["fields"]["register"]["selector"]["select"]["options"]
+    assert options == sorted(WRITE_SPECS)
+
+
+def test_translations_are_generated():
+    import subprocess
+    import sys
+
+    result = subprocess.run([sys.executable, str(ROOT / "tools" / "gen_translations.py"),
+                             "--check"], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("board", ["sherpa.yaml", "sherpa_service.yaml"])
+def test_dashboards_bind_only_entities_the_release_creates(board):
+    import re
+
+    manifest = json.loads((ROOT / "entities.json").read_text())
+    provided = {f"{e['domain']}.sherpa_{e['key']}" for e in manifest["entities"]}
+    text = (ROOT / "dashboards" / board).read_text()
+    bound = set(re.findall(r"\b(?:sensor|binary_sensor|number|switch)\.sherpa_[a-z0-9_]+", text))
+    assert bound and not bound - provided, sorted(bound - provided)
+    if board == "sherpa.yaml":     # the everyday board never offers a control
+        assert not {b for b in bound if b.startswith(("number.", "switch."))}
+
+
+def test_the_live_check_tool_covers_every_candidate_once():
+    import sys
+
+    from custom_components.olimpia_sherpa_modbus.registers import WRITE_SPECS
+
+    sys.path.insert(0, str(ROOT / "tools"))
+    try:
+        import verify_writes
+    finally:
+        sys.path.remove(str(ROOT / "tools"))
+    assert sorted(verify_writes.ORDER) == sorted(WRITE_SPECS)
+    assert len(set(verify_writes.ORDER)) == len(verify_writes.ORDER)
+    assert verify_writes.ORDER[-1] == "heating_curve_enabled"    # the one that matters most, last

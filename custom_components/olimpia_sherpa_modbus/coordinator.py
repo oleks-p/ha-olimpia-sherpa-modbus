@@ -31,6 +31,7 @@ from .registers import (
     Tier,
 )
 from .transport import SherpaBus, SherpaIllegalError, SherpaTransientError
+from .writes import WriteGate
 
 if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
@@ -81,6 +82,7 @@ class SherpaCoordinator(DataUpdateCoordinator[SherpaData]):
         bus: SherpaBus,
         slave: int,
         model: ModelInfo,
+        write_checks: dict[str, dict[str, Any]] | None = None,
     ) -> None:
         super().__init__(
             hass,
@@ -111,6 +113,7 @@ class SherpaCoordinator(DataUpdateCoordinator[SherpaData]):
         self.inputs_glitches = 0
         self.split_blocks: list[str] = []
         self.data = SherpaData()
+        self.writes = WriteGate(self, write_checks if write_checks is not None else {})
 
     # -- polling ---------------------------------------------------------
 
@@ -253,6 +256,19 @@ class SherpaCoordinator(DataUpdateCoordinator[SherpaData]):
         values["compressor_rate"] = self._compressor.rate
         values["compressor_running"] = self._compressor.running
         return data
+
+    def patch_register(self, address: int, raw: int) -> None:
+        """Fold a word just read back after a write into the cache, and publish.
+
+        The cache is what every value is decoded from. A setpoint is read once
+        every ten minutes, so without this a written value would only show up
+        on the next setpoint poll.
+        """
+        for block in self.blocks:
+            words = self._cache.get(block.key)
+            if words is not None and block.address <= address <= block.end:
+                words[address - block.address] = raw
+        self.async_set_updated_data(self._build())
 
     # -- diagnostics -----------------------------------------------------
 

@@ -95,6 +95,13 @@ class FakeSherpa:
         self._stall_on: dict[int, int] = {}
         self._corrupt_left = 0
         self._delay_next = 0.0
+        #: How the unit treats an FC6 write, per address: "accept" (default for
+        #: an address it has), "refuse" (exception 2), "ignore" (acknowledged,
+        #: not applied) or "revert" (applied, then the controller puts its own
+        #: value back after one more read).
+        self.write_mode: dict[int, str] = {}
+        self.writes: list[tuple[int, int]] = []
+        self._revert: dict[int, tuple[int, int]] = {}
 
     # -- fault injection ----------------------------------------------------
 
@@ -163,6 +170,7 @@ class FakeSherpa:
         span = range(address, address + count)
         if any(a in self.silent for a in span):
             return None
+        self._settle(span)
         for first in self.atomic_u32:
             if (first in span) != (first + 1 in span):
                 return 2
@@ -178,10 +186,48 @@ class FakeSherpa:
                 return 2
         return words
 
+    def write(self, unit: int, address: int, value: int) -> int | bool | None:
+        """FC6: True when acknowledged, an exception code, or None for silence."""
+        with self._lock:
+            self.requests.append((unit, 6, address, 1))
+            if self._stall_left > 0:
+                self._stall_left -= 1
+                return None
+        if unit != self.slave:
+            return None
+        mode = self.write_mode.get(address, "accept" if address in self.registers else "refuse")
+        if mode == "refuse":
+            return 2
+        self.writes.append((address, value))
+        if mode == "accept":
+            self.registers[address] = value
+        elif mode == "revert":
+            self._revert[address] = (self.registers[address], 1)
+            self.registers[address] = value
+        return True
+
+    def _settle(self, span: range) -> None:
+        """Run any pending revert: the controller restoring its own value."""
+        for address in span:
+            if address in self._revert:
+                original, reads_left = self._revert[address]
+                if reads_left > 0:
+                    self._revert[address] = (original, reads_left - 1)
+                else:
+                    self.registers[address] = original
+                    del self._revert[address]
+
     def respond(self, unit: int, pdu: bytes) -> bytes | None:
         """Response PDU for a request PDU, or None for silence."""
         fc = pdu[0]
         address, count = struct.unpack(">HH", pdu[1:5])
+        if fc == 6:
+            outcome = self.write(unit, address, count)   # for FC6 the second word is the value
+            if outcome is None:
+                return None
+            if outcome is True:
+                return pdu[:5]                           # FC6 echoes the request
+            return bytes([fc | 0x80, outcome])
         result = self.read(unit, fc, address, count)
         if result is None:
             return None
@@ -348,9 +394,17 @@ def main(argv=None) -> int:
     ap.add_argument("--framer", choices=("rtu", "mbap"), default="rtu",
                     help="rtu: transparent serial server; mbap: Modbus-TCP gateway")
     ap.add_argument("--slave", type=int, default=201)
+    ap.add_argument("--write-mode", action="append", default=[], metavar="ADDR=MODE",
+                    help="how FC6 to ADDR is treated: accept, refuse, ignore or revert "
+                         "(repeatable; default accept)")
     args = ap.parse_args(argv)
     host, _, port = args.listen.rpartition(":")
     fake = FakeSherpa.from_capture(args.capture, slave=args.slave)
+    for item in args.write_mode:
+        address, _, mode = item.partition("=")
+        if mode not in ("accept", "refuse", "ignore", "revert") or not address.isdigit():
+            ap.error(f"--write-mode {item!r}: expected ADDR=accept|refuse|ignore|revert")
+        fake.write_mode[int(address)] = mode
     server = TcpServer(fake, args.framer, bind=(host or "127.0.0.1", int(port)))
     print(f"serving {len(fake.registers)} registers as slave {args.slave} on "
           f"{host}:{server.port} ({args.framer}); Ctrl-C to stop")

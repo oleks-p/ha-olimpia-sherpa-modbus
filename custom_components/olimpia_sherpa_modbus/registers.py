@@ -301,3 +301,52 @@ FORBIDDEN_WRITES: frozenset[int] = frozenset(
     | set(range(270, 280))      # counters
     | set(range(201, 206))      # not present on this unit
 )
+
+
+@dataclass(frozen=True, slots=True)
+class WriteSpec:
+    """A register that MAY become writable, and the values it may take.
+
+    Never writable on these terms alone. A register is written only when the
+    "allow writes" option is on AND the integration's own write check has
+    passed for it on this unit and firmware (see writes.py). The ranges are the
+    integration's, deliberately narrower than "whatever the panel accepts":
+    the manual gives no limits for most of these.
+    """
+
+    key: str
+    minimum: float
+    maximum: float
+    step: float
+    platform: str = "number"   # "number" | "switch"
+
+
+def _temp_spec(key: str, minimum: float, maximum: float) -> WriteSpec:
+    return WriteSpec(key, minimum, maximum, 0.5)
+
+
+WRITE_SPECS: dict[str, WriteSpec] = {spec.key: spec for spec in (
+    _temp_spec("cooling_setpoint", 7.0, 25.0),
+    _temp_spec("cooling_eco_setpoint", 7.0, 25.0),
+    _temp_spec("heating_setpoint", 20.0, 55.0),
+    _temp_spec("heating_eco_setpoint", 20.0, 55.0),
+    _temp_spec("dhw_setpoint", 30.0, 55.0),
+    WriteSpec("legionella_setpoint", 50.0, 80.0, 1.0),       # manual: 50-80 degC
+    WriteSpec("legionella_duration", 0, 240, 10),            # manual: 0-240 min
+    _temp_spec("dhw_hysteresis", 2.0, 15.0),
+    _temp_spec("cooling_curve_max_water_outdoor", 15.0, 45.0),
+    _temp_spec("cooling_curve_max_water", 7.0, 25.0),
+    _temp_spec("cooling_curve_min_water_outdoor", 15.0, 45.0),
+    _temp_spec("cooling_curve_min_water", 7.0, 25.0),
+    _temp_spec("heating_curve_max_water_outdoor", -25.0, 25.0),
+    _temp_spec("heating_curve_max_water", 20.0, 55.0),
+    _temp_spec("heating_curve_min_water_outdoor", -25.0, 25.0),
+    _temp_spec("heating_curve_min_water", 20.0, 55.0),
+    _temp_spec("water_setpoint_correction", -5.0, 5.0),      # manual: -5.0 to +5.0
+    WriteSpec("cooling_curve_enabled", 0, 1, 1, "switch"),
+    WriteSpec("heating_curve_enabled", 0, 1, 1, "switch"),
+)}
+
+# A forbidden register can never acquire a write spec, whatever is edited above.
+assert not {BY_KEY[key].address for key in WRITE_SPECS} & FORBIDDEN_WRITES
+assert all(key in BY_KEY for key in WRITE_SPECS)

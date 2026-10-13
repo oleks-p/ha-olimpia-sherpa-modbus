@@ -187,6 +187,33 @@
           "on": "mdi:engine"
         }
       }
+    },
+    "number": {
+      "legionella_setpoint": {
+        "default": "mdi:bacteria-outline"
+      },
+      "legionella_duration": {
+        "default": "mdi:timer-outline"
+      },
+      "dhw_hysteresis": {
+        "default": "mdi:arrow-expand-vertical"
+      },
+      "water_setpoint_correction": {
+        "default": "mdi:plus-minus-variant"
+      }
+    },
+    "switch": {
+      "cooling_curve_enabled": {
+        "default": "mdi:chart-bell-curve-cumulative"
+      },
+      "heating_curve_enabled": {
+        "default": "mdi:chart-bell-curve-cumulative"
+      }
+    }
+  },
+  "services": {
+    "verify_write": {
+      "service": "mdi:pencil-lock-outline"
     }
   }
 }

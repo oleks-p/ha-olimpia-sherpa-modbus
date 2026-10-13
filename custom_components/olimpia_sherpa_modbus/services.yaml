@@ -1,0 +1,38 @@
+verify_write:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: olimpia_sherpa_modbus
+    register:
+      required: true
+      selector:
+        select:
+          translation_key: write_register
+          options:
+            - cooling_curve_enabled
+            - cooling_curve_max_water
+            - cooling_curve_max_water_outdoor
+            - cooling_curve_min_water
+            - cooling_curve_min_water_outdoor
+            - cooling_eco_setpoint
+            - cooling_setpoint
+            - dhw_hysteresis
+            - dhw_setpoint
+            - heating_curve_enabled
+            - heating_curve_max_water
+            - heating_curve_max_water_outdoor
+            - heating_curve_min_water
+            - heating_curve_min_water_outdoor
+            - heating_eco_setpoint
+            - heating_setpoint
+            - legionella_duration
+            - legionella_setpoint
+            - water_setpoint_correction
+    hold_seconds:
+      default: 5
+      selector:
+        number:
+          min: 1
+          max: 30
+          unit_of_measurement: s

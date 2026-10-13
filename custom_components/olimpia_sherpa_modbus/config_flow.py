@@ -19,6 +19,7 @@ from homeassistant.util import slugify
 
 from . import bus_registry
 from .const import (
+    CONF_ALLOW_WRITES,
     CONF_BAUDRATE,
     CONF_ENTITY_PREFIX,
     CONF_SERIAL_PORT,
@@ -204,18 +205,23 @@ class SherpaConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class SherpaOptionsFlow(OptionsFlowWithReload):
-    """How long the link may fail before entities go unavailable."""
+    """Link tolerance, and whether verified parameters may be written."""
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None
                               ) -> ConfigFlowResult:
         if user_input is not None:
-            return self.async_create_entry(
-                data={CONF_UNAVAILABLE_AFTER: int(user_input[CONF_UNAVAILABLE_AFTER])})
-        current = self.config_entry.options.get(CONF_UNAVAILABLE_AFTER, DEFAULT_UNAVAILABLE_AFTER)
+            return self.async_create_entry(data={
+                CONF_UNAVAILABLE_AFTER: int(user_input[CONF_UNAVAILABLE_AFTER]),
+                CONF_ALLOW_WRITES: bool(user_input.get(CONF_ALLOW_WRITES, False)),
+            })
+        options = self.config_entry.options
         schema = vol.Schema({
-            vol.Required(CONF_UNAVAILABLE_AFTER, default=current): selector.NumberSelector(
-                selector.NumberSelectorConfig(
+            vol.Required(CONF_UNAVAILABLE_AFTER,
+                         default=options.get(CONF_UNAVAILABLE_AFTER, DEFAULT_UNAVAILABLE_AFTER)):
+                selector.NumberSelector(selector.NumberSelectorConfig(
                     min=MIN_UNAVAILABLE_AFTER, max=MAX_UNAVAILABLE_AFTER, step=10,
                     unit_of_measurement="s", mode=selector.NumberSelectorMode.BOX)),
+            vol.Required(CONF_ALLOW_WRITES, default=options.get(CONF_ALLOW_WRITES, False)):
+                selector.BooleanSelector(),
         })
         return self.async_show_form(step_id="init", data_schema=schema)
