@@ -214,6 +214,9 @@
   "services": {
     "verify_write": {
       "service": "mdi:pencil-lock-outline"
+    },
+    "read_registers": {
+      "service": "mdi:magnify-scan"
     }
   }
 }

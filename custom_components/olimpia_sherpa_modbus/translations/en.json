@@ -99,6 +99,24 @@
           "description": "Seconds to hold the test value before reading it again."
         }
       }
+    },
+    "read_registers": {
+      "name": "Read registers",
+      "description": "Reads raw holding registers through the integration's own connection, for research and support. Without an address it reads every register the unit is known to answer. Only reads, never writes. Admin only.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Sherpa",
+          "description": "Which unit, if more than one is configured."
+        },
+        "address": {
+          "name": "Address",
+          "description": "First register to read. Leave empty for a snapshot of every answering register."
+        },
+        "count": {
+          "name": "Count",
+          "description": "How many registers from the address (at most 125)."
+        }
+      }
     }
   },
   "selector": {
@@ -522,6 +540,9 @@
     },
     "choose_entry": {
       "message": "Choose which Sherpa: none or more than one is loaded."
+    },
+    "read_failed": {
+      "message": "No answer from the Sherpa while reading: {error}"
     },
     "unsupported_model": {
       "message": "The Sherpa reports identify code {code} ({model}), a register layout this integration does not know."

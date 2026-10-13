@@ -123,7 +123,7 @@ def test_enum_values_are_snake_case_keys():
 def test_manifest_and_version():
     manifest = json.loads((PACKAGE / "manifest.json").read_text())
     assert manifest["domain"] == "olimpia_sherpa_modbus"
-    assert manifest["version"] == "0.2.0"
+    assert manifest["version"] == "0.3.0"
     assert manifest["iot_class"] == "local_polling" and manifest["config_flow"] is True
 
 

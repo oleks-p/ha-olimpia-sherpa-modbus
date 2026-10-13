@@ -137,6 +137,14 @@ Measured on the reference unit, and enforced by the tests:
   reset and left quiet for a second, because RTU has no transaction id and a
   late reply must not be taken as the next answer.
 
+## Raw reads
+
+The admin action **Read registers** returns raw register words through the
+integration's own connection, with Home Assistant running. Without an address
+it reads every register the unit is known to answer. `tools/mode_research.py`
+snapshots and diffs them, to find what an undocumented register does by
+changing one thing on the panel at a time.
+
 ## Probe
 
 `tools/probe_sherpa.py` is a standalone, standard-library-only script (Python
@@ -151,7 +159,7 @@ always starts HA again.
 
 ```bash
 uv venv --python 3.14 .venv && uv pip install --python .venv/bin/python -r requirements_test.txt
-.venv/bin/python -m pytest          # 214 tests: integration (HA 2026.8.2) + probe + fixtures
+.venv/bin/python -m pytest          # 220 tests: integration (HA 2026.8.2) + probe + fixtures
 .venv/bin/ruff check custom_components tools tests
 docker compose up -d                # a dev Home Assistant against a simulated unit
 .venv/bin/python tools/gen_translations.py   # strings.json + en/uk from one table

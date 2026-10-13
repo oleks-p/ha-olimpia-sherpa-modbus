@@ -69,3 +69,4 @@ CHECK_HOLD_DEFAULT: Final = 5
 CHECK_HOLD_MAX: Final = 30
 EVENT_PARAMETER_WRITTEN: Final = f"{DOMAIN}_parameter_written"
 SERVICE_VERIFY_WRITE: Final = "verify_write"
+SERVICE_READ_REGISTERS: Final = "read_registers"
