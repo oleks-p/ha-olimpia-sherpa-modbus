@@ -25,6 +25,7 @@ from homeassistant.helpers.service import async_register_admin_service
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.util.hass_dict import HassKey
 
+from .cards import async_register_cards
 from .const import (
     CHECK_HOLD_DEFAULT,
     CHECK_HOLD_MAX,
@@ -157,7 +158,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: SherpaConfigEntry) -> bo
 
     entry.runtime_data = SherpaRuntime(endpoint, bus, coordinator)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    try:
+        await async_register_cards(hass, _integration_version(hass))
+    except Exception:  # noqa: BLE001 - the entities matter more than the cards
+        _LOGGER.warning("Could not set up the Sherpa cards", exc_info=True)
     return True
+
+
+def _integration_version(hass: HomeAssistant) -> str:
+    """The manifest version, which cache-busts the card bundle."""
+    try:
+        from homeassistant.loader import async_get_loaded_integration
+
+        return async_get_loaded_integration(hass, DOMAIN).version or "0"
+    except Exception:  # noqa: BLE001 - only the cache-busting query depends on it
+        return "0"
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: SherpaConfigEntry) -> bool:

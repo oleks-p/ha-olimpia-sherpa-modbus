@@ -126,3 +126,11 @@ async def test_a_running_compressor_is_heating(hass, setup_integration, fake, fr
             await _poll(hass, freezer)
     assert hass.states.get("binary_sensor.sherpa_compressor_running").state == "on"
     assert hass.states.get(ENTITY).attributes["hvac_action"] == "heating"
+
+
+async def test_the_curves_ride_along_for_the_cards(hass, setup_integration):
+    attrs = hass.states.get(ENTITY).attributes
+    assert attrs["heating_curve"] == {"enabled": True, "outdoor_at_max_water": -5.0,
+                                      "max_water": 35.0, "outdoor_at_min_water": 20.0,
+                                      "min_water": 28.0}
+    assert attrs["cooling_curve"]["max_water"] == 18.0

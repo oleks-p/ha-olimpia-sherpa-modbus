@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.5.0 — 2026-10-13
+
+Lovelace cards, built in (P7).
+
+- **Sherpa schematic** (`custom:sherpa-schematic-card`). It draws the outdoor
+  unit, the indoor unit, the three-way valve, the heating or cooling circuit and
+  the hot-water tank.
+  - The live water route is coloured and animates while the pump runs.
+  - The route follows the unit's mode, not the valve output, because ADDR259
+    can invert the valve's polarity.
+  - It shows the compressor, the pump, EH1/EH2 and K5, defrost and night, the
+    water temperatures on the pipes they measure, the tank against its setpoint,
+    and faults with their descriptions.
+- **Sherpa status and setpoints** (`custom:sherpa-control-card`).
+  - The mode is shown as the panel has it, and is read-only.
+  - The water is shown against its target.
+  - The climatic curve is drawn with today's operating point.
+  - The hot-water tank is shown against its setpoint.
+  - Setpoints get a stepper only where the verified number entity exists, and a
+    lock elsewhere. Taps are collected for 1.5 s and sent as one write, which
+    respects the integration's limit of one write per register every 10 s.
+- English and Ukrainian, following the user's language. A `labels:` option
+  overrides single strings.
+- The integration serves the bundle itself and adds it to the Lovelace
+  resources (`?v=<version>`). An older release's entry is repointed rather than
+  duplicated, and YAML-mode dashboards are left to their owner. A failure here
+  never affects the entities.
+- The climate entity now carries both climatic curves as attributes, for the
+  cards; their sensors are disabled by default.
+- The cards follow the Futura cards' design tokens. The schematic always draws
+  on the dark ground, like the Futura schematics, and its readouts scale with
+  the card width.
+
 ## 0.4.0 — 2026-10-13
 
 A read-only climate entity, from what the P5 mode research found
