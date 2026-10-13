@@ -106,7 +106,23 @@ the unit in standby.
 | Date (EEST) | Register | Steps (write -> read) | Hold | Result |
 |---|---|---|---|---|
 | 2026-10-13 16:27 | 209 `heating_eco_setpoint` | 30.0 -> 30.0; 30.5 -> 30.5, 30.5 after 5 s; restored 30.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:32 | 207 `cooling_eco_setpoint` | 18.0 -> 18.0; 18.5 -> 18.5, 18.5 after 5 s; restored 18.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:32 | 206 `cooling_setpoint` | 15.0 -> 15.0; 15.5 -> 15.5, 15.5 after 5 s; restored 15.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:32 | 239 `cooling_curve_max_water_outdoor` | 20.0 -> 20.0; 20.5 -> 20.5, 20.5 after 5 s; restored 20.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:32 | 240 `cooling_curve_max_water` | 18.0 -> 18.0; 18.5 -> 18.5, 18.5 after 5 s; restored 18.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:33 | 241 `cooling_curve_min_water_outdoor` | 40.0 -> 40.0; 40.5 -> 40.5, 40.5 after 5 s; restored 40.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:33 | 242 `cooling_curve_min_water` | 15.0 -> 15.0; 15.5 -> 15.5, 15.5 after 5 s; restored 15.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:33 | 233 `legionella_duration` | 30 min -> 30 min; 40 min -> 40 min, 40 min after 5 s; restored 30 min | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:33 | 232 `legionella_setpoint` | 65.0 -> 65.0; 66.0 -> 66.0, 66.0 after 5 s; restored 65.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:33 | 238 `dhw_hysteresis` | 10.0 -> 10.0; 10.5 -> 10.5, 10.5 after 5 s; restored 10.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:33 | 210 `dhw_setpoint` | 50.0 -> 50.0; 50.5 -> 50.5, 50.5 after 5 s; restored 50.0 | 5 s | `roundtrip_ok` |
+| 2026-10-13 16:33 | 208 `heating_setpoint` | 35.0 -> 35.0; 35.5 -> 35.5, 35.5 after 5 s; restored 35.0 | 5 s | `roundtrip_ok` |
+
+After the batch, every register read its original value again. The unit stayed
+in standby with no error, and there were no repair issues and no link failures.
 
 Still open:
-- The other 18 candidates are not checked yet.
+- 7 candidates are not checked yet. They move the live water target by one
+  step for the hold: the four heating-curve points, `water_setpoint_correction`,
+  and the two curve enables.
 - Persistence over a power cycle (EEPROM) is not checked for any register.
