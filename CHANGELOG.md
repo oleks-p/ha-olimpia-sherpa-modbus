@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 — unreleased
+## 0.2.0 — 2026-10-13
 
 Opt-in writes, and the write check that has to pass before any.
 
@@ -33,7 +33,7 @@ Opt-in writes, and the write check that has to pass before any.
   `olimpia_sherpa_modbus` is unchanged, so nothing migrates. Which units are
   supported is still decided by the identify code; see the README.
 
-## 0.1.0 — unreleased
+## 0.1.0 — 2026-10-13
 
 First release. Read-only.
 

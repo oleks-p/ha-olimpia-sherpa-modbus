@@ -64,7 +64,8 @@ async def test_a_refused_write_is_reported_and_nothing_changes(hass, writable, f
 
 
 async def test_an_acknowledged_but_ignored_write_is_not_trusted(hass, writable, fake):
-    # The likeliest behaviour with ADDR220 = 0: the panel keeps control.
+    # What the manual suggests for ADDR220 = 0 (display only); the reference
+    # unit applied writes anyway, but another firmware may not.
     fake.write_mode[HEATING] = "ignore"
     result = await _check(hass, "heating_setpoint")
     assert result["result"] == "ignored"

@@ -68,8 +68,8 @@ python3 tools/verify_writes.py --ha http://192.168.30.141:8123 \
 - Without `--only` it walks every candidate, **safest first**. ECO and cooling
   parameters come first; while the curves run heating they cannot affect the
   plant. The curve enables come last.
-- It stops at the first result that is not `roundtrip_ok`. With the unit
-  ignoring serial writes, the first answer is the answer for all of them.
+- It stops at the first result that is not `roundtrip_ok`: something about the
+  unit is not as expected, and that is worth a look before more writes.
 - `--out results.json` keeps the full step-by-step results.
 
 The same action is in *Developer tools → Actions* ("Verify write"), with the
@@ -80,16 +80,18 @@ response shown in place.
 | Result | Meaning | Next |
 |---|---|---|
 | `roundtrip_ok` | Applied and held | Its number/switch entity appears (service dashboard) |
-| `ignored` | Acknowledged, not applied | Expected with **ADDR220 = 0** (display has control); see below |
+| `ignored` | Acknowledged, not applied | Leave it read-only. Not seen on the reference unit, even with ADDR220 = 0 (see below) |
 | `reverted` | Applied, then undone by the controller | Leave it read-only; note which register |
 | `refused` | Modbus exception | Leave it read-only |
 | `unverifiable` | Current value outside the spec | Widen the spec only with evidence from the manual or the panel's limits |
 
-**ADDR220 (remote controls)** is 0 on the reference unit: display only. If the
-unit ignores serial writes in that mode, setting 220 = 1 would hand control to
-RS-485, but it also disables the display's mode and timer settings. That is a
-product decision for the mode-research phase (P5), not something the
-integration changes: 220 is forbidden.
+**ADDR220 (remote controls)** is 0 on the reference unit: display only. The
+manual suggests a unit in that mode might ignore serial writes. The reference
+unit does not, at least for setpoints: it applied a serial write and held it,
+with 220 = 0. So setpoints need no change to 220. Setting 220 = 1 would hand
+control to RS-485, but it also disables the display's mode and timer settings.
+Whether mode commands need it is a question for the mode-research phase (P5).
+The integration never changes 220 itself: it is forbidden.
 
 **Persistence.** A `roundtrip_ok` shows the value applied and held for the hold;
 it does not show the value survives a power cycle (EEPROM). Note the value of a
@@ -97,4 +99,14 @@ verified register before the next power outage, and check it afterwards.
 
 ## Results on the reference unit
 
-*(not run yet. Record date, firmware, ADDR220 and each result here.)*
+Unit: SHERPA S2 BIG + SHERPA S2 14T, identify code 1134, firmware 0.57, site
+uahs01. Integration 0.2.0, ADDR220 = 0 (display only), both climatic curves on,
+the unit in standby.
+
+| Date (EEST) | Register | Steps (write -> read) | Hold | Result |
+|---|---|---|---|---|
+| 2026-10-13 16:27 | 209 `heating_eco_setpoint` | 30.0 -> 30.0; 30.5 -> 30.5, 30.5 after 5 s; restored 30.0 | 5 s | `roundtrip_ok` |
+
+Still open:
+- The other 18 candidates are not checked yet.
+- Persistence over a power cycle (EEPROM) is not checked for any register.
