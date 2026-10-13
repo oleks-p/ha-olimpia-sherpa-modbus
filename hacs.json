@@ -1,5 +1,5 @@
 {
-  "name": "Olimpia Splendid Sherpa S2 (Modbus)",
+  "name": "Olimpia Splendid Sherpa (Modbus)",
   "content_in_root": false,
   "render_readme": true,
   "homeassistant": "2025.8.0",

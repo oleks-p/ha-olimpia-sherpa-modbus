@@ -1,4 +1,4 @@
-"""Constants for the Olimpia Splendid Sherpa S2 integration."""
+"""Constants for the Olimpia Splendid Sherpa integration."""
 
 from __future__ import annotations
 

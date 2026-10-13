@@ -1,4 +1,4 @@
-"""The Olimpia Splendid Sherpa S2 integration (Modbus RTU).
+"""The Olimpia Splendid Sherpa integration (Modbus RTU).
 
 Reads by default. Writes are opt-in per entry ("allow writes"), and then only
 to registers the built-in write check has verified on this very unit -- see

@@ -29,6 +29,9 @@ Opt-in writes, and the write check that has to pass before any.
 - `entities.json` lists the number and switch entities (`writable: true`).
 - The read-only sensors are unchanged. Entity ids, units and state classes are
   the same as in 0.1.0.
+- Shown as **Olimpia Splendid Sherpa (Modbus)**, without "S2". The domain
+  `olimpia_sherpa_modbus` is unchanged, so nothing migrates. Which units are
+  supported is still decided by the identify code; see the README.
 
 ## 0.1.0 — unreleased
 

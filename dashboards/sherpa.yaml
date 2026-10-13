@@ -1,4 +1,4 @@
-# Sherpa S2 dashboard for the olimpia_sherpa_modbus integration (YAML mode).
+# Sherpa dashboard for the olimpia_sherpa_modbus integration (YAML mode).
 #
 # Entity ids assume the default prefix "sherpa". The Overview and Trends views
 # use built-in cards only; the Schematic view needs custom:heat-pump-card
@@ -6,17 +6,17 @@
 #
 #   lovelace:
 #     dashboards:
-#       sherpa-s2:
+#       sherpa-heat-pump:
 #         mode: yaml
 #         filename: dashboards/sherpa.yaml
-#         title: Sherpa S2
+#         title: Sherpa
 #         icon: mdi:heat-pump
 #
 # Setpoints are shown, not edited, on this board. The writable parameters
 # (opt-in, and only once verified on the unit) are on sherpa_service.yaml, for
 # the installer.
 
-title: Sherpa S2
+title: Sherpa
 
 views:
   - title: Overview
@@ -109,7 +109,7 @@ views:
     panel: true
     cards:
       - type: custom:heat-pump-card
-        title: Sherpa S2
+        title: Sherpa
         heatingPumpType: A2W
         heatingPumpStatusOnOff: binary_sensor.sherpa_power
         heatingPumpHeatingMode: binary_sensor.sherpa_mode_heating
