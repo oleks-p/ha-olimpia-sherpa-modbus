@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "How is the Sherpa connected?",
-        "description": "The integration only reads: it never changes a setting on the unit. RS-485 allows one master, so stop anything else that polls the Sherpa (an old `modbus:` configuration, an i3 controller) before adding it.",
+        "description": "The integration reads the unit. Writes stay off unless you turn them on in its options, and even then only parameters the write check has verified on this unit can be changed. RS-485 allows one master, so stop anything else that polls the Sherpa (an old `modbus:` configuration, an i3 controller) before adding it.",
         "menu_options": {
           "serial": "USB / RS-485 adapter",
           "network": "Network gateway"
@@ -69,10 +69,34 @@
   "options": {
     "step": {
       "init": {
-        "title": "Link tolerance",
-        "description": "The RS-485 link stalls for 10-30 s now and then; that is normal. Entities keep their last values until a failure has lasted this long.",
+        "title": "Link and writes",
+        "description": "The RS-485 link stalls for 10-30 s now and then; that is normal. Entities keep their last values until a failure has lasted as long as set here.",
         "data": {
-          "unavailable_after": "Unavailable after"
+          "unavailable_after": "Unavailable after",
+          "allow_writes": "Allow writes to verified parameters"
+        },
+        "data_description": {
+          "allow_writes": "Off by default. When on, a setpoint becomes writable only after the write check (the Verify write action) has passed for it on this unit. The unit's own controller still runs the plant."
+        }
+      }
+    }
+  },
+  "services": {
+    "verify_write": {
+      "name": "Verify write",
+      "description": "Checks that one parameter can be written on this unit: writes its own value back, then one step away (held, then read again), and always restores the original. Needs 'Allow writes' on. Admin only.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Sherpa",
+          "description": "Which unit, if more than one is configured."
+        },
+        "register": {
+          "name": "Parameter",
+          "description": "The parameter to check."
+        },
+        "hold_seconds": {
+          "name": "Hold",
+          "description": "Seconds to hold the test value before reading it again."
         }
       }
     }
@@ -82,6 +106,29 @@
       "options": {
         "rtu_over_tcp": "Transparent serial server (RTU over TCP)",
         "tcp": "Modbus TCP gateway"
+      }
+    },
+    "write_register": {
+      "options": {
+        "cooling_curve_enabled": "Cooling climatic curve",
+        "cooling_curve_max_water": "Cooling curve: max water",
+        "cooling_curve_max_water_outdoor": "Cooling curve: outdoor at max water",
+        "cooling_curve_min_water": "Cooling curve: min water",
+        "cooling_curve_min_water_outdoor": "Cooling curve: outdoor at min water",
+        "cooling_eco_setpoint": "Cooling setpoint (eco)",
+        "cooling_setpoint": "Cooling setpoint",
+        "dhw_hysteresis": "DHW hysteresis",
+        "dhw_setpoint": "DHW setpoint",
+        "heating_curve_enabled": "Heating climatic curve",
+        "heating_curve_max_water": "Heating curve: max water",
+        "heating_curve_max_water_outdoor": "Heating curve: outdoor at max water",
+        "heating_curve_min_water": "Heating curve: min water",
+        "heating_curve_min_water_outdoor": "Heating curve: outdoor at min water",
+        "heating_eco_setpoint": "Heating setpoint (eco)",
+        "heating_setpoint": "Heating setpoint",
+        "legionella_duration": "Anti-legionella duration",
+        "legionella_setpoint": "Anti-legionella setpoint",
+        "water_setpoint_correction": "Water setpoint correction"
       }
     }
   },
@@ -382,9 +429,100 @@
       "external_boiler_enabled": {
         "name": "External boiler enabled"
       }
+    },
+    "number": {
+      "cooling_setpoint": {
+        "name": "Cooling setpoint"
+      },
+      "cooling_eco_setpoint": {
+        "name": "Cooling setpoint (eco)"
+      },
+      "heating_setpoint": {
+        "name": "Heating setpoint"
+      },
+      "heating_eco_setpoint": {
+        "name": "Heating setpoint (eco)"
+      },
+      "dhw_setpoint": {
+        "name": "DHW setpoint"
+      },
+      "legionella_setpoint": {
+        "name": "Anti-legionella setpoint"
+      },
+      "legionella_duration": {
+        "name": "Anti-legionella duration"
+      },
+      "dhw_hysteresis": {
+        "name": "DHW hysteresis"
+      },
+      "cooling_curve_max_water_outdoor": {
+        "name": "Cooling curve: outdoor at max water"
+      },
+      "cooling_curve_max_water": {
+        "name": "Cooling curve: max water"
+      },
+      "cooling_curve_min_water_outdoor": {
+        "name": "Cooling curve: outdoor at min water"
+      },
+      "cooling_curve_min_water": {
+        "name": "Cooling curve: min water"
+      },
+      "heating_curve_max_water_outdoor": {
+        "name": "Heating curve: outdoor at max water"
+      },
+      "heating_curve_max_water": {
+        "name": "Heating curve: max water"
+      },
+      "heating_curve_min_water_outdoor": {
+        "name": "Heating curve: outdoor at min water"
+      },
+      "heating_curve_min_water": {
+        "name": "Heating curve: min water"
+      },
+      "water_setpoint_correction": {
+        "name": "Water setpoint correction"
+      }
+    },
+    "switch": {
+      "cooling_curve_enabled": {
+        "name": "Cooling climatic curve"
+      },
+      "heating_curve_enabled": {
+        "name": "Heating climatic curve"
+      }
     }
   },
   "exceptions": {
+    "writes_disabled": {
+      "message": "Writes are off for this Sherpa. Turn on 'Allow writes' in its options first."
+    },
+    "not_writable": {
+      "message": "{key} is not writable: its write check has not passed on this unit."
+    },
+    "not_a_candidate": {
+      "message": "{key} is not a parameter this integration writes."
+    },
+    "out_of_range": {
+      "message": "{value} is outside {minimum} to {maximum} in steps of {step} for {key}."
+    },
+    "rate_limited": {
+      "message": "Too many writes: {key} can be written once every {interval} s, and the unit {daily} times a day."
+    },
+    "write_not_applied": {
+      "message": "The Sherpa did not apply {key}: wrote {expected}, it reads {actual}."
+    },
+    "write_failed": {
+      "message": "No answer from the Sherpa while writing: {error}"
+    },
+    "write_refused": {
+      "message": "The Sherpa refused the write (Modbus exception {code})."
+    },
+    "restore_failed": {
+      "message": "Could not set {key} (register {address}) back to {value}. Set it on the unit's panel."
+    },
+    "choose_entry": {
+      "message": "Choose which Sherpa: none or more than one is loaded."
+    },
     "unsupported_model": {
       "message": "The Sherpa reports identify code {code} ({model}), a register layout this integration does not know."
     },
@@ -399,6 +537,10 @@
     "unsupported_model": {
       "title": "Unsupported Sherpa model",
       "description": "The unit reports identify code {code} ({model}). This integration has a register map only for identify code 1134 (Sherpa S2, firmware 0.57), and reading another layout with it would show wrong values. Capture this unit with tools/probe_sherpa.py and open an issue with the result."
+    },
+    "restore_failed": {
+      "title": "A Sherpa parameter was left changed",
+      "description": "The write check could not put {key} (register {address}) back to {value}. Set it on the unit's SERVICE screen, then dismiss this."
     }
   }
 }

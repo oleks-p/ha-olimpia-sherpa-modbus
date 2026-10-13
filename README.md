@@ -4,9 +4,10 @@ A config-flow integration for the Olimpia Splendid **Sherpa S2** air/water heat
 pump. It talks to the indoor unit over RS-485 (terminal **AB**), either from a
 USB adapter on the Home Assistant host or through a network gateway.
 
-**v0.1.0 is read-only.** It reports what the unit is doing and never sends
-anything but reads; the unit's own controller owns every setpoint. Writable
-setpoints, behind an option that is off by default, are planned for v0.2.0.
+It reads by default. **Writes are opt-in:** with *Allow writes* on, a setpoint
+becomes writable only after the built-in [write check](docs/write_check.md) has
+proved, on this very unit, that the unit applies it and keeps it. The unit's
+own controller still runs the plant.
 
 ## What you get
 
@@ -23,8 +24,12 @@ setpoints, behind an option that is off by default, are planned for v0.2.0.
 - **Faults:** error codes E01–E27 and override codes OR01–OR13, with their
   descriptions from the manual. Defrost is reported separately.
 - **Runtime counters:** compressor, pump and filter, in seconds and hours.
-- **Setpoints and service parameters**, read-only. The less common parameters
+- **Setpoints and service parameters** as sensors. The less common parameters
   are diagnostic entities and disabled by default.
+- **Writable setpoints (opt-in):** heating, cooling and their ECO values, DHW,
+  anti-legionella, the climatic-curve points and enables, and the water setpoint
+  correction. Each becomes a number or switch entity once its write check passes.
+  The sensor of the same name stays and keeps the statistics.
 - **Link health:** last successful read and read failures. RS-485 stalls of
   10–30 s are normal on this unit and don't make entities unavailable; only an
   outage longer than 120 s (configurable) does.
@@ -63,12 +68,44 @@ The **entity ID prefix**, default `sherpa`, starts every entity id
 history and long-term statistics of an existing YAML setup that used the same
 names.
 
-Options: how long the link may fail before entities go unavailable (default
-120 s). The connection can be changed later with *Reconfigure*; entity ids and
-history are kept.
+Options:
 
-`dashboards/sherpa.yaml` is a ready-made dashboard. The schematic view uses
+- How long the link may fail before entities go unavailable (default 120 s).
+- **Allow writes** (default off).
+
+The connection can be changed later with *Reconfigure*; entity ids and history
+are kept.
+
+`dashboards/sherpa.yaml` is a ready-made dashboard for the household. The
+schematic view uses
 [heat-pump-card](https://github.com/ManfredTremmel/lovelace-heat-pump-card).
+`dashboards/sherpa_service.yaml` is an admin board for the writable parameters.
+
+## Writes
+
+With *Allow writes* on, run the **Verify write** action for a parameter. You can
+run it from *Developer tools → Actions*, or with `tools/verify_writes.py` for
+several in a row. The check:
+
+1. writes the parameter's own value back;
+2. writes a value one step away and holds it, reading it at once and after the
+   hold;
+3. always restores the original.
+
+Only a `roundtrip_ok` result makes the parameter writable. The result is stored
+for this unit and firmware, and a firmware update voids it.
+
+Each write is also:
+
+- range- and step-checked;
+- skipped if the unit already holds the value;
+- rate-limited: once per 10 s per parameter, 50 a day;
+- read back.
+
+A value the unit did not take is an error, not a silent change. Parameters that
+could hurt the installation or cut communication are never writable, for
+example ADDR220, 229, 247 and 401, the model, the cascade, the protections and
+the pump PWM. Details: [docs/write_check.md](docs/write_check.md).
 
 ## How it talks to the unit
 
@@ -90,7 +127,8 @@ Measured on the reference unit, and enforced by the tests:
 `tools/probe_sherpa.py` is a standalone, standard-library-only script (Python
 3.11+). It captures a unit's register map and read rules into the JSON the
 tests are built on. It never writes to the unit, and it will not talk while
-another master is active. See [docs/probe_runbook.md](docs/probe_runbook.md).
+another master is active. (Writes are verified through the integration instead,
+see [Writes](#writes).) See [docs/probe_runbook.md](docs/probe_runbook.md).
 `tools/pi_probe_run.sh` runs it on a Home Assistant host with HA stopped and
 always starts HA again.
 
@@ -98,9 +136,11 @@ always starts HA again.
 
 ```bash
 uv venv --python 3.14 .venv && uv pip install --python .venv/bin/python -r requirements_test.txt
-.venv/bin/python -m pytest          # 175 tests: integration (HA 2026.8.2) + probe + fixtures
+.venv/bin/python -m pytest          # 214 tests: integration (HA 2026.8.2) + probe + fixtures
 .venv/bin/ruff check custom_components tools tests
 docker compose up -d                # a dev Home Assistant against a simulated unit
+.venv/bin/python tools/gen_translations.py   # strings.json + en/uk from one table
+.venv/bin/python tools/export_entities.py    # entities.json, for the site platform
 ```
 
 - `tests/integration`: the integration against a fake built from the reference

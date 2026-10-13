@@ -1,0 +1,103 @@
+# Sherpa S2 service dashboard: the writable parameters (YAML mode).
+#
+# For the installer, not the household. Register it as an admin-only dashboard:
+#
+#   lovelace:
+#     dashboards:
+#       sherpa-service:
+#         mode: yaml
+#         filename: dashboards/sherpa_service.yaml
+#         title: Sherpa service
+#         icon: mdi:wrench
+#         require_admin: true
+#         show_in_sidebar: false
+#
+# A parameter appears here only once its write check has passed on this unit
+# ("Allow writes" on, then Developer tools > Actions > "Verify write"). Until
+# then it is simply absent: the entity-filter cards skip entities that do not
+# exist. The read-only sensors beside them are what the setpoints actually are.
+
+title: Sherpa service
+
+views:
+  - title: Parameters
+    path: parameters
+    icon: mdi:tune-variant
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Before you change anything
+          - type: markdown
+            content: >-
+              The unit's own controller runs the plant. Every write is read back;
+              one the unit does not take shows as an error, and the value here
+              stays what the unit holds. While the climatic curves are on, the
+              unit takes the water temperature from the curve: the fixed and ECO
+              setpoints then have no effect.
+          - type: tile
+            entity: sensor.sherpa_remote_controls
+          - type: tile
+            entity: sensor.sherpa_mode
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Setpoints
+          - type: entity-filter
+            card:
+              type: entities
+            conditions:
+              - condition: state
+                state_not: unavailable
+            entities:
+              - number.sherpa_heating_setpoint
+              - number.sherpa_heating_eco_setpoint
+              - number.sherpa_cooling_setpoint
+              - number.sherpa_cooling_eco_setpoint
+              - number.sherpa_water_setpoint_correction
+          - type: entity-filter
+            card:
+              type: entities
+              title: Domestic hot water
+            conditions:
+              - condition: state
+                state_not: unavailable
+            entities:
+              - number.sherpa_dhw_setpoint
+              - number.sherpa_dhw_hysteresis
+              - number.sherpa_legionella_setpoint
+              - number.sherpa_legionella_duration
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Climatic curves
+          - type: entity-filter
+            card:
+              type: entities
+              title: Heating
+            conditions:
+              - condition: state
+                state_not: unavailable
+            entities:
+              - switch.sherpa_heating_curve_enabled
+              - number.sherpa_heating_curve_max_water_outdoor
+              - number.sherpa_heating_curve_max_water
+              - number.sherpa_heating_curve_min_water_outdoor
+              - number.sherpa_heating_curve_min_water
+          - type: entity-filter
+            card:
+              type: entities
+              title: Cooling
+            conditions:
+              - condition: state
+                state_not: unavailable
+            entities:
+              - switch.sherpa_cooling_curve_enabled
+              - number.sherpa_cooling_curve_max_water_outdoor
+              - number.sherpa_cooling_curve_max_water
+              - number.sherpa_cooling_curve_min_water_outdoor
+              - number.sherpa_cooling_curve_min_water

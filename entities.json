@@ -1,8 +1,8 @@
 {
  "domain": "olimpia_sherpa_modbus",
- "version": "0.1.0",
+ "version": "0.2.0",
  "default_entity_prefix": "sherpa",
- "read_only": true,
+ "writes": "opt_in",
  "entity_id": "<domain>.<entity_prefix>_<key>",
  "entities": [
   {
@@ -554,6 +554,203 @@
    "domain": "binary_sensor",
    "key": "external_boiler_enabled",
    "entity_category": "diagnostic"
+  },
+  {
+   "domain": "number",
+   "key": "cooling_setpoint",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": 7.0,
+   "max": 25.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "cooling_eco_setpoint",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": 7.0,
+   "max": 25.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "heating_setpoint",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": 20.0,
+   "max": 55.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "heating_eco_setpoint",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": 20.0,
+   "max": 55.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "dhw_setpoint",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": 30.0,
+   "max": 55.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "legionella_setpoint",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": 50.0,
+   "max": 80.0,
+   "step": 1.0
+  },
+  {
+   "domain": "number",
+   "key": "legionella_duration",
+   "unit_of_measurement": "min",
+   "device_class": "duration",
+   "entity_category": "config",
+   "writable": true,
+   "min": 0,
+   "max": 240,
+   "step": 10
+  },
+  {
+   "domain": "number",
+   "key": "dhw_hysteresis",
+   "unit_of_measurement": "°C",
+   "entity_category": "config",
+   "writable": true,
+   "min": 2.0,
+   "max": 15.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "cooling_curve_max_water_outdoor",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": 15.0,
+   "max": 45.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "cooling_curve_max_water",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": 7.0,
+   "max": 25.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "cooling_curve_min_water_outdoor",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": 15.0,
+   "max": 45.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "cooling_curve_min_water",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": 7.0,
+   "max": 25.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "heating_curve_max_water_outdoor",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": -25.0,
+   "max": 25.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "heating_curve_max_water",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": 20.0,
+   "max": 55.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "heating_curve_min_water_outdoor",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": -25.0,
+   "max": 25.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "heating_curve_min_water",
+   "unit_of_measurement": "°C",
+   "device_class": "temperature",
+   "entity_category": "config",
+   "writable": true,
+   "min": 20.0,
+   "max": 55.0,
+   "step": 0.5
+  },
+  {
+   "domain": "number",
+   "key": "water_setpoint_correction",
+   "unit_of_measurement": "°C",
+   "entity_category": "config",
+   "writable": true,
+   "min": -5.0,
+   "max": 5.0,
+   "step": 0.5
+  },
+  {
+   "domain": "switch",
+   "key": "cooling_curve_enabled",
+   "entity_category": "config",
+   "writable": true
+  },
+  {
+   "domain": "switch",
+   "key": "heating_curve_enabled",
+   "entity_category": "config",
+   "writable": true
   }
  ]
 }

@@ -10,7 +10,7 @@ DOMAIN: Final = "olimpia_sherpa_modbus"
 MANUFACTURER: Final = "Olimpia Splendid"
 DEFAULT_NAME: Final = "Sherpa"
 
-PLATFORMS: Final = [Platform.SENSOR, Platform.BINARY_SENSOR]
+PLATFORMS: Final = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.NUMBER, Platform.SWITCH]
 
 # -- connection ---------------------------------------------------------------
 
@@ -51,3 +51,21 @@ CONF_UNAVAILABLE_AFTER: Final = "unavailable_after"
 DEFAULT_UNAVAILABLE_AFTER: Final = 120
 MIN_UNAVAILABLE_AFTER: Final = 30
 MAX_UNAVAILABLE_AFTER: Final = 900
+
+# -- writes (opt-in) ------------------------------------------------------------
+
+#: Off by default. Even on, a register is written only once the write check has
+#: passed for it on this unit and firmware.
+CONF_ALLOW_WRITES: Final = "allow_writes"
+#: A register is written at most once per this many seconds ...
+WRITE_MIN_INTERVAL: Final = 10.0
+#: ... and the unit at most this many times a day. These values are kept in the
+#: controller's non-volatile memory; an automation that writes on every state
+#: change would wear it out.
+WRITE_DAILY_LIMIT: Final = 50
+#: How long the write check holds the neighbour value before reading it again,
+#: to catch a controller that accepts a write and then puts its own value back.
+CHECK_HOLD_DEFAULT: Final = 5
+CHECK_HOLD_MAX: Final = 30
+EVENT_PARAMETER_WRITTEN: Final = f"{DOMAIN}_parameter_written"
+SERVICE_VERIFY_WRITE: Final = "verify_write"

@@ -1,23 +1,54 @@
 """The Olimpia Splendid Sherpa S2 integration (Modbus RTU).
 
-Read-only. The unit's own controller owns every setpoint it acts on; this
-integration reports what it is doing and never sends anything but reads.
+Reads by default. Writes are opt-in per entry ("allow writes"), and then only
+to registers the built-in write check has verified on this very unit -- see
+writes.py. The unit's own controller still runs the plant.
 """
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ConfigEntryError, ConfigEntryNotReady
+import voluptuous as vol
+from homeassistant.config_entries import ConfigEntry, ConfigEntryState
+from homeassistant.core import HomeAssistant, ServiceCall, ServiceResponse, SupportsResponse
+from homeassistant.exceptions import (
+    ConfigEntryError,
+    ConfigEntryNotReady,
+    HomeAssistantError,
+    ServiceValidationError,
+)
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import issue_registry as ir
+from homeassistant.helpers.service import async_register_admin_service
+from homeassistant.helpers.typing import ConfigType
 from homeassistant.util.hass_dict import HassKey
 
-from .const import CONF_SLAVE, DOMAIN, PLATFORMS
+from .const import (
+    CHECK_HOLD_DEFAULT,
+    CHECK_HOLD_MAX,
+    CONF_SLAVE,
+    DOMAIN,
+    PLATFORMS,
+    SERVICE_VERIFY_WRITE,
+)
 from .coordinator import SherpaCoordinator
 from .model import NotASherpa, UnsupportedModel, async_identify
+from .registers import WRITE_SPECS
 from .transport import BusRegistry, Endpoint, SherpaBus, SherpaTransientError
+from .writes import CHECKS, WriteChecks
+
+_LOGGER = logging.getLogger(__name__)
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
+VERIFY_WRITE_SCHEMA = vol.Schema({
+    vol.Optional("config_entry_id"): cv.string,
+    vol.Required("register"): vol.In(sorted(WRITE_SPECS)),
+    vol.Optional("hold_seconds", default=CHECK_HOLD_DEFAULT):
+        vol.All(vol.Coerce(int), vol.Range(min=1, max=CHECK_HOLD_MAX)),
+})
 
 #: One bus per physical link, shared by every entry and config flow using it.
 BUSES: HassKey[BusRegistry] = HassKey(DOMAIN)
@@ -35,6 +66,31 @@ SherpaConfigEntry = ConfigEntry[SherpaRuntime]
 
 def bus_registry(hass: HomeAssistant) -> BusRegistry:
     return hass.data.setdefault(BUSES, BusRegistry())
+
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Register the write check, once, for every entry to use."""
+
+    async def verify_write(call: ServiceCall) -> ServiceResponse:
+        entry = _target_entry(hass, call.data.get("config_entry_id"))
+        return await entry.runtime_data.coordinator.writes.async_check(
+            call.data["register"], call.data["hold_seconds"])
+
+    # Admin only: it writes to the unit, however briefly and however carefully.
+    async_register_admin_service(hass, DOMAIN, SERVICE_VERIFY_WRITE, verify_write,
+                                 schema=VERIFY_WRITE_SCHEMA,
+                                 supports_response=SupportsResponse.ONLY)
+    return True
+
+
+def _target_entry(hass: HomeAssistant, entry_id: str | None) -> SherpaConfigEntry:
+    loaded = [e for e in hass.config_entries.async_entries(DOMAIN)
+              if e.state is ConfigEntryState.LOADED]
+    if entry_id:
+        loaded = [e for e in loaded if e.entry_id == entry_id]
+    if len(loaded) != 1:
+        raise ServiceValidationError(translation_domain=DOMAIN, translation_key="choose_entry")
+    return loaded[0]
 
 
 def _issue_id(entry: ConfigEntry) -> str:
@@ -68,12 +124,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: SherpaConfigEntry) -> bo
                                   translation_placeholders={"endpoint": str(endpoint)}) from err
     ir.async_delete_issue(hass, DOMAIN, _issue_id(entry))
 
-    coordinator = SherpaCoordinator(hass, entry, bus, slave, model)
+    checks = hass.data.setdefault(CHECKS, WriteChecks(hass))
+    await checks.async_load()
+    coordinator = SherpaCoordinator(hass, entry, bus, slave, model, checks.for_entry(entry.entry_id))
     try:
         await coordinator.async_config_entry_first_refresh()
     except ConfigEntryNotReady:
         await registry.release(endpoint)
         raise
+    try:
+        await coordinator.writes.async_resume()
+    except HomeAssistantError as err:
+        # Not a reason to stop reading the unit: the repair issue says what is left.
+        _LOGGER.error("Could not finish an interrupted write check: %s", err)
 
     entry.runtime_data = SherpaRuntime(endpoint, bus, coordinator)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
@@ -86,3 +149,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: SherpaConfigEntry) -> b
     if unloaded:
         await bus_registry(hass).release(entry.runtime_data.endpoint)
     return unloaded
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: SherpaConfigEntry) -> None:
+    """A removed unit's write checks go with it: a re-added one is checked afresh."""
+    await hass.data.setdefault(CHECKS, WriteChecks(hass)).async_forget(entry.entry_id)

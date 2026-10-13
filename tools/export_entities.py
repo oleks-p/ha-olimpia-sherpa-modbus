@@ -25,7 +25,10 @@ OUT = ROOT / "entities.json"
 def build() -> dict:
     from custom_components.olimpia_sherpa_modbus.binary_sensor import BINARY_SENSORS
     from custom_components.olimpia_sherpa_modbus.const import DEFAULT_ENTITY_PREFIX, DOMAIN
+    from custom_components.olimpia_sherpa_modbus.number import NUMBERS
+    from custom_components.olimpia_sherpa_modbus.registers import WRITE_SPECS
     from custom_components.olimpia_sherpa_modbus.sensor import SENSORS
+    from custom_components.olimpia_sherpa_modbus.switch import SWITCHES
 
     manifest = json.loads(
         (ROOT / "custom_components" / DOMAIN / "manifest.json").read_text())
@@ -41,7 +44,14 @@ def build() -> dict:
             rec["options"] = list(d.options)
         if not d.entity_registry_enabled_default:
             rec["enabled_default"] = False
-        if d.present_fn is not None:
+        if domain in ("number", "switch"):
+            # Created only with "allow writes" on and the write check passed on
+            # the unit: never something a customer dashboard can count on.
+            spec = WRITE_SPECS[d.key]
+            rec["writable"] = True
+            if domain == "number":
+                rec.update(min=spec.minimum, max=spec.maximum, step=spec.step)
+        elif d.present_fn is not None:
             rec["conditional"] = True   # created only when the hardware reports it
         return rec
 
@@ -49,10 +59,13 @@ def build() -> dict:
         "domain": DOMAIN,
         "version": manifest["version"],
         "default_entity_prefix": DEFAULT_ENTITY_PREFIX,
-        "read_only": True,
+        # Off by default; then per register, after the write check (writes.py).
+        "writes": "opt_in",
         "entity_id": "<domain>.<entity_prefix>_<key>",
         "entities": [record("sensor", d) for d in SENSORS]
-        + [record("binary_sensor", d) for d in BINARY_SENSORS],
+        + [record("binary_sensor", d) for d in BINARY_SENSORS]
+        + [record("number", d) for d in NUMBERS]
+        + [record("switch", d) for d in SWITCHES],
     }
 
 

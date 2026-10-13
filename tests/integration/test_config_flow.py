@@ -140,4 +140,12 @@ async def test_options_set_the_outage_tolerance(hass, config_entry):
     result = await hass.config_entries.options.async_configure(
         result["flow_id"], {CONF_UNAVAILABLE_AFTER: 300})
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert config_entry.options == {CONF_UNAVAILABLE_AFTER: 300}
+    # writes stay off unless asked for
+    assert config_entry.options == {CONF_UNAVAILABLE_AFTER: 300, "allow_writes": False}
+
+
+async def test_options_can_allow_writes(hass, config_entry):
+    result = await hass.config_entries.options.async_init(config_entry.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {CONF_UNAVAILABLE_AFTER: 120, "allow_writes": True})
+    assert config_entry.options["allow_writes"] is True

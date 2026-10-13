@@ -112,6 +112,35 @@ async def test_reads_over_a_serial_port(pty_server):
         await bus.close()
 
 
+@pytest.mark.parametrize("tcp_server", ["rtu", "mbap"], indirect=True)
+async def test_writes_over_tcp(tcp_server, unit):
+    bus = SherpaBus(_tcp_endpoint(tcp_server), timeout=1.0, gap=0, resync=0)
+    try:
+        await bus.write(201, 208, 355)                     # FC6, echoed
+        assert unit.registers[208] == 355 and await bus.read(201, 208, 1) == [355]
+        unit.write_mode[207] = "refuse"
+        with pytest.raises(SherpaIllegalError) as err:
+            await bus.write(201, 207, 185)
+        assert err.value.code == 2 and unit.registers[207] == 180
+        assert str(err.value) == "write 207=185 refused with exception 2"
+        assert bus.failures == 0                           # a refusal is not a link failure
+        unit.write_mode[209] = "ignore"
+        await bus.write(201, 209, 305)                     # acknowledged...
+        assert await bus.read(201, 209, 1) == [300]        # ...and not applied
+    finally:
+        await bus.close()
+
+
+async def test_writes_over_a_serial_port(pty_server, unit):
+    bus = SherpaBus(Endpoint(TRANSPORT_SERIAL, serial_port=pty_server.path),
+                    timeout=1.0, gap=0, resync=0)
+    try:
+        await bus.write(201, 210, 505)
+        assert unit.registers[210] == 505 and await bus.read(201, 210, 1) == [505]
+    finally:
+        await bus.close()
+
+
 async def test_entries_on_one_link_share_one_bus():
     closed = []
 
