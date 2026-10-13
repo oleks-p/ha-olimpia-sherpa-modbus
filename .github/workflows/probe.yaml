@@ -1,0 +1,20 @@
+name: probe
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # The probe runs on the Raspberry Pi host (Debian 12, Python 3.11), not in
+      # the Home Assistant container, so it is tested on that version.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements_test.txt
+      - run: ruff check tools tests
+      - run: pytest -q

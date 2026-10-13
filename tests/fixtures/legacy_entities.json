@@ -1,0 +1,2302 @@
+{
+ "captured_at": "2026-10-13T09:01:16+00:00",
+ "site": "uahs01",
+ "ha_version": "2026.8.2",
+ "history_window": {
+  "start": "2026-07-15T09:01:16+00:00",
+  "end": "2026-10-13T09:01:16+00:00"
+ },
+ "source_files": {
+  "packages/plant.yaml": "615e41de3486591c3f776560d11c5adb56493de1ff3e1f6d3a905ded9a6e9e39",
+  "packages/sherpa.yaml": "aac7a329390f5666645e5c2db9d24319329c1b20dffa809f533ac88806e43e1c"
+ },
+ "entities": {
+  "binary_sensor.sherpa_compressor_running": {
+   "key": "compressor_running",
+   "domain": "binary_sensor",
+   "platform": "threshold",
+   "unique_id": null,
+   "in_registry": false,
+   "friendly_name": "Sherpa compressor running",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "threshold",
+   "hub_loaded": null,
+   "definition": {
+    "platform": "threshold",
+    "name": "Sherpa compressor running",
+    "entity_id": "sensor.sherpa_compressor_rate",
+    "upper": 20
+   },
+   "history": {
+    "records": 1550,
+    "first": "2026-08-17T09:02:07.420611+00:00",
+    "sentinels": {
+     "unknown": 10
+    },
+    "states": {
+     "off": 775,
+     "on": 765
+    }
+   }
+  },
+  "binary_sensor.sherpa_defrost": {
+   "key": "defrost",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_defrost",
+   "in_registry": true,
+   "friendly_name": "sherpa defrost",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Defrost",
+    "unique_id": "sherpa_defrost",
+    "state": "{{ states('sensor.sherpa_override') | int(0) | bitwise_and(32) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_override') }}"
+   },
+   "history": {
+    "records": 24,
+    "first": "2026-08-17T09:02:06.087047+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "off": 12
+    }
+   }
+  },
+  "binary_sensor.sherpa_error": {
+   "key": "error",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_error",
+   "in_registry": true,
+   "friendly_name": "Sherpa error",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": "problem",
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Sherpa error",
+    "unique_id": "sherpa_error",
+    "device_class": "problem",
+    "state": "{{ states('sensor.sherpa_alarm_1') | int(0) > 0\n   or states('sensor.sherpa_alarm_2') | int(0) > 0 }}\n"
+   },
+   "history": {
+    "records": 44,
+    "first": "2026-08-17T09:02:06.086135+00:00",
+    "sentinels": {
+     "unavailable": 4,
+     "unknown": 7
+    },
+    "states": {
+     "off": 22,
+     "on": 11
+    }
+   }
+  },
+  "binary_sensor.sherpa_in_flow": {
+   "key": "in_flow",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_in_flow",
+   "in_registry": true,
+   "friendly_name": "sherpa in flow",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": "running",
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Flow switch",
+    "unique_id": "sherpa_in_flow",
+    "state": "{{ states('sensor.sherpa_inputs') | int(1) | bitwise_and(1) == 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_inputs') }}",
+    "device_class": "running"
+   },
+   "history": {
+    "records": 62,
+    "first": "2026-08-17T09:02:06.079572+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "on": 29,
+     "off": 21
+    }
+   }
+  },
+  "binary_sensor.sherpa_in_ta": {
+   "key": "in_ta",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_in_ta",
+   "in_registry": true,
+   "friendly_name": "sherpa in ta",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "on",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Thermostat demand",
+    "unique_id": "sherpa_in_ta",
+    "state": "{{ states('sensor.sherpa_inputs') | int(128) | bitwise_and(128) == 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_inputs') }}"
+   },
+   "history": {
+    "records": 39,
+    "first": "2026-08-17T09:02:06.080020+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "on": 19,
+     "off": 8
+    }
+   }
+  },
+  "binary_sensor.sherpa_mode_cooling": {
+   "key": "mode_cooling",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_mode_cooling",
+   "in_registry": true,
+   "friendly_name": "sherpa mode cooling",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Cooling",
+    "unique_id": "sherpa_mode_cooling",
+    "state": "{{ states('sensor.sherpa_status') | int(0) | bitwise_and(1) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_status') }}"
+   },
+   "history": {
+    "records": 172,
+    "first": "2026-08-17T09:02:06.081599+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "on": 84,
+     "off": 76
+    }
+   }
+  },
+  "binary_sensor.sherpa_mode_dhw": {
+   "key": "mode_dhw",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_mode_dhw",
+   "in_registry": true,
+   "friendly_name": "sherpa mode dhw",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос DHW",
+    "unique_id": "sherpa_mode_dhw",
+    "state": "{{ states('sensor.sherpa_status') | int(0) | bitwise_and(12) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_status') }}"
+   },
+   "history": {
+    "records": 106,
+    "first": "2026-08-17T09:02:06.082383+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "off": 53,
+     "on": 41
+    }
+   }
+  },
+  "binary_sensor.sherpa_mode_heating": {
+   "key": "mode_heating",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_mode_heating",
+   "in_registry": true,
+   "friendly_name": "sherpa mode heating",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Heating",
+    "unique_id": "sherpa_mode_heating",
+    "state": "{{ states('sensor.sherpa_status') | int(0) | bitwise_and(2) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_status') }}"
+   },
+   "history": {
+    "records": 100,
+    "first": "2026-08-17T09:02:06.082016+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "off": 50,
+     "on": 38
+    }
+   }
+  },
+  "binary_sensor.sherpa_mode_legionella": {
+   "key": "mode_legionella",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_mode_legionella",
+   "in_registry": true,
+   "friendly_name": "sherpa mode legionella",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Legionella cycle",
+    "unique_id": "sherpa_mode_legionella",
+    "state": "{{ states('sensor.sherpa_status') | int(0) | bitwise_and(8) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_status') }}"
+   },
+   "history": {
+    "records": 20,
+    "first": "2026-08-18T08:50:16.308169+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 1
+    },
+    "states": {
+     "off": 10,
+     "on": 4
+    }
+   }
+  },
+  "binary_sensor.sherpa_mode_night": {
+   "key": "mode_night",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_mode_night",
+   "in_registry": true,
+   "friendly_name": "sherpa mode night",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Night mode",
+    "unique_id": "sherpa_mode_night",
+    "state": "{{ states('sensor.sherpa_status') | int(0) | bitwise_and(128) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_status') }}"
+   },
+   "history": {
+    "records": 24,
+    "first": "2026-08-17T09:02:06.082835+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "off": 12
+    }
+   }
+  },
+  "binary_sensor.sherpa_mode_pending": {
+   "key": "mode_pending",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_mode_pending",
+   "in_registry": true,
+   "friendly_name": "sherpa mode pending",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Pending / blocked",
+    "unique_id": "sherpa_mode_pending",
+    "state": "{{ states('sensor.sherpa_status') | int(0) | bitwise_and(96) == 96 }}",
+    "availability": "{{ has_value('sensor.sherpa_status') }}"
+   },
+   "history": {
+    "records": 3024,
+    "first": "2026-08-17T09:02:06.083206+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "off": 1510,
+     "on": 1502
+    }
+   }
+  },
+  "binary_sensor.sherpa_out_3way": {
+   "key": "out_3way",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_out_3way",
+   "in_registry": true,
+   "friendly_name": "sherpa out 3way",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Three-way valve",
+    "unique_id": "sherpa_out_3way",
+    "state": "{{ states('sensor.sherpa_outputs') | int(0) | bitwise_and(16) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_outputs') }}"
+   },
+   "history": {
+    "records": 106,
+    "first": "2026-08-17T09:02:06.077019+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "off": 53,
+     "on": 41
+    }
+   }
+  },
+  "binary_sensor.sherpa_out_alarm": {
+   "key": "out_alarm",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_out_alarm",
+   "in_registry": true,
+   "friendly_name": "sherpa out alarm",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Alarm output",
+    "unique_id": "sherpa_out_alarm",
+    "state": "{{ states('sensor.sherpa_outputs') | int(0) | bitwise_and(256) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_outputs') }}"
+   },
+   "history": {
+    "records": 44,
+    "first": "2026-08-17T09:02:06.078095+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "off": 21,
+     "on": 11
+    }
+   }
+  },
+  "binary_sensor.sherpa_out_boiler": {
+   "key": "out_boiler",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_out_boiler",
+   "in_registry": true,
+   "friendly_name": "sherpa out boiler",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Boiler call",
+    "unique_id": "sherpa_out_boiler",
+    "state": "{{ states('sensor.sherpa_outputs') | int(0) | bitwise_and(128) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_outputs') }}"
+   },
+   "history": {
+    "records": 24,
+    "first": "2026-08-17T09:02:06.077732+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "off": 12
+    }
+   }
+  },
+  "binary_sensor.sherpa_out_dhw_pump": {
+   "key": "out_dhw_pump",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_out_dhw_pump",
+   "in_registry": true,
+   "friendly_name": "sherpa out dhw pump",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос DHW pump",
+    "unique_id": "sherpa_out_dhw_pump",
+    "state": "{{ states('sensor.sherpa_outputs') | int(0) | bitwise_and(2) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_outputs') }}"
+   },
+   "history": {
+    "records": 28,
+    "first": "2026-08-17T09:02:06.075909+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "off": 14,
+     "on": 2
+    }
+   }
+  },
+  "binary_sensor.sherpa_out_eh1": {
+   "key": "out_eh1",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_out_eh1",
+   "in_registry": true,
+   "friendly_name": "sherpa out eh1",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Electric heater 1",
+    "unique_id": "sherpa_out_eh1",
+    "state": "{{ states('sensor.sherpa_outputs') | int(0) | bitwise_and(4) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_outputs') }}"
+   },
+   "history": {
+    "records": 32,
+    "first": "2026-08-17T09:02:06.076288+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "off": 16,
+     "on": 4
+    }
+   }
+  },
+  "binary_sensor.sherpa_out_eh2": {
+   "key": "out_eh2",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_out_eh2",
+   "in_registry": true,
+   "friendly_name": "sherpa out eh2",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Electric heater 2",
+    "unique_id": "sherpa_out_eh2",
+    "state": "{{ states('sensor.sherpa_outputs') | int(0) | bitwise_and(8) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_outputs') }}"
+   },
+   "history": {
+    "records": 24,
+    "first": "2026-08-17T09:02:06.076650+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "off": 12
+    }
+   }
+  },
+  "binary_sensor.sherpa_out_k5": {
+   "key": "out_k5",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_out_k5",
+   "in_registry": true,
+   "friendly_name": "sherpa out k5",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Output K5",
+    "unique_id": "sherpa_out_k5",
+    "state": "{{ states('sensor.sherpa_outputs') | int(0) | bitwise_and(32) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_outputs') }}"
+   },
+   "history": {
+    "records": 24,
+    "first": "2026-08-17T09:02:06.077388+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "off": 12
+    }
+   }
+  },
+  "binary_sensor.sherpa_out_pump": {
+   "key": "out_pump",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_out_pump",
+   "in_registry": true,
+   "friendly_name": "sherpa out pump",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Тепловий насос Circulation pump",
+    "unique_id": "sherpa_out_pump",
+    "state": "{{ states('sensor.sherpa_outputs') | int(0) | bitwise_and(1) > 0 }}",
+    "availability": "{{ has_value('sensor.sherpa_outputs') }}"
+   },
+   "history": {
+    "records": 64,
+    "first": "2026-08-17T09:02:06.075408+00:00",
+    "sentinels": {
+     "unavailable": 5,
+     "unknown": 7
+    },
+    "states": {
+     "on": 30,
+     "off": 22
+    }
+   }
+  },
+  "binary_sensor.sherpa_power": {
+   "key": "power",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_power",
+   "in_registry": true,
+   "friendly_name": "Sherpa power",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": "mdi:heat-pump",
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Sherpa power",
+    "unique_id": "sherpa_power",
+    "icon": "mdi:heat-pump",
+    "state": "{{ states('sensor.sherpa_status') | int(0) > 0\n   or states('sensor.sherpa_outputs') | int(0) | bitwise_and(1) > 0 }}\n"
+   },
+   "history": {
+    "records": 52,
+    "first": "2026-08-17T09:02:06.083548+00:00",
+    "sentinels": {
+     "unavailable": 4,
+     "unknown": 7
+    },
+    "states": {
+     "on": 25,
+     "off": 16
+    }
+   }
+  },
+  "binary_sensor.sherpa_warning": {
+   "key": "warning",
+   "domain": "binary_sensor",
+   "platform": "template",
+   "unique_id": "sherpa_warning",
+   "in_registry": true,
+   "friendly_name": "Sherpa warning",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": "mdi:alert-outline",
+   "statistics": null,
+   "state_at_capture": "off",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Sherpa warning",
+    "unique_id": "sherpa_warning",
+    "icon": "mdi:alert-outline",
+    "state": "{{ states('sensor.sherpa_override') | int(0) > 0 }}"
+   },
+   "history": {
+    "records": 24,
+    "first": "2026-08-17T09:02:06.086668+00:00",
+    "sentinels": {
+     "unavailable": 4,
+     "unknown": 7
+    },
+    "states": {
+     "off": 12,
+     "on": 1
+    }
+   }
+  },
+  "sensor.sherpa_alarm_1": {
+   "key": "alarm_1",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_alarm_1",
+   "in_registry": true,
+   "friendly_name": "sherpa alarm 1",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "0",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос alarm 1",
+    "unique_id": "sherpa_alarm_1",
+    "slave": 201,
+    "address": 100,
+    "input_type": "holding",
+    "data_type": "uint16",
+    "scan_interval": 10
+   },
+   "history": {
+    "records": 39,
+    "first": "2026-08-17T09:02:06.702205+00:00",
+    "sentinels": {
+     "unavailable": 9,
+     "unknown": 2
+    },
+    "states": {
+     "0": 17,
+     "64": 11
+    }
+   }
+  },
+  "sensor.sherpa_alarm_2": {
+   "key": "alarm_2",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_alarm_2",
+   "in_registry": true,
+   "friendly_name": "sherpa alarm 2",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "0",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос alarm 2",
+    "unique_id": "sherpa_alarm_2",
+    "slave": 201,
+    "address": 101,
+    "input_type": "holding",
+    "data_type": "uint16",
+    "scan_interval": 10
+   },
+   "history": {
+    "records": 24,
+    "first": "2026-08-17T09:02:06.702711+00:00",
+    "sentinels": {
+     "unavailable": 11,
+     "unknown": 2
+    },
+    "states": {
+     "0": 11
+    }
+   }
+  },
+  "sensor.sherpa_compressor_hours": {
+   "key": "compressor_hours",
+   "domain": "sensor",
+   "platform": "template",
+   "unique_id": "sherpa_compressor_hours",
+   "in_registry": true,
+   "friendly_name": "Sherpa compressor hours",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "h",
+   "device_class": "duration",
+   "state_class": "total_increasing",
+   "icon": null,
+   "statistics": {
+    "unit": "h",
+    "unit_class": "duration",
+    "has_mean": false,
+    "has_sum": true
+   },
+   "state_at_capture": "36.93",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Sherpa compressor hours",
+    "unique_id": "sherpa_compressor_hours",
+    "device_class": "duration",
+    "unit_of_measurement": "h",
+    "state_class": "total_increasing",
+    "state": "{{ (states('sensor.sherpa_compressor_seconds') | float(0) / 3600) | round(2) }}"
+   },
+   "history": {
+    "records": 2259,
+    "first": "2026-08-17T09:02:06.065981+00:00",
+    "sentinels": {
+     "unavailable": 4,
+     "unknown": 7
+    },
+    "distinct": 2220,
+    "min": 0.0,
+    "max": 36.93
+   }
+  },
+  "sensor.sherpa_compressor_rate": {
+   "key": "compressor_rate",
+   "domain": "sensor",
+   "platform": "derivative",
+   "unique_id": "sherpa_compressor_rate",
+   "in_registry": true,
+   "friendly_name": "Sherpa compressor rate",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "s/min",
+   "device_class": null,
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": "s/min",
+    "unit_class": null,
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "0",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "derivative",
+   "hub_loaded": null,
+   "definition": {
+    "platform": "derivative",
+    "source": "sensor.sherpa_compressor_seconds",
+    "name": "Sherpa compressor rate",
+    "unique_id": "sherpa_compressor_rate",
+    "unit_time": "min",
+    "time_window": "00:02:00",
+    "round": 0
+   },
+   "history": {
+    "records": 5145,
+    "first": "2026-08-17T09:02:06.069849+00:00",
+    "sentinels": {
+     "unavailable": 158,
+     "unknown": 4
+    },
+    "distinct": 66,
+    "min": 0.0,
+    "max": 1099.0
+   }
+  },
+  "sensor.sherpa_compressor_seconds": {
+   "key": "compressor_seconds",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_compressor_seconds",
+   "in_registry": true,
+   "friendly_name": "sherpa compressor seconds",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "s",
+   "device_class": "duration",
+   "state_class": "total_increasing",
+   "icon": null,
+   "statistics": {
+    "unit": "s",
+    "unit_class": "duration",
+    "has_mean": false,
+    "has_sum": true
+   },
+   "state_at_capture": "132958",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Compressor runtime",
+    "unique_id": "sherpa_compressor_seconds",
+    "slave": 201,
+    "address": 270,
+    "input_type": "holding",
+    "data_type": "uint32",
+    "device_class": "duration",
+    "state_class": "total_increasing",
+    "unit_of_measurement": "s",
+    "scan_interval": 60
+   },
+   "history": {
+    "records": 3367,
+    "first": "2026-08-17T09:02:06.704664+00:00",
+    "sentinels": {
+     "unavailable": 10,
+     "unknown": 2
+    },
+    "distinct": 3346,
+    "min": 19766.0,
+    "max": 132958.0
+   }
+  },
+  "sensor.sherpa_cooling_eco_setpoint": {
+   "key": "cooling_eco_setpoint",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_cooling_eco_setpoint",
+   "in_registry": true,
+   "friendly_name": "sherpa cooling eco setpoint",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": "°C",
+    "unit_class": "temperature",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "18.0",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Cooling setpoint (eco)",
+    "unique_id": "sherpa_cooling_eco_setpoint",
+    "slave": 201,
+    "address": 207,
+    "input_type": "holding",
+    "data_type": "int16",
+    "scale": 0.1,
+    "precision": 1,
+    "unit_of_measurement": "°C",
+    "scan_interval": 600,
+    "device_class": "temperature",
+    "state_class": "measurement"
+   },
+   "history": {
+    "records": 10,
+    "first": "2026-08-17T09:02:06.707509+00:00",
+    "sentinels": {
+     "unavailable": 3,
+     "unknown": 3
+    },
+    "states": {
+     "18.0": 4
+    }
+   }
+  },
+  "sensor.sherpa_cooling_setpoint": {
+   "key": "cooling_setpoint",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_cooling_setpoint",
+   "in_registry": true,
+   "friendly_name": "sherpa cooling setpoint",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": "°C",
+    "unit_class": "temperature",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "15.0",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Cooling setpoint",
+    "unique_id": "sherpa_cooling_setpoint",
+    "slave": 201,
+    "address": 206,
+    "input_type": "holding",
+    "data_type": "int16",
+    "scale": 0.1,
+    "precision": 1,
+    "unit_of_measurement": "°C",
+    "scan_interval": 600,
+    "device_class": "temperature",
+    "state_class": "measurement"
+   },
+   "history": {
+    "records": 10,
+    "first": "2026-08-17T09:02:06.706709+00:00",
+    "sentinels": {
+     "unavailable": 3,
+     "unknown": 3
+    },
+    "states": {
+     "15.0": 4
+    }
+   }
+  },
+  "sensor.sherpa_dhw_hysteresis": {
+   "key": "dhw_hysteresis",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_dhw_hysteresis",
+   "in_registry": true,
+   "friendly_name": "sherpa dhw hysteresis",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "°C",
+   "device_class": null,
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": "°C",
+    "unit_class": "temperature",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "10.0",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос DHW hysteresis",
+    "unique_id": "sherpa_dhw_hysteresis",
+    "slave": 201,
+    "address": 238,
+    "input_type": "holding",
+    "data_type": "int16",
+    "scale": 0.1,
+    "precision": 1,
+    "unit_of_measurement": "°C",
+    "scan_interval": 600,
+    "state_class": "measurement"
+   },
+   "history": {
+    "records": 9,
+    "first": "2026-08-17T09:02:06.709973+00:00",
+    "sentinels": {
+     "unavailable": 3,
+     "unknown": 3
+    },
+    "states": {
+     "10.0": 3
+    }
+   }
+  },
+  "sensor.sherpa_dhw_setpoint": {
+   "key": "dhw_setpoint",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_dhw_setpoint",
+   "in_registry": true,
+   "friendly_name": "sherpa dhw setpoint",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": "°C",
+    "unit_class": "temperature",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "50.0",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос DHW setpoint",
+    "unique_id": "sherpa_dhw_setpoint",
+    "slave": 201,
+    "address": 210,
+    "input_type": "holding",
+    "data_type": "int16",
+    "scale": 0.1,
+    "precision": 1,
+    "unit_of_measurement": "°C",
+    "scan_interval": 600,
+    "device_class": "temperature",
+    "state_class": "measurement"
+   },
+   "history": {
+    "records": 8,
+    "first": "2026-08-17T09:02:06.709384+00:00",
+    "sentinels": {
+     "unavailable": 3,
+     "unknown": 2
+    },
+    "states": {
+     "50.0": 3
+    }
+   }
+  },
+  "sensor.sherpa_dhw_tank": {
+   "key": "dhw_tank",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_dhw_tank",
+   "in_registry": true,
+   "friendly_name": "sherpa dhw tank",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": "°C",
+    "unit_class": "temperature",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "22.1",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Бак ГВП",
+    "unique_id": "sherpa_dhw_tank",
+    "slave": 201,
+    "address": 2,
+    "input_type": "holding",
+    "data_type": "int16",
+    "scale": 0.1,
+    "precision": 1,
+    "unit_of_measurement": "°C",
+    "device_class": "temperature",
+    "state_class": "measurement",
+    "scan_interval": 30
+   },
+   "history": {
+    "records": 17574,
+    "first": "2026-08-17T09:02:06.700078+00:00",
+    "sentinels": {
+     "unavailable": 9,
+     "unknown": 3
+    },
+    "distinct": 475,
+    "min": 19.4,
+    "max": 67.2
+   }
+  },
+  "sensor.sherpa_error_code": {
+   "key": "error_code",
+   "domain": "sensor",
+   "platform": "template",
+   "unique_id": "sherpa_error_code",
+   "in_registry": true,
+   "friendly_name": "Sherpa error code",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": "mdi:alert-circle-outline",
+   "statistics": null,
+   "state_at_capture": "none",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Sherpa error code",
+    "unique_id": "sherpa_error_code",
+    "icon": "mdi:alert-circle-outline",
+    "state": "{% set a1 = states('sensor.sherpa_alarm_1') | int(0) %} {% set a2 = states('sensor.sherpa_alarm_2') | int(0) %} {% set e1 = ['E01','E02','E03','E04','E05','E06','E07','E08','E09'] %} {% set e2 = ['E20','E21','E22','E23','E24','E25','E26','E27'] %} {% set ns = namespace(found=[]) %} {% for i in range(9) %}\n  {% if a1 | bitwise_and(2 ** i) > 0 %}\n    {% set ns.found = ns.found + [e1[i]] %}\n  {% endif %}\n{% endfor %} {% for i in range(8) %}\n  {% if a2 | bitwise_and(2 ** i) > 0 %}\n    {% set ns.found = ns.found + [e2[i]] %}\n  {% endif %}\n{% endfor %} {{ ns.found | join(', ') if ns.found else 'none' }}\n"
+   },
+   "history": {
+    "records": 44,
+    "first": "2026-08-17T09:02:06.062958+00:00",
+    "sentinels": {
+     "unavailable": 4,
+     "unknown": 7
+    },
+    "states": {
+     "none": 22,
+     "E07": 11
+    }
+   }
+  },
+  "sensor.sherpa_filter_seconds": {
+   "key": "filter_seconds",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_filter_seconds",
+   "in_registry": true,
+   "friendly_name": "sherpa filter seconds",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "s",
+   "device_class": "duration",
+   "state_class": "total_increasing",
+   "icon": null,
+   "statistics": {
+    "unit": "s",
+    "unit_class": "duration",
+    "has_mean": false,
+    "has_sum": true
+   },
+   "state_at_capture": "3351442",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Filter runtime",
+    "unique_id": "sherpa_filter_seconds",
+    "slave": 201,
+    "address": 274,
+    "input_type": "holding",
+    "data_type": "uint32",
+    "device_class": "duration",
+    "state_class": "total_increasing",
+    "unit_of_measurement": "s",
+    "scan_interval": 60
+   },
+   "history": {
+    "records": 48001,
+    "first": "2026-08-17T09:02:06.706037+00:00",
+    "sentinels": {
+     "unavailable": 9,
+     "unknown": 2
+    },
+    "distinct": 47981,
+    "min": 413383.0,
+    "max": 3351647.0
+   }
+  },
+  "sensor.sherpa_heating_eco_setpoint": {
+   "key": "heating_eco_setpoint",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_heating_eco_setpoint",
+   "in_registry": true,
+   "friendly_name": "sherpa heating eco setpoint",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": "°C",
+    "unit_class": "temperature",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "30.0",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Heating setpoint (eco)",
+    "unique_id": "sherpa_heating_eco_setpoint",
+    "slave": 201,
+    "address": 209,
+    "input_type": "holding",
+    "data_type": "int16",
+    "scale": 0.1,
+    "precision": 1,
+    "unit_of_measurement": "°C",
+    "scan_interval": 600,
+    "device_class": "temperature",
+    "state_class": "measurement"
+   },
+   "history": {
+    "records": 8,
+    "first": "2026-08-17T09:02:06.708768+00:00",
+    "sentinels": {
+     "unavailable": 3,
+     "unknown": 2
+    },
+    "states": {
+     "30.0": 3
+    }
+   }
+  },
+  "sensor.sherpa_heating_setpoint": {
+   "key": "heating_setpoint",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_heating_setpoint",
+   "in_registry": true,
+   "friendly_name": "sherpa heating setpoint",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": "°C",
+    "unit_class": "temperature",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "35.0",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Heating setpoint",
+    "unique_id": "sherpa_heating_setpoint",
+    "slave": 201,
+    "address": 208,
+    "input_type": "holding",
+    "data_type": "int16",
+    "scale": 0.1,
+    "precision": 1,
+    "unit_of_measurement": "°C",
+    "scan_interval": 600,
+    "device_class": "temperature",
+    "state_class": "measurement"
+   },
+   "history": {
+    "records": 9,
+    "first": "2026-08-17T09:02:06.708139+00:00",
+    "sentinels": {
+     "unavailable": 3,
+     "unknown": 3
+    },
+    "states": {
+     "35.0": 3
+    }
+   }
+  },
+  "sensor.sherpa_identify_code": {
+   "key": "identify_code",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_identify_code",
+   "in_registry": true,
+   "friendly_name": "Sherpa identify code",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "unavailable",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "modbus",
+   "hub_loaded": false,
+   "definition": {
+    "name": "Sherpa identify code",
+    "unique_id": "sherpa_identify_code",
+    "slave": 201,
+    "address": 199,
+    "input_type": "holding",
+    "data_type": "uint16",
+    "scan_interval": 3600
+   },
+   "history": {
+    "records": 8,
+    "first": "2026-08-17T09:02:06.711515+00:00",
+    "sentinels": {
+     "unavailable": 3,
+     "unknown": 3
+    },
+    "states": {
+     "1134": 2
+    }
+   }
+  },
+  "sensor.sherpa_inputs": {
+   "key": "inputs",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_inputs",
+   "in_registry": true,
+   "friendly_name": "sherpa inputs",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "895",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос inputs",
+    "unique_id": "sherpa_inputs",
+    "slave": 201,
+    "address": 8,
+    "input_type": "holding",
+    "data_type": "uint16",
+    "scan_interval": 10
+   },
+   "history": {
+    "records": 47,
+    "first": "2026-08-17T09:02:06.701147+00:00",
+    "sentinels": {
+     "unavailable": 9,
+     "unknown": 2
+    },
+    "states": {
+     "894": 16,
+     "895": 15,
+     "0": 5
+    }
+   }
+  },
+  "sensor.sherpa_legionella_setpoint": {
+   "key": "legionella_setpoint",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_legionella_setpoint",
+   "in_registry": true,
+   "friendly_name": "sherpa legionella setpoint",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": "°C",
+    "unit_class": "temperature",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "65.0",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Legionella setpoint",
+    "unique_id": "sherpa_legionella_setpoint",
+    "slave": 201,
+    "address": 232,
+    "input_type": "holding",
+    "data_type": "int16",
+    "scale": 0.1,
+    "precision": 1,
+    "unit_of_measurement": "°C",
+    "scan_interval": 600,
+    "device_class": "temperature",
+    "state_class": "measurement"
+   },
+   "history": {
+    "records": 10,
+    "first": "2026-08-17T09:02:06.710648+00:00",
+    "sentinels": {
+     "unavailable": 3,
+     "unknown": 3
+    },
+    "states": {
+     "65.0": 4
+    }
+   }
+  },
+  "sensor.sherpa_legionella_start": {
+   "key": "legionella_start",
+   "domain": "sensor",
+   "platform": "template",
+   "unique_id": "sherpa_legionella_start",
+   "in_registry": true,
+   "friendly_name": "Sherpa legionella start",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": "mdi:clock-outline",
+   "statistics": null,
+   "state_at_capture": "01:00",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Sherpa legionella start",
+    "unique_id": "sherpa_legionella_start",
+    "icon": "mdi:clock-outline",
+    "state": "{% set m = states('sensor.sherpa_legionella_start_minutes') | int(0) %} {{ '%02d:%02d' | format(m // 60, m % 60) }}\n"
+   },
+   "history": {
+    "records": 27,
+    "first": "2026-08-17T09:02:06.067955+00:00",
+    "sentinels": {
+     "unavailable": 4,
+     "unknown": 7
+    },
+    "states": {
+     "01:00": 13,
+     "00:00": 3
+    }
+   }
+  },
+  "sensor.sherpa_legionella_start_minutes": {
+   "key": "legionella_start_minutes",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_legionella_start_minutes",
+   "in_registry": true,
+   "friendly_name": "sherpa legionella start minutes",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "min",
+   "device_class": "duration",
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "60",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Legionella start",
+    "unique_id": "sherpa_legionella_start_minutes",
+    "slave": 201,
+    "address": 231,
+    "input_type": "holding",
+    "data_type": "uint16",
+    "scale": 1,
+    "precision": 0,
+    "unit_of_measurement": "min",
+    "scan_interval": 3600,
+    "device_class": "duration"
+   },
+   "history": {
+    "records": 9,
+    "first": "2026-08-17T09:02:06.711117+00:00",
+    "sentinels": {
+     "unavailable": 3,
+     "unknown": 3
+    },
+    "states": {
+     "60": 3
+    }
+   }
+  },
+  "sensor.sherpa_mode": {
+   "key": "mode",
+   "domain": "sensor",
+   "platform": "template",
+   "unique_id": "sherpa_mode",
+   "in_registry": true,
+   "friendly_name": "Sherpa mode",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": "mdi:state-machine",
+   "statistics": null,
+   "state_at_capture": "standby",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Sherpa mode",
+    "unique_id": "sherpa_mode",
+    "icon": "mdi:state-machine",
+    "state": "{% set s = states('sensor.sherpa_status') | int(0) %} {% if s | bitwise_and(4) > 0 %}domestic hot water {% elif s | bitwise_and(8) > 0 %}anti-legionella {% elif s | bitwise_and(1) > 0 %}cooling {% elif s | bitwise_and(2) > 0 %}heating {% else %}standby {% endif %}\n"
+   },
+   "history": {
+    "records": 189,
+    "first": "2026-08-17T09:02:06.064446+00:00",
+    "sentinels": {
+     "unavailable": 4,
+     "unknown": 7
+    },
+    "states": {
+     "cooling": 88,
+     "standby": 48,
+     "domestic hot water": 37,
+     "anti-legionella": 4,
+     "heating": 1
+    }
+   }
+  },
+  "sensor.sherpa_outdoor_air": {
+   "key": "outdoor_air",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_outdoor_air",
+   "in_registry": true,
+   "friendly_name": "sherpa outdoor air",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": "°C",
+    "unit_class": "temperature",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "12.9",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Зовнішнє повітря",
+    "unique_id": "sherpa_outdoor_air",
+    "slave": 201,
+    "address": 3,
+    "input_type": "holding",
+    "data_type": "int16",
+    "scale": 0.1,
+    "precision": 1,
+    "unit_of_measurement": "°C",
+    "device_class": "temperature",
+    "state_class": "measurement",
+    "scan_interval": 30
+   },
+   "history": {
+    "records": 26316,
+    "first": "2026-08-17T09:02:06.700714+00:00",
+    "sentinels": {
+     "unavailable": 9,
+     "unknown": 3
+    },
+    "distinct": 352,
+    "min": 4.0,
+    "max": 39.1
+   }
+  },
+  "sensor.sherpa_outputs": {
+   "key": "outputs",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_outputs",
+   "in_registry": true,
+   "friendly_name": "sherpa outputs",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "0",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос outputs",
+    "unique_id": "sherpa_outputs",
+    "slave": 201,
+    "address": 105,
+    "input_type": "holding",
+    "data_type": "uint16",
+    "scan_interval": 10
+   },
+   "history": {
+    "records": 159,
+    "first": "2026-08-17T09:02:06.703562+00:00",
+    "sentinels": {
+     "unavailable": 13,
+     "unknown": 2
+    },
+    "states": {
+     "1": 58,
+     "17": 45,
+     "0": 24,
+     "256": 11,
+     "21": 4,
+     "3": 2
+    }
+   }
+  },
+  "sensor.sherpa_override": {
+   "key": "override",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_override",
+   "in_registry": true,
+   "friendly_name": "sherpa override",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "0",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос override",
+    "unique_id": "sherpa_override",
+    "slave": 201,
+    "address": 102,
+    "input_type": "holding",
+    "data_type": "uint16",
+    "scan_interval": 10
+   },
+   "history": {
+    "records": 26,
+    "first": "2026-08-17T09:02:06.703166+00:00",
+    "sentinels": {
+     "unavailable": 11,
+     "unknown": 2
+    },
+    "states": {
+     "0": 12,
+     "16": 1
+    }
+   }
+  },
+  "sensor.sherpa_pump_duty": {
+   "key": "pump_duty",
+   "domain": "sensor",
+   "platform": "template",
+   "unique_id": "sherpa_pump_duty",
+   "in_registry": true,
+   "friendly_name": "Sherpa pump duty",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "%",
+   "device_class": null,
+   "state_class": "measurement",
+   "icon": "mdi:pump",
+   "statistics": {
+    "unit": "%",
+    "unit_class": "unitless",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "0",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Sherpa pump duty",
+    "unique_id": "sherpa_pump_duty",
+    "icon": "mdi:pump",
+    "unit_of_measurement": "%",
+    "state_class": "measurement",
+    "state": "{% set duty = [5, 20, 30, 50, 60, 70, 70, 70] %} {% set step = states('sensor.sherpa_pump_step') | int(0) %} {{ duty[step - 1] if 1 <= step <= 8 else 0 }}\n"
+   },
+   "history": {
+    "records": 46,
+    "first": "2026-08-17T09:02:06.065126+00:00",
+    "sentinels": {
+     "unavailable": 4,
+     "unknown": 7
+    },
+    "states": {
+     "5": 22,
+     "0": 13
+    }
+   }
+  },
+  "sensor.sherpa_pump_hours": {
+   "key": "pump_hours",
+   "domain": "sensor",
+   "platform": "template",
+   "unique_id": "sherpa_pump_hours",
+   "in_registry": true,
+   "friendly_name": "Sherpa pump hours",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "h",
+   "device_class": "duration",
+   "state_class": "total_increasing",
+   "icon": null,
+   "statistics": {
+    "unit": "h",
+    "unit_class": "duration",
+    "has_mean": false,
+    "has_sum": true
+   },
+   "state_at_capture": "930.96",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Sherpa pump hours",
+    "unique_id": "sherpa_pump_hours",
+    "device_class": "duration",
+    "unit_of_measurement": "h",
+    "state_class": "total_increasing",
+    "state": "{{ (states('sensor.sherpa_pump_seconds') | float(0) / 3600) | round(2) }}"
+   },
+   "history": {
+    "records": 48013,
+    "first": "2026-08-17T09:02:06.066960+00:00",
+    "sentinels": {
+     "unavailable": 4,
+     "unknown": 7
+    },
+    "distinct": 47968,
+    "min": 0.0,
+    "max": 931.01
+   }
+  },
+  "sensor.sherpa_pump_seconds": {
+   "key": "pump_seconds",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_pump_seconds",
+   "in_registry": true,
+   "friendly_name": "sherpa pump seconds",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "s",
+   "device_class": "duration",
+   "state_class": "total_increasing",
+   "icon": null,
+   "statistics": {
+    "unit": "s",
+    "unit_class": "duration",
+    "has_mean": false,
+    "has_sum": true
+   },
+   "state_at_capture": "3351442",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Pump runtime",
+    "unique_id": "sherpa_pump_seconds",
+    "slave": 201,
+    "address": 272,
+    "input_type": "holding",
+    "data_type": "uint32",
+    "device_class": "duration",
+    "state_class": "total_increasing",
+    "unit_of_measurement": "s",
+    "scan_interval": 60
+   },
+   "history": {
+    "records": 48001,
+    "first": "2026-08-17T09:02:06.705382+00:00",
+    "sentinels": {
+     "unavailable": 9,
+     "unknown": 2
+    },
+    "distinct": 47981,
+    "min": 413383.0,
+    "max": 3351647.0
+   }
+  },
+  "sensor.sherpa_pump_step": {
+   "key": "pump_step",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_pump_step",
+   "in_registry": true,
+   "friendly_name": "Sherpa pump step",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": null,
+    "unit_class": "unitless",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "unavailable",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "modbus",
+   "hub_loaded": false,
+   "definition": {
+    "name": "Sherpa pump step",
+    "unique_id": "sherpa_pump_step",
+    "slave": 201,
+    "address": 388,
+    "input_type": "holding",
+    "data_type": "uint16",
+    "state_class": "measurement",
+    "scan_interval": 30
+   },
+   "history": {
+    "records": 27,
+    "first": "2026-08-17T09:02:06.703954+00:00",
+    "sentinels": {
+     "unavailable": 13,
+     "unknown": 2
+    },
+    "states": {
+     "1": 12
+    }
+   }
+  },
+  "sensor.sherpa_status": {
+   "key": "status",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_status",
+   "in_registry": true,
+   "friendly_name": "sherpa status",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": null,
+   "device_class": null,
+   "state_class": null,
+   "icon": null,
+   "statistics": null,
+   "state_at_capture": "0",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос status",
+    "unique_id": "sherpa_status",
+    "slave": 201,
+    "address": 12,
+    "input_type": "holding",
+    "data_type": "uint16",
+    "scan_interval": 10
+   },
+   "history": {
+    "records": 3112,
+    "first": "2026-08-17T09:02:06.701545+00:00",
+    "sentinels": {
+     "unavailable": 10,
+     "unknown": 2
+    },
+    "states": {
+     "1": 1358,
+     "97": 1334,
+     "102": 190,
+     "6": 164,
+     "0": 46,
+     "9": 4,
+     "96": 3,
+     "98": 1
+    }
+   }
+  },
+  "sensor.sherpa_water_delta": {
+   "key": "water_delta",
+   "domain": "sensor",
+   "platform": "template",
+   "unique_id": "sherpa_water_delta",
+   "in_registry": true,
+   "friendly_name": "Sherpa water delta",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "°C",
+   "device_class": null,
+   "state_class": "measurement",
+   "icon": "mdi:delta",
+   "statistics": {
+    "unit": "°C",
+    "unit_class": "temperature",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "-0.6",
+   "defined_in": "packages/sherpa.yaml",
+   "shadowed_in": [],
+   "kind": "template",
+   "hub_loaded": null,
+   "definition": {
+    "name": "Sherpa water delta",
+    "unique_id": "sherpa_water_delta",
+    "icon": "mdi:delta",
+    "unit_of_measurement": "°C",
+    "state_class": "measurement",
+    "state": "{{ (states('sensor.sherpa_water_out') | float(0)\n    - states('sensor.sherpa_water_in') | float(0)) | round(1) }}\n"
+   },
+   "history": {
+    "records": 63510,
+    "first": "2026-08-17T09:02:06.067493+00:00",
+    "sentinels": {
+     "unavailable": 4,
+     "unknown": 7
+    },
+    "distinct": 225,
+    "min": -26.0,
+    "max": 26.6
+   }
+  },
+  "sensor.sherpa_water_in": {
+   "key": "water_in",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_water_in",
+   "in_registry": true,
+   "friendly_name": "sherpa water in",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": "°C",
+    "unit_class": "temperature",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "25.8",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Вода вхід",
+    "unique_id": "sherpa_water_in",
+    "slave": 201,
+    "address": 0,
+    "input_type": "holding",
+    "data_type": "int16",
+    "scale": 0.1,
+    "precision": 1,
+    "unit_of_measurement": "°C",
+    "device_class": "temperature",
+    "state_class": "measurement",
+    "scan_interval": 30
+   },
+   "history": {
+    "records": 31134,
+    "first": "2026-08-17T09:02:06.698669+00:00",
+    "sentinels": {
+     "unavailable": 10,
+     "unknown": 3
+    },
+    "distinct": 558,
+    "min": 14.7,
+    "max": 70.4
+   }
+  },
+  "sensor.sherpa_water_out": {
+   "key": "water_out",
+   "domain": "sensor",
+   "platform": "modbus",
+   "unique_id": "sherpa_water_out",
+   "in_registry": true,
+   "friendly_name": "sherpa water out",
+   "entity_category": null,
+   "disabled_by": null,
+   "unit": "°C",
+   "device_class": "temperature",
+   "state_class": "measurement",
+   "icon": null,
+   "statistics": {
+    "unit": "°C",
+    "unit_class": "temperature",
+    "has_mean": true,
+    "has_sum": false
+   },
+   "state_at_capture": "25.2",
+   "defined_in": "packages/plant.yaml",
+   "shadowed_in": [
+    "packages/sherpa.yaml"
+   ],
+   "kind": "modbus",
+   "hub_loaded": true,
+   "definition": {
+    "name": "Тепловий насос Вода вихід",
+    "unique_id": "sherpa_water_out",
+    "slave": 201,
+    "address": 1,
+    "input_type": "holding",
+    "data_type": "int16",
+    "scale": 0.1,
+    "precision": 1,
+    "unit_of_measurement": "°C",
+    "device_class": "temperature",
+    "state_class": "measurement",
+    "scan_interval": 30
+   },
+   "history": {
+    "records": 32380,
+    "first": "2026-08-17T09:02:06.699445+00:00",
+    "sentinels": {
+     "unavailable": 10,
+     "unknown": 3
+    },
+    "distinct": 569,
+    "min": 12.8,
+    "max": 69.9
+   }
+  }
+ }
+}

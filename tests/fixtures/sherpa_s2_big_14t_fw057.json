@@ -1,0 +1,5261 @@
+{
+ "probe_version": "0.1.0",
+ "captured_at": "2026-10-13T09:22:10+00:00",
+ "link": {
+  "transport": "serial",
+  "path": "/dev/ttyUSB0",
+  "baud": 9600,
+  "framing": "8N1",
+  "exclusive": true,
+  "slave": 201,
+  "timeout_s": 3.0,
+  "gap_ms": 60.0
+ },
+ "stages": [
+  "identity",
+  "rules"
+ ],
+ "argv": [
+  "--serial",
+  "/dev/ttyUSB0",
+  "--i-stopped-home-assistant",
+  "--stages",
+  "rules",
+  "--sweep-from",
+  "~/sherpa_sweep.json"
+ ],
+ "guard": {
+  "operator_confirmed": true,
+  "listen_seconds": 15.0,
+  "listened": true,
+  "bytes_heard": 0
+ },
+ "identity": {
+  "reads": {
+   "197": {
+    "status": "OK",
+    "raw": 57
+   },
+   "198": {
+    "status": "OK",
+    "raw": 57
+   },
+   "199": {
+    "status": "OK",
+    "raw": 1134
+   },
+   "370": {
+    "status": "OK",
+    "raw": 2
+   },
+   "371": {
+    "status": "OK",
+    "raw": 14
+   },
+   "247": {
+    "status": "OK",
+    "raw": 201
+   },
+   "401": {
+    "status": "OK",
+    "raw": 1
+   },
+   "220": {
+    "status": "OK",
+    "raw": 0
+   },
+   "228": {
+    "status": "OK",
+    "raw": 2
+   },
+   "229": {
+    "status": "OK",
+    "raw": 2
+   }
+  },
+  "fw_197": 57,
+  "fw_198": 57,
+  "identify_code": 1134,
+  "idu_model": 2,
+  "odu_model": 14,
+  "modbus_address": 201,
+  "protocol": 1,
+  "remote_controls": 0,
+  "dhw_source": 2,
+  "legionella_mode": 2,
+  "firmware_197": "0.57",
+  "firmware_198": "0.57",
+  "idu_model_name": "SHERPA S2 BIG",
+  "odu_model_name": "SHERPA S2 14T",
+  "expected_identify": 1134
+ },
+ "sweep": {
+  "first": 0,
+  "last": 999,
+  "timeout_s": 1.0,
+  "registers": {
+   "0": {
+    "status": "OK",
+    "raw": 258
+   },
+   "1": {
+    "status": "OK",
+    "raw": 251
+   },
+   "2": {
+    "status": "OK",
+    "raw": 221
+   },
+   "3": {
+    "status": "OK",
+    "raw": 132
+   },
+   "4": {
+    "status": "OK",
+    "raw": 65535
+   },
+   "5": {
+    "status": "OK",
+    "raw": 65035
+   },
+   "6": {
+    "status": "OK",
+    "raw": 65035
+   },
+   "7": {
+    "status": "OK",
+    "raw": 65535
+   },
+   "8": {
+    "status": "OK",
+    "raw": 895
+   },
+   "9": {
+    "status": "OK",
+    "raw": 0
+   },
+   "10": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "11": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "12": {
+    "status": "OK",
+    "raw": 0
+   },
+   "13": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "14": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "15": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "16": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "17": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "18": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "19": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "20": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "21": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "22": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "23": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "24": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "25": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "26": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "27": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "28": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "29": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "30": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "31": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "32": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "33": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "34": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "35": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "36": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "37": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "38": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "39": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "40": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "41": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "42": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "43": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "44": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "45": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "46": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "47": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "48": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "49": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "50": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "51": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "52": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "53": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "54": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "55": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "56": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "57": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "58": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "59": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "60": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "61": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "62": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "63": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "64": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "65": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "66": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "67": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "68": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "69": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "70": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "71": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "72": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "73": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "74": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "75": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "76": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "77": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "78": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "79": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "80": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "81": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "82": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "83": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "84": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "85": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "86": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "87": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "88": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "89": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "90": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "91": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "92": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "93": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "94": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "95": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "96": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "97": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "98": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "99": {
+    "status": "OK",
+    "raw": 0
+   },
+   "100": {
+    "status": "OK",
+    "raw": 0
+   },
+   "101": {
+    "status": "OK",
+    "raw": 0
+   },
+   "102": {
+    "status": "OK",
+    "raw": 0
+   },
+   "103": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "104": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "105": {
+    "status": "OK",
+    "raw": 0
+   },
+   "106": {
+    "status": "OK",
+    "raw": 0
+   },
+   "107": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "108": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "109": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "110": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "111": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "112": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "113": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "114": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "115": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "116": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "117": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "118": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "119": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "120": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "121": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "122": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "123": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "124": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "125": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "126": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "127": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "128": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "129": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "130": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "131": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "132": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "133": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "134": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "135": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "136": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "137": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "138": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "139": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "140": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "141": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "142": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "143": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "144": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "145": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "146": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "147": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "148": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "149": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "150": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "151": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "152": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "153": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "154": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "155": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "156": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "157": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "158": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "159": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "160": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "161": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "162": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "163": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "164": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "165": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "166": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "167": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "168": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "169": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "170": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "171": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "172": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "173": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "174": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "175": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "176": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "177": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "178": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "179": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "180": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "181": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "182": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "183": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "184": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "185": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "186": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "187": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "188": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "189": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "190": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "191": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "192": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "193": {
+    "status": "OK",
+    "raw": 991
+   },
+   "194": {
+    "status": "OK",
+    "raw": 0
+   },
+   "195": {
+    "status": "OK",
+    "raw": 0
+   },
+   "196": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "197": {
+    "status": "OK",
+    "raw": 57
+   },
+   "198": {
+    "status": "OK",
+    "raw": 57
+   },
+   "199": {
+    "status": "OK",
+    "raw": 1134
+   },
+   "200": {
+    "status": "OK",
+    "raw": 0
+   },
+   "201": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "202": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "203": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "204": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "205": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "206": {
+    "status": "OK",
+    "raw": 150
+   },
+   "207": {
+    "status": "OK",
+    "raw": 180
+   },
+   "208": {
+    "status": "OK",
+    "raw": 350
+   },
+   "209": {
+    "status": "OK",
+    "raw": 300
+   },
+   "210": {
+    "status": "OK",
+    "raw": 500
+   },
+   "211": {
+    "status": "OK",
+    "raw": 1
+   },
+   "212": {
+    "status": "OK",
+    "raw": 1
+   },
+   "213": {
+    "status": "OK",
+    "raw": 750
+   },
+   "214": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "215": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "216": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "217": {
+    "status": "OK",
+    "raw": 1
+   },
+   "218": {
+    "status": "OK",
+    "raw": 1
+   },
+   "219": {
+    "status": "OK",
+    "raw": 20
+   },
+   "220": {
+    "status": "OK",
+    "raw": 0
+   },
+   "221": {
+    "status": "OK",
+    "raw": 1
+   },
+   "222": {
+    "status": "OK",
+    "raw": 72
+   },
+   "223": {
+    "status": "OK",
+    "raw": 30
+   },
+   "224": {
+    "status": "OK",
+    "raw": 0
+   },
+   "225": {
+    "status": "OK",
+    "raw": 0
+   },
+   "226": {
+    "status": "OK",
+    "raw": 0
+   },
+   "227": {
+    "status": "OK",
+    "raw": 20
+   },
+   "228": {
+    "status": "OK",
+    "raw": 2
+   },
+   "229": {
+    "status": "OK",
+    "raw": 2
+   },
+   "230": {
+    "status": "OK",
+    "raw": 14
+   },
+   "231": {
+    "status": "OK",
+    "raw": 60
+   },
+   "232": {
+    "status": "OK",
+    "raw": 650
+   },
+   "233": {
+    "status": "OK",
+    "raw": 30
+   },
+   "234": {
+    "status": "OK",
+    "raw": 0
+   },
+   "235": {
+    "status": "OK",
+    "raw": 15
+   },
+   "236": {
+    "status": "OK",
+    "raw": 30
+   },
+   "237": {
+    "status": "OK",
+    "raw": 0
+   },
+   "238": {
+    "status": "OK",
+    "raw": 100
+   },
+   "239": {
+    "status": "OK",
+    "raw": 200
+   },
+   "240": {
+    "status": "OK",
+    "raw": 180
+   },
+   "241": {
+    "status": "OK",
+    "raw": 400
+   },
+   "242": {
+    "status": "OK",
+    "raw": 150
+   },
+   "243": {
+    "status": "OK",
+    "raw": 65486
+   },
+   "244": {
+    "status": "OK",
+    "raw": 350
+   },
+   "245": {
+    "status": "OK",
+    "raw": 200
+   },
+   "246": {
+    "status": "OK",
+    "raw": 280
+   },
+   "247": {
+    "status": "OK",
+    "raw": 201
+   },
+   "248": {
+    "status": "OK",
+    "raw": 500
+   },
+   "249": {
+    "status": "OK",
+    "raw": 2
+   },
+   "250": {
+    "status": "OK",
+    "raw": 1
+   },
+   "251": {
+    "status": "OK",
+    "raw": 72
+   },
+   "252": {
+    "status": "OK",
+    "raw": 30
+   },
+   "253": {
+    "status": "OK",
+    "raw": 100
+   },
+   "254": {
+    "status": "OK",
+    "raw": 250
+   },
+   "255": {
+    "status": "OK",
+    "raw": 350
+   },
+   "256": {
+    "status": "OK",
+    "raw": 2
+   },
+   "257": {
+    "status": "OK",
+    "raw": 0
+   },
+   "258": {
+    "status": "OK",
+    "raw": 0
+   },
+   "259": {
+    "status": "OK",
+    "raw": 0
+   },
+   "260": {
+    "status": "OK",
+    "raw": 10
+   },
+   "261": {
+    "status": "OK",
+    "raw": 30
+   },
+   "262": {
+    "status": "OK",
+    "raw": 20
+   },
+   "263": {
+    "status": "OK",
+    "raw": 10
+   },
+   "264": {
+    "status": "OK",
+    "raw": 2
+   },
+   "265": {
+    "status": "OK",
+    "raw": 0
+   },
+   "266": {
+    "status": "OK",
+    "raw": 20
+   },
+   "267": {
+    "status": "OK",
+    "raw": 5
+   },
+   "268": {
+    "status": "OK",
+    "raw": 10
+   },
+   "269": {
+    "status": "OK",
+    "raw": 150
+   },
+   "270": {
+    "status": "OK",
+    "raw": 2
+   },
+   "271": {
+    "status": "OK",
+    "raw": 1886
+   },
+   "272": {
+    "status": "OK",
+    "raw": 51
+   },
+   "273": {
+    "status": "OK",
+    "raw": 9106
+   },
+   "274": {
+    "status": "OK",
+    "raw": 51
+   },
+   "275": {
+    "status": "OK",
+    "raw": 9106
+   },
+   "276": {
+    "status": "OK",
+    "raw": 0
+   },
+   "277": {
+    "status": "OK",
+    "raw": 0
+   },
+   "278": {
+    "status": "OK",
+    "raw": 0
+   },
+   "279": {
+    "status": "OK",
+    "raw": 0
+   },
+   "280": {
+    "status": "OK",
+    "raw": 1300
+   },
+   "281": {
+    "status": "OK",
+    "raw": 0
+   },
+   "282": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "283": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "284": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "285": {
+    "status": "OK",
+    "raw": 60
+   },
+   "286": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "287": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "288": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "289": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "290": {
+    "status": "OK",
+    "raw": 0
+   },
+   "291": {
+    "status": "OK",
+    "raw": 0
+   },
+   "292": {
+    "status": "OK",
+    "raw": 0
+   },
+   "293": {
+    "status": "OK",
+    "raw": 12
+   },
+   "294": {
+    "status": "OK",
+    "raw": 34
+   },
+   "295": {
+    "status": "OK",
+    "raw": 56
+   },
+   "296": {
+    "status": "OK",
+    "raw": 0
+   },
+   "297": {
+    "status": "OK",
+    "raw": 0
+   },
+   "298": {
+    "status": "OK",
+    "raw": 0
+   },
+   "299": {
+    "status": "OK",
+    "raw": 0
+   },
+   "300": {
+    "status": "OK",
+    "raw": 0
+   },
+   "301": {
+    "status": "OK",
+    "raw": 0
+   },
+   "302": {
+    "status": "OK",
+    "raw": 0
+   },
+   "303": {
+    "status": "OK",
+    "raw": 0
+   },
+   "304": {
+    "status": "OK",
+    "raw": 0
+   },
+   "305": {
+    "status": "OK",
+    "raw": 0
+   },
+   "306": {
+    "status": "OK",
+    "raw": 0
+   },
+   "307": {
+    "status": "OK",
+    "raw": 0
+   },
+   "308": {
+    "status": "OK",
+    "raw": 0
+   },
+   "309": {
+    "status": "OK",
+    "raw": 0
+   },
+   "310": {
+    "status": "OK",
+    "raw": 0
+   },
+   "311": {
+    "status": "OK",
+    "raw": 0
+   },
+   "312": {
+    "status": "OK",
+    "raw": 0
+   },
+   "313": {
+    "status": "OK",
+    "raw": 0
+   },
+   "314": {
+    "status": "OK",
+    "raw": 0
+   },
+   "315": {
+    "status": "OK",
+    "raw": 0
+   },
+   "316": {
+    "status": "OK",
+    "raw": 0
+   },
+   "317": {
+    "status": "OK",
+    "raw": 0
+   },
+   "318": {
+    "status": "OK",
+    "raw": 0
+   },
+   "319": {
+    "status": "OK",
+    "raw": 0
+   },
+   "320": {
+    "status": "OK",
+    "raw": 0
+   },
+   "321": {
+    "status": "OK",
+    "raw": 75
+   },
+   "322": {
+    "status": "OK",
+    "raw": 75
+   },
+   "323": {
+    "status": "OK",
+    "raw": 75
+   },
+   "324": {
+    "status": "OK",
+    "raw": 75
+   },
+   "325": {
+    "status": "OK",
+    "raw": 75
+   },
+   "326": {
+    "status": "OK",
+    "raw": 75
+   },
+   "327": {
+    "status": "OK",
+    "raw": 5
+   },
+   "328": {
+    "status": "OK",
+    "raw": 5
+   },
+   "329": {
+    "status": "OK",
+    "raw": 5
+   },
+   "330": {
+    "status": "OK",
+    "raw": 5
+   },
+   "331": {
+    "status": "OK",
+    "raw": 5
+   },
+   "332": {
+    "status": "OK",
+    "raw": 5
+   },
+   "333": {
+    "status": "OK",
+    "raw": 1
+   },
+   "334": {
+    "status": "OK",
+    "raw": 2
+   },
+   "335": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "336": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "337": {
+    "status": "OK",
+    "raw": 25
+   },
+   "338": {
+    "status": "OK",
+    "raw": 50
+   },
+   "339": {
+    "status": "OK",
+    "raw": 70
+   },
+   "340": {
+    "status": "OK",
+    "raw": 100
+   },
+   "341": {
+    "status": "OK",
+    "raw": 0
+   },
+   "342": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "343": {
+    "status": "OK",
+    "raw": 0
+   },
+   "344": {
+    "status": "OK",
+    "raw": 0
+   },
+   "345": {
+    "status": "OK",
+    "raw": 0
+   },
+   "346": {
+    "status": "OK",
+    "raw": 0
+   },
+   "347": {
+    "status": "OK",
+    "raw": 65516
+   },
+   "348": {
+    "status": "OK",
+    "raw": 50
+   },
+   "349": {
+    "status": "OK",
+    "raw": 25
+   },
+   "350": {
+    "status": "OK",
+    "raw": 0
+   },
+   "351": {
+    "status": "OK",
+    "raw": 0
+   },
+   "352": {
+    "status": "OK",
+    "raw": 0
+   },
+   "353": {
+    "status": "OK",
+    "raw": 0
+   },
+   "354": {
+    "status": "OK",
+    "raw": 0
+   },
+   "355": {
+    "status": "OK",
+    "raw": 0
+   },
+   "356": {
+    "status": "OK",
+    "raw": 0
+   },
+   "357": {
+    "status": "OK",
+    "raw": 0
+   },
+   "358": {
+    "status": "OK",
+    "raw": 0
+   },
+   "359": {
+    "status": "OK",
+    "raw": 0
+   },
+   "360": {
+    "status": "OK",
+    "raw": 0
+   },
+   "361": {
+    "status": "OK",
+    "raw": 0
+   },
+   "362": {
+    "status": "OK",
+    "raw": 0
+   },
+   "363": {
+    "status": "OK",
+    "raw": 0
+   },
+   "364": {
+    "status": "OK",
+    "raw": 0
+   },
+   "365": {
+    "status": "OK",
+    "raw": 0
+   },
+   "366": {
+    "status": "OK",
+    "raw": 0
+   },
+   "367": {
+    "status": "OK",
+    "raw": 0
+   },
+   "368": {
+    "status": "OK",
+    "raw": 0
+   },
+   "369": {
+    "status": "OK",
+    "raw": 0
+   },
+   "370": {
+    "status": "OK",
+    "raw": 2
+   },
+   "371": {
+    "status": "OK",
+    "raw": 14
+   },
+   "372": {
+    "status": "OK",
+    "raw": 1
+   },
+   "373": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "374": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "375": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "376": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "377": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "378": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "379": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "380": {
+    "status": "OK",
+    "raw": 5
+   },
+   "381": {
+    "status": "OK",
+    "raw": 20
+   },
+   "382": {
+    "status": "OK",
+    "raw": 30
+   },
+   "383": {
+    "status": "OK",
+    "raw": 50
+   },
+   "384": {
+    "status": "OK",
+    "raw": 60
+   },
+   "385": {
+    "status": "OK",
+    "raw": 70
+   },
+   "386": {
+    "status": "OK",
+    "raw": 70
+   },
+   "387": {
+    "status": "OK",
+    "raw": 70
+   },
+   "388": {
+    "status": "OK",
+    "raw": 1
+   },
+   "389": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "390": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "391": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "392": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "393": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "394": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "395": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "396": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "397": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "398": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "399": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "400": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "401": {
+    "status": "OK",
+    "raw": 1
+   },
+   "402": {
+    "status": "OK",
+    "raw": 0
+   },
+   "403": {
+    "status": "OK",
+    "raw": 0
+   },
+   "404": {
+    "status": "OK",
+    "raw": 0
+   },
+   "405": {
+    "status": "OK",
+    "raw": 100
+   },
+   "406": {
+    "status": "OK",
+    "raw": 0
+   },
+   "407": {
+    "status": "OK",
+    "raw": 5
+   },
+   "408": {
+    "status": "OK",
+    "raw": 0
+   },
+   "409": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "410": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "411": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "412": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "413": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "414": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "415": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "416": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "417": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "418": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "419": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "420": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "421": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "422": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "423": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "424": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "425": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "426": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "427": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "428": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "429": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "430": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "431": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "432": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "433": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "434": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "435": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "436": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "437": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "438": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "439": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "440": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "441": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "442": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "443": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "444": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "445": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "446": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "447": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "448": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "449": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "450": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "451": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "452": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "453": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "454": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "455": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "456": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "457": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "458": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "459": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "460": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "461": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "462": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "463": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "464": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "465": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "466": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "467": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "468": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "469": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "470": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "471": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "472": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "473": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "474": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "475": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "476": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "477": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "478": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "479": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "480": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "481": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "482": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "483": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "484": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "485": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "486": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "487": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "488": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "489": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "490": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "491": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "492": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "493": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "494": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "495": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "496": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "497": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "498": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "499": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "500": {
+    "status": "OK",
+    "raw": 0
+   },
+   "501": {
+    "status": "OK",
+    "raw": 0
+   },
+   "502": {
+    "status": "OK",
+    "raw": 0
+   },
+   "503": {
+    "status": "OK",
+    "raw": 0
+   },
+   "504": {
+    "status": "OK",
+    "raw": 0
+   },
+   "505": {
+    "status": "OK",
+    "raw": 0
+   },
+   "506": {
+    "status": "OK",
+    "raw": 0
+   },
+   "507": {
+    "status": "OK",
+    "raw": 0
+   },
+   "508": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "509": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "510": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "511": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "512": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "513": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "514": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "515": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "516": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "517": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "518": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "519": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "520": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "521": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "522": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "523": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "524": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "525": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "526": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "527": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "528": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "529": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "530": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "531": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "532": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "533": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "534": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "535": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "536": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "537": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "538": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "539": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "540": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "541": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "542": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "543": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "544": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "545": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "546": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "547": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "548": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "549": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "550": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "551": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "552": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "553": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "554": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "555": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "556": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "557": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "558": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "559": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "560": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "561": {
+    "status": "OK",
+    "raw": 24
+   },
+   "562": {
+    "status": "OK",
+    "raw": 28
+   },
+   "563": {
+    "status": "OK",
+    "raw": 32
+   },
+   "564": {
+    "status": "OK",
+    "raw": 36
+   },
+   "565": {
+    "status": "OK",
+    "raw": 38
+   },
+   "566": {
+    "status": "OK",
+    "raw": 42
+   },
+   "567": {
+    "status": "OK",
+    "raw": 44
+   },
+   "568": {
+    "status": "OK",
+    "raw": 48
+   },
+   "569": {
+    "status": "OK",
+    "raw": 52
+   },
+   "570": {
+    "status": "OK",
+    "raw": 54
+   },
+   "571": {
+    "status": "OK",
+    "raw": 58
+   },
+   "572": {
+    "status": "OK",
+    "raw": 62
+   },
+   "573": {
+    "status": "OK",
+    "raw": 62
+   },
+   "574": {
+    "status": "OK",
+    "raw": 66
+   },
+   "575": {
+    "status": "OK",
+    "raw": 70
+   },
+   "576": {
+    "status": "OK",
+    "raw": 74
+   },
+   "577": {
+    "status": "OK",
+    "raw": 74
+   },
+   "578": {
+    "status": "OK",
+    "raw": 78
+   },
+   "579": {
+    "status": "OK",
+    "raw": 78
+   },
+   "580": {
+    "status": "OK",
+    "raw": 78
+   },
+   "581": {
+    "status": "OK",
+    "raw": 78
+   },
+   "582": {
+    "status": "OK",
+    "raw": 78
+   },
+   "583": {
+    "status": "OK",
+    "raw": 78
+   },
+   "584": {
+    "status": "OK",
+    "raw": 78
+   },
+   "585": {
+    "status": "OK",
+    "raw": 78
+   },
+   "586": {
+    "status": "OK",
+    "raw": 78
+   },
+   "587": {
+    "status": "OK",
+    "raw": 78
+   },
+   "588": {
+    "status": "OK",
+    "raw": 78
+   },
+   "589": {
+    "status": "OK",
+    "raw": 78
+   },
+   "590": {
+    "status": "OK",
+    "raw": 78
+   },
+   "591": {
+    "status": "OK",
+    "raw": 78
+   },
+   "592": {
+    "status": "OK",
+    "raw": 78
+   },
+   "593": {
+    "status": "OK",
+    "raw": 24
+   },
+   "594": {
+    "status": "OK",
+    "raw": 28
+   },
+   "595": {
+    "status": "OK",
+    "raw": 32
+   },
+   "596": {
+    "status": "OK",
+    "raw": 36
+   },
+   "597": {
+    "status": "OK",
+    "raw": 40
+   },
+   "598": {
+    "status": "OK",
+    "raw": 42
+   },
+   "599": {
+    "status": "OK",
+    "raw": 44
+   },
+   "600": {
+    "status": "OK",
+    "raw": 48
+   },
+   "601": {
+    "status": "OK",
+    "raw": 52
+   },
+   "602": {
+    "status": "OK",
+    "raw": 54
+   },
+   "603": {
+    "status": "OK",
+    "raw": 58
+   },
+   "604": {
+    "status": "OK",
+    "raw": 62
+   },
+   "605": {
+    "status": "OK",
+    "raw": 66
+   },
+   "606": {
+    "status": "OK",
+    "raw": 70
+   },
+   "607": {
+    "status": "OK",
+    "raw": 74
+   },
+   "608": {
+    "status": "OK",
+    "raw": 78
+   },
+   "609": {
+    "status": "OK",
+    "raw": 82
+   },
+   "610": {
+    "status": "OK",
+    "raw": 84
+   },
+   "611": {
+    "status": "OK",
+    "raw": 88
+   },
+   "612": {
+    "status": "OK",
+    "raw": 92
+   },
+   "613": {
+    "status": "OK",
+    "raw": 92
+   },
+   "614": {
+    "status": "OK",
+    "raw": 92
+   },
+   "615": {
+    "status": "OK",
+    "raw": 92
+   },
+   "616": {
+    "status": "OK",
+    "raw": 92
+   },
+   "617": {
+    "status": "OK",
+    "raw": 92
+   },
+   "618": {
+    "status": "OK",
+    "raw": 92
+   },
+   "619": {
+    "status": "OK",
+    "raw": 92
+   },
+   "620": {
+    "status": "OK",
+    "raw": 92
+   },
+   "621": {
+    "status": "OK",
+    "raw": 92
+   },
+   "622": {
+    "status": "OK",
+    "raw": 92
+   },
+   "623": {
+    "status": "OK",
+    "raw": 92
+   },
+   "624": {
+    "status": "OK",
+    "raw": 92
+   },
+   "625": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "626": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "627": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "628": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "629": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "630": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "631": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "632": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "633": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "634": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "635": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "636": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "637": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "638": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "639": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "640": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "641": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "642": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "643": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "644": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "645": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "646": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "647": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "648": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "649": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "650": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "651": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "652": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "653": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "654": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "655": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "656": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "657": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "658": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "659": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "660": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "661": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "662": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "663": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "664": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "665": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "666": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "667": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "668": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "669": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "670": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "671": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "672": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "673": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "674": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "675": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "676": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "677": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "678": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "679": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "680": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "681": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "682": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "683": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "684": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "685": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "686": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "687": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "688": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "689": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "690": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "691": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "692": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "693": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "694": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "695": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "696": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "697": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "698": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "699": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "700": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "701": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "702": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "703": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "704": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "705": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "706": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "707": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "708": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "709": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "710": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "711": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "712": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "713": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "714": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "715": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "716": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "717": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "718": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "719": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "720": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "721": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "722": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "723": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "724": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "725": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "726": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "727": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "728": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "729": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "730": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "731": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "732": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "733": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "734": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "735": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "736": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "737": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "738": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "739": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "740": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "741": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "742": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "743": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "744": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "745": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "746": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "747": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "748": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "749": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "750": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "751": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "752": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "753": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "754": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "755": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "756": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "757": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "758": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "759": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "760": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "761": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "762": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "763": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "764": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "765": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "766": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "767": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "768": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "769": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "770": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "771": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "772": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "773": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "774": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "775": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "776": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "777": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "778": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "779": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "780": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "781": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "782": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "783": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "784": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "785": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "786": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "787": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "788": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "789": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "790": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "791": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "792": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "793": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "794": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "795": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "796": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "797": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "798": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "799": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "800": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "801": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "802": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "803": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "804": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "805": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "806": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "807": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "808": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "809": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "810": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "811": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "812": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "813": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "814": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "815": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "816": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "817": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "818": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "819": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "820": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "821": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "822": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "823": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "824": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "825": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "826": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "827": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "828": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "829": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "830": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "831": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "832": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "833": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "834": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "835": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "836": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "837": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "838": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "839": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "840": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "841": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "842": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "843": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "844": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "845": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "846": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "847": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "848": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "849": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "850": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "851": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "852": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "853": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "854": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "855": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "856": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "857": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "858": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "859": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "860": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "861": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "862": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "863": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "864": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "865": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "866": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "867": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "868": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "869": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "870": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "871": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "872": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "873": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "874": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "875": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "876": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "877": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "878": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "879": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "880": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "881": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "882": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "883": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "884": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "885": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "886": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "887": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "888": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "889": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "890": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "891": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "892": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "893": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "894": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "895": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "896": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "897": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "898": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "899": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "900": {
+    "status": "OK",
+    "raw": 0
+   },
+   "901": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "902": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "903": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "904": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "905": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "906": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "907": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "908": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "909": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "910": {
+    "status": "OK",
+    "raw": 45693
+   },
+   "911": {
+    "status": "OK",
+    "raw": 0
+   },
+   "912": {
+    "status": "OK",
+    "raw": 249
+   },
+   "913": {
+    "status": "OK",
+    "raw": 59169
+   },
+   "914": {
+    "status": "OK",
+    "raw": 13476
+   },
+   "915": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "916": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "917": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "918": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "919": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "920": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "921": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "922": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "923": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "924": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "925": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "926": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "927": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "928": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "929": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "930": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "931": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "932": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "933": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "934": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "935": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "936": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "937": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "938": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "939": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "940": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "941": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "942": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "943": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "944": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "945": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "946": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "947": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "948": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "949": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "950": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "951": {
+    "status": "OK",
+    "raw": 33692
+   },
+   "952": {
+    "status": "OK",
+    "raw": 0
+   },
+   "953": {
+    "status": "OK",
+    "raw": 0
+   },
+   "954": {
+    "status": "OK",
+    "raw": 33692
+   },
+   "955": {
+    "status": "OK",
+    "raw": 0
+   },
+   "956": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "957": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "958": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "959": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "960": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "961": {
+    "status": "OK",
+    "raw": 0
+   },
+   "962": {
+    "status": "OK",
+    "raw": 0
+   },
+   "963": {
+    "status": "OK",
+    "raw": 0
+   },
+   "964": {
+    "status": "OK",
+    "raw": 0
+   },
+   "965": {
+    "status": "OK",
+    "raw": 0
+   },
+   "966": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "967": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "968": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "969": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "970": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "971": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "972": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "973": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "974": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "975": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "976": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "977": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "978": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "979": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "980": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "981": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "982": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "983": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "984": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "985": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "986": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "987": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "988": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "989": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "990": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "991": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "992": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "993": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "994": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "995": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "996": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "997": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "998": {
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   },
+   "999": {
+    "status": "OK",
+    "raw": 0
+   }
+  },
+  "stalls": [],
+  "summary": {
+   "duration_s": 96.0,
+   "by_status": {
+    "EXCEPTION": 716,
+    "OK": 284
+   },
+   "ranges": {
+    "EXCEPTION": [
+     [
+      10,
+      11
+     ],
+     [
+      13,
+      98
+     ],
+     [
+      103,
+      104
+     ],
+     [
+      107,
+      192
+     ],
+     [
+      196,
+      196
+     ],
+     [
+      201,
+      205
+     ],
+     [
+      214,
+      216
+     ],
+     [
+      282,
+      284
+     ],
+     [
+      286,
+      289
+     ],
+     [
+      335,
+      336
+     ],
+     [
+      342,
+      342
+     ],
+     [
+      373,
+      379
+     ],
+     [
+      389,
+      400
+     ],
+     [
+      409,
+      499
+     ],
+     [
+      508,
+      560
+     ],
+     [
+      625,
+      899
+     ],
+     [
+      901,
+      909
+     ],
+     [
+      915,
+      950
+     ],
+     [
+      956,
+      960
+     ],
+     [
+      966,
+      998
+     ]
+    ],
+    "OK": [
+     [
+      0,
+      9
+     ],
+     [
+      12,
+      12
+     ],
+     [
+      99,
+      102
+     ],
+     [
+      105,
+      106
+     ],
+     [
+      193,
+      195
+     ],
+     [
+      197,
+      200
+     ],
+     [
+      206,
+      213
+     ],
+     [
+      217,
+      281
+     ],
+     [
+      285,
+      285
+     ],
+     [
+      290,
+      334
+     ],
+     [
+      337,
+      341
+     ],
+     [
+      343,
+      372
+     ],
+     [
+      380,
+      388
+     ],
+     [
+      401,
+      408
+     ],
+     [
+      500,
+      507
+     ],
+     [
+      561,
+      624
+     ],
+     [
+      900,
+      900
+     ],
+     [
+      910,
+      914
+     ],
+     [
+      951,
+      955
+     ],
+     [
+      961,
+      965
+     ],
+     [
+      999,
+      999
+     ]
+    ]
+   }
+  }
+ },
+ "sweep_source": {
+  "file": "sherpa_observed_20261013-090910.json",
+  "captured_at": "2026-10-13T09:09:10+00:00"
+ },
+ "rules": {
+  "run_reads": [
+   {
+    "start": 0,
+    "count": 10,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 99,
+    "count": 4,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 105,
+    "count": 2,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 193,
+    "count": 3,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 197,
+    "count": 4,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 206,
+    "count": 8,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 217,
+    "count": 65,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 290,
+    "count": 45,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 337,
+    "count": 5,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 343,
+    "count": 30,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 380,
+    "count": 9,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 401,
+    "count": 8,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 500,
+    "count": 8,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 561,
+    "count": 64,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 910,
+    "count": 5,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 951,
+    "count": 5,
+    "status": "OK",
+    "differs_from_sweep": []
+   },
+   {
+    "start": 961,
+    "count": 5,
+    "status": "OK",
+    "differs_from_sweep": []
+   }
+  ],
+  "count_ladder": {
+   "start": 217,
+   "reads": [
+    {
+     "count": 2,
+     "status": "OK"
+    },
+    {
+     "count": 3,
+     "status": "OK"
+    },
+    {
+     "count": 4,
+     "status": "OK"
+    },
+    {
+     "count": 6,
+     "status": "OK"
+    },
+    {
+     "count": 8,
+     "status": "OK"
+    },
+    {
+     "count": 10,
+     "status": "OK"
+    },
+    {
+     "count": 13,
+     "status": "OK"
+    },
+    {
+     "count": 16,
+     "status": "OK"
+    },
+    {
+     "count": 20,
+     "status": "OK"
+    },
+    {
+     "count": 25,
+     "status": "OK"
+    },
+    {
+     "count": 32,
+     "status": "OK"
+    },
+    {
+     "count": 40,
+     "status": "OK"
+    },
+    {
+     "count": 50,
+     "status": "OK"
+    },
+    {
+     "count": 64,
+     "status": "OK"
+    },
+    {
+     "count": 65,
+     "status": "OK"
+    }
+   ]
+  },
+  "across_gaps": [
+   {
+    "gap_kind": "EXCEPTION",
+    "start": 9,
+    "count": 4,
+    "status": "EXCEPTION",
+    "code": 2,
+    "detail": "ILLEGAL_DATA_ADDRESS"
+   }
+  ],
+  "u32_reads": {
+   "270x2": {
+    "status": "OK",
+    "words": [
+     2,
+     1886
+    ]
+   },
+   "271x1": {
+    "status": "OK",
+    "raw": 1886
+   },
+   "271x2": {
+    "status": "OK",
+    "words": [
+     1886,
+     51
+    ]
+   },
+   "273x1": {
+    "status": "OK",
+    "raw": 9106
+   }
+  },
+  "fc4": {
+   "0x1": {
+    "status": "EXCEPTION",
+    "code": 1,
+    "detail": "ILLEGAL_FUNCTION"
+   },
+   "270x2": {
+    "status": "EXCEPTION",
+    "code": 1,
+    "detail": "ILLEGAL_FUNCTION"
+   }
+  },
+  "summary": {
+   "answering_runs": 21,
+   "whole_run_reads": 17,
+   "all_runs_readable": true,
+   "unreadable_runs": [],
+   "ladder_start": 217,
+   "ladder_tested_up_to": 65,
+   "safe_read_count": 65,
+   "read_across_exception_gap": "EXCEPTION",
+   "read_across_silent_gap": "untested",
+   "u32_half_readable": true,
+   "fc4": "unsupported",
+   "block_values_match_sweep": true,
+   "inconsistent_addresses": []
+  }
+ },
+ "finished_at": "2026-10-13T09:22:31+00:00",
+ "timing": {
+  "requests": 49,
+  "by_status": {
+   "EXCEPTION": 3,
+   "OK": 46
+  },
+  "latency_ms": {
+   "p50": 51.5,
+   "p95": 179.9,
+   "max": 180.5,
+   "n": 46
+  },
+  "echo_frames": 0,
+  "stale_frames": 0
+ },
+ "sanitized": true,
+ "sweep_timing": {
+  "requests": 1046,
+  "by_status": {
+   "EXCEPTION": 729,
+   "OK": 317
+  },
+  "latency_ms": {
+   "p50": 35.9,
+   "p95": 36.0,
+   "max": 51.9,
+   "n": 317
+  },
+  "echo_frames": 0,
+  "stale_frames": 0
+ }
+}
