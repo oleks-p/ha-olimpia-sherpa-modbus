@@ -478,6 +478,12 @@
           },
           "remote_controls": {
             "name": "Remote control"
+          },
+          "heating_curve": {
+            "name": "Heating curve"
+          },
+          "cooling_curve": {
+            "name": "Cooling curve"
           }
         }
       }

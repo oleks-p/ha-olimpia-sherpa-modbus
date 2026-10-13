@@ -478,6 +478,12 @@
           },
           "remote_controls": {
             "name": "Дистанційне керування"
+          },
+          "heating_curve": {
+            "name": "Крива опалення"
+          },
+          "cooling_curve": {
+            "name": "Крива охолодження"
           }
         }
       }

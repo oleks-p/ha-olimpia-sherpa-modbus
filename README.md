@@ -95,6 +95,23 @@ Options:
 The connection can be changed later with *Reconfigure*; entity ids and history
 are kept.
 
+## Cards
+
+The integration ships two Lovelace cards and registers them itself (on
+storage-mode dashboards; for a YAML-mode setup, add
+`/olimpia_sherpa_modbus/sherpa-cards.js` as a module resource):
+
+- `custom:sherpa-schematic-card`: the plant, with the water route the heat pump
+  is using right now.
+- `custom:sherpa-control-card`: the mode, the water against its target, the
+  climatic curve, the tank, and the setpoints. Setpoints can be edited only
+  where writes are allowed and verified.
+
+Both take `prefix` (default `sherpa`), `title` and `labels`. They follow the
+user's language, English or Ukrainian. The sources are in `cards/` (Lit +
+TypeScript); `cd cards && npm ci && npm run build` rebuilds the bundle, and CI
+checks that the committed bundle matches its source.
+
 `dashboards/sherpa.yaml` is a ready-made dashboard for everyday use. The
 schematic view uses
 [heat-pump-card](https://github.com/ManfredTremmel/lovelace-heat-pump-card).
@@ -163,7 +180,7 @@ always starts HA again.
 
 ```bash
 uv venv --python 3.14 .venv && uv pip install --python .venv/bin/python -r requirements_test.txt
-.venv/bin/python -m pytest          # 245 tests: integration (HA 2026.8.2) + probe + fixtures
+.venv/bin/python -m pytest          # 253 tests: integration (HA 2026.8.2) + probe + fixtures
 .venv/bin/ruff check custom_components tools tests
 docker compose up -d                # a dev Home Assistant against a simulated unit
 .venv/bin/python tools/gen_translations.py   # strings.json + en/uk from one table

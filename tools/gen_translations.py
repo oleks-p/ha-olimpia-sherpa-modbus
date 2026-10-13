@@ -165,6 +165,8 @@ CLIMATE = {"heat_pump": ("Heat pump", "Тепловий насос", {
     "dhw_in_progress": ("Hot water cycle", "Цикл ГВП"),
     "night": ("Night mode", "Нічний режим"),
     "remote_controls": ("Remote control", "Дистанційне керування"),
+    "heating_curve": ("Heating curve", "Крива опалення"),
+    "cooling_curve": ("Cooling curve", "Крива охолодження"),
 })}
 
 

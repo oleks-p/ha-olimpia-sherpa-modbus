@@ -1,6 +1,7 @@
 # Sherpa dashboard for the olimpia_sherpa_modbus integration (YAML mode).
 #
-# Entity ids assume the default prefix "sherpa". The Overview and Trends views
+# Entity ids assume the default prefix "sherpa". The Plant view uses the
+# integration's own cards (it serves them itself); the Overview and Trends views
 # use built-in cards only; the Schematic view needs custom:heat-pump-card
 # (ManfredTremmel/lovelace-heat-pump-card). Register it in configuration.yaml:
 #
@@ -106,6 +107,24 @@ views:
             entity: binary_sensor.sherpa_out_boiler
           - type: tile
             entity: sensor.sherpa_compressor_hours
+
+  - title: Plant
+    path: plant
+    icon: mdi:pipe
+    type: sections
+    max_columns: 3
+    sections:
+      # The integration's own cards: served by it and registered as a Lovelace
+      # resource automatically (storage-mode dashboards).
+      - type: grid
+        column_span: 2
+        cards:
+          - type: custom:sherpa-schematic-card
+            grid_options:
+              columns: full
+      - type: grid
+        cards:
+          - type: custom:sherpa-control-card
 
   - title: Schematic
     path: schematic

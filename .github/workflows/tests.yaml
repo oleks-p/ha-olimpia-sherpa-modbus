@@ -17,3 +17,21 @@ jobs:
       - run: pip install -r requirements_test.txt
       - run: ruff check custom_components tools tests
       - run: pytest -q
+
+  cards:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: cards/package-lock.json
+      - run: npm ci
+        working-directory: cards
+      - run: npm run typecheck
+        working-directory: cards
+      - run: npm run build
+        working-directory: cards
+      # The bundle ships inside the integration: it must be the build of this source.
+      - run: git diff --exit-code -- custom_components/olimpia_sherpa_modbus/www/

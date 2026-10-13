@@ -48,6 +48,17 @@ async def async_setup_entry(
     async_add_entities([SherpaClimate(entry.runtime_data.coordinator, HEAT_PUMP, "climate")])
 
 
+def _curve(values: dict[str, Any], kind: str) -> dict[str, Any]:
+    return {
+        "enabled": None if values.get(f"{kind}_curve_enabled") is None
+        else bool(values.get(f"{kind}_curve_enabled")),
+        "outdoor_at_max_water": values.get(f"{kind}_curve_max_water_outdoor"),
+        "max_water": values.get(f"{kind}_curve_max_water"),
+        "outdoor_at_min_water": values.get(f"{kind}_curve_min_water_outdoor"),
+        "min_water": values.get(f"{kind}_curve_min_water"),
+    }
+
+
 class SherpaClimate(SherpaEntity, ClimateEntity):
     entity_description: SherpaClimateDescription
     _attr_supported_features = ClimateEntityFeature(0)
@@ -100,6 +111,9 @@ class SherpaClimate(SherpaEntity, ClimateEntity):
             "dhw_in_progress": values.get("mode") == "domestic_hot_water",
             "night": values.get("mode_night"),
             "remote_controls": values.get("remote_controls"),
+            # The curves themselves, for cards that draw them: their sensors are
+            # diagnostic and off by default, the registers are always read.
+            **{f"{kind}_curve": _curve(values, kind) for kind in ("heating", "cooling")},
         }
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
