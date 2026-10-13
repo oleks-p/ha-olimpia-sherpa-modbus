@@ -1,0 +1,31 @@
+# A dev Home Assistant against a simulated Sherpa -- no hardware needed.
+#
+#   docker compose up -d
+#   open http://localhost:8123, onboard, then add "Olimpia Splendid Sherpa S2":
+#   Network gateway -> host "sim", port 5020, "Transparent serial server
+#   (RTU over TCP)", address 201.
+#
+# The simulator serves the reference unit's probe capture: identity, the 284
+# answering registers, and the unit's refusal of reads that span a gap.
+# The Home Assistant release the tests pin.
+services:
+  sim:
+    image: python:3.14-slim
+    working_dir: /repo
+    command: >-
+      python3 -u tools/sim_sherpa.py --capture tests/fixtures/sherpa_s2_big_14t_fw057.json
+      --listen 0.0.0.0:5020 --framer rtu
+    volumes:
+      - .:/repo:ro
+
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:2026.8.2
+    ports:
+      - "8123:8123"
+    environment:
+      - TZ=UTC
+    volumes:
+      - ./dev-config:/config
+      - ./custom_components:/config/custom_components:ro
+    depends_on:
+      - sim

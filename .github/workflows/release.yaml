@@ -1,0 +1,17 @@
+name: release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tag must match the manifest version
+        run: |
+          manifest=$(python3 -c "import json; print(json.load(open('custom_components/olimpia_sherpa_modbus/manifest.json'))['version'])")
+          tag="${GITHUB_REF_NAME#v}"
+          echo "manifest $manifest, tag $tag"
+          test "$manifest" = "$tag"

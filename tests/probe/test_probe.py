@@ -487,10 +487,8 @@ def test_rules_plan_on_the_reference_units_map(tmp_path):
     """The rules stage, driven by the real unit's sweep, against a fake with its map."""
     import pathlib
 
-    capture = pathlib.Path(__file__).parent / "fixtures" / "sherpa_s2_big_14t_fw057.json"
-    sweep = json.loads(capture.read_text())["sweep"]["registers"]
-    answering = {int(a): v["raw"] for a, v in sweep.items() if v["status"] == "OK"}
-    fake = FakeSherpa(answering)
+    capture = pathlib.Path(__file__).parents[1] / "fixtures" / "sherpa_s2_big_14t_fw057.json"
+    fake = FakeSherpa.from_capture(capture)
     server = PtyServer(fake)
     try:
         rc, data = run(tmp_path, "--serial", server.path, "--i-stopped-home-assistant",

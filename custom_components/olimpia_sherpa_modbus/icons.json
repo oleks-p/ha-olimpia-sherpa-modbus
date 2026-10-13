@@ -1,0 +1,192 @@
+{
+  "entity": {
+    "sensor": {
+      "mode": {
+        "default": "mdi:heat-pump",
+        "state": {
+          "standby": "mdi:power-sleep",
+          "cooling": "mdi:snowflake",
+          "heating": "mdi:radiator",
+          "domestic_hot_water": "mdi:water-thermometer",
+          "anti_legionella": "mdi:bacteria-outline"
+        }
+      },
+      "error_code": {
+        "default": "mdi:alert-circle-outline"
+      },
+      "override_code": {
+        "default": "mdi:information-outline"
+      },
+      "pump_step": {
+        "default": "mdi:pump"
+      },
+      "pump_duty": {
+        "default": "mdi:pump"
+      },
+      "water_delta": {
+        "default": "mdi:delta"
+      },
+      "compressor_rate": {
+        "default": "mdi:speedometer"
+      },
+      "legionella_start": {
+        "default": "mdi:clock-outline"
+      },
+      "legionella_start_minutes": {
+        "default": "mdi:clock-outline"
+      },
+      "inputs": {
+        "default": "mdi:import"
+      },
+      "status": {
+        "default": "mdi:state-machine"
+      },
+      "outputs": {
+        "default": "mdi:export"
+      },
+      "override": {
+        "default": "mdi:information-outline"
+      },
+      "alarm_1": {
+        "default": "mdi:alert-outline"
+      },
+      "alarm_2": {
+        "default": "mdi:alert-outline"
+      },
+      "identify_code": {
+        "default": "mdi:identifier"
+      },
+      "remote_controls": {
+        "default": "mdi:remote"
+      },
+      "read_failures": {
+        "default": "mdi:lan-disconnect"
+      },
+      "last_successful_read": {
+        "default": "mdi:lan-check"
+      }
+    },
+    "binary_sensor": {
+      "in_flow": {
+        "default": "mdi:waves-arrow-right",
+        "state": {
+          "on": "mdi:waves-arrow-right"
+        }
+      },
+      "in_ta": {
+        "default": "mdi:toggle-switch-off-outline",
+        "state": {
+          "on": "mdi:toggle-switch"
+        }
+      },
+      "mode_cooling": {
+        "default": "mdi:snowflake-off",
+        "state": {
+          "on": "mdi:snowflake"
+        }
+      },
+      "mode_heating": {
+        "default": "mdi:radiator-off",
+        "state": {
+          "on": "mdi:radiator"
+        }
+      },
+      "mode_dhw": {
+        "default": "mdi:water-thermometer-outline",
+        "state": {
+          "on": "mdi:water-thermometer"
+        }
+      },
+      "mode_legionella": {
+        "default": "mdi:bacteria-outline",
+        "state": {
+          "on": "mdi:bacteria"
+        }
+      },
+      "mode_night": {
+        "default": "mdi:weather-sunny",
+        "state": {
+          "on": "mdi:weather-night"
+        }
+      },
+      "mode_pending": {
+        "default": "mdi:timer-sand-complete",
+        "state": {
+          "on": "mdi:timer-sand"
+        }
+      },
+      "out_pump": {
+        "default": "mdi:pump-off",
+        "state": {
+          "on": "mdi:pump"
+        }
+      },
+      "out_dhw_pump": {
+        "default": "mdi:pump-off",
+        "state": {
+          "on": "mdi:pump"
+        }
+      },
+      "out_eh1": {
+        "default": "mdi:heating-coil",
+        "state": {
+          "on": "mdi:heating-coil"
+        }
+      },
+      "out_eh2": {
+        "default": "mdi:heating-coil",
+        "state": {
+          "on": "mdi:heating-coil"
+        }
+      },
+      "out_3way": {
+        "default": "mdi:valve-closed",
+        "state": {
+          "on": "mdi:valve-open"
+        }
+      },
+      "out_k5": {
+        "default": "mdi:heating-coil",
+        "state": {
+          "on": "mdi:heating-coil"
+        }
+      },
+      "out_boiler": {
+        "default": "mdi:water-boiler-off",
+        "state": {
+          "on": "mdi:water-boiler"
+        }
+      },
+      "out_alarm": {
+        "default": "mdi:bell-outline",
+        "state": {
+          "on": "mdi:bell-alert"
+        }
+      },
+      "defrost": {
+        "default": "mdi:snowflake-melt",
+        "state": {
+          "on": "mdi:snowflake-melt"
+        }
+      },
+      "power": {
+        "default": "mdi:power-off",
+        "state": {
+          "on": "mdi:heat-pump"
+        }
+      },
+      "warning": {
+        "default": "mdi:alert-outline",
+        "state": {
+          "on": "mdi:alert"
+        }
+      },
+      "compressor_running": {
+        "default": "mdi:engine-off-outline",
+        "state": {
+          "on": "mdi:engine"
+        }
+      }
+    }
+  }
+}

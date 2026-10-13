@@ -1,0 +1,166 @@
+# Sherpa S2 dashboard for the olimpia_sherpa_modbus integration (YAML mode).
+#
+# Entity ids assume the default prefix "sherpa". The Overview and Trends views
+# use built-in cards only; the Schematic view needs custom:heat-pump-card
+# (ManfredTremmel/lovelace-heat-pump-card). Register it in configuration.yaml:
+#
+#   lovelace:
+#     dashboards:
+#       sherpa-s2:
+#         mode: yaml
+#         filename: dashboards/sherpa.yaml
+#         title: Sherpa S2
+#         icon: mdi:heat-pump
+#
+# Setpoints are shown, not edited: this version of the integration is
+# read-only, and the unit's own controller owns them.
+
+title: Sherpa S2
+
+views:
+  - title: Overview
+    path: overview
+    icon: mdi:heat-pump
+    type: sections
+    max_columns: 4
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: State
+          - type: tile
+            entity: sensor.sherpa_mode
+          - type: tile
+            entity: binary_sensor.sherpa_compressor_running
+          - type: tile
+            entity: binary_sensor.sherpa_defrost
+          - type: tile
+            entity: binary_sensor.sherpa_mode_night
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: binary_sensor.sherpa_error
+                state: "on"
+            card:
+              type: tile
+              entity: sensor.sherpa_error_code
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: binary_sensor.sherpa_warning
+                state: "on"
+            card:
+              type: tile
+              entity: sensor.sherpa_override_code
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Temperatures
+          - type: tile
+            entity: sensor.sherpa_water_out
+          - type: tile
+            entity: sensor.sherpa_water_in
+          - type: tile
+            entity: sensor.sherpa_water_delta
+          - type: tile
+            entity: sensor.sherpa_dhw_tank
+          - type: tile
+            entity: sensor.sherpa_outdoor_air
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Setpoints
+          - type: tile
+            entity: sensor.sherpa_heating_setpoint
+          - type: tile
+            entity: sensor.sherpa_cooling_setpoint
+          - type: tile
+            entity: sensor.sherpa_dhw_setpoint
+          - type: tile
+            entity: sensor.sherpa_legionella_setpoint
+          - type: tile
+            entity: sensor.sherpa_legionella_start
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Outputs
+          - type: tile
+            entity: binary_sensor.sherpa_out_pump
+          - type: tile
+            entity: sensor.sherpa_pump_duty
+          - type: tile
+            entity: binary_sensor.sherpa_out_3way
+          - type: tile
+            entity: binary_sensor.sherpa_out_eh1
+          - type: tile
+            entity: binary_sensor.sherpa_out_eh2
+          - type: tile
+            entity: binary_sensor.sherpa_out_boiler
+          - type: tile
+            entity: sensor.sherpa_compressor_hours
+
+  - title: Schematic
+    path: schematic
+    icon: mdi:sitemap-outline
+    panel: true
+    cards:
+      - type: custom:heat-pump-card
+        title: Sherpa S2
+        heatingPumpType: A2W
+        heatingPumpStatusOnOff: binary_sensor.sherpa_power
+        heatingPumpHeatingMode: binary_sensor.sherpa_mode_heating
+        heatingPumpCoolingMode: binary_sensor.sherpa_mode_cooling
+        heatingPumpHotWaterMode: binary_sensor.sherpa_mode_dhw
+        heatingPumpNightMode: binary_sensor.sherpa_mode_night
+        error: binary_sensor.sherpa_error
+        warning: binary_sensor.sherpa_warning
+        defrostMode: binary_sensor.sherpa_defrost
+        outdoorTemperature: sensor.sherpa_outdoor_air
+        supplyTemperature: sensor.sherpa_water_out
+        # No status bit says the compressor runs; the integration derives it
+        # from the runtime counter (register 270).
+        hpRunning: binary_sensor.sherpa_compressor_running
+        compressorRunning: binary_sensor.sherpa_compressor_running
+        compressorValue: sensor.sherpa_compressor_hours
+        circulatingPumpRunning: binary_sensor.sherpa_out_pump
+        wwHeatingValve: binary_sensor.sherpa_out_3way
+        tankWW: true
+        tankTempWWUp: sensor.sherpa_dhw_tank
+        heaterRodLevel1: binary_sensor.sherpa_out_eh1
+        heaterRodLevel2: binary_sensor.sherpa_out_eh2
+        additionalHeating: binary_sensor.sherpa_out_boiler
+
+  # Charts live on their own view so the default one stays cheap to render on
+  # a wall panel.
+  - title: Trends
+    path: trends
+    icon: mdi:chart-line
+    cards:
+      - type: statistics-graph
+        title: Water and air
+        period: 5minute
+        stat_types: [mean]
+        days_to_show: 2
+        entities:
+          - sensor.sherpa_water_out
+          - sensor.sherpa_water_in
+          - sensor.sherpa_outdoor_air
+          - sensor.sherpa_dhw_tank
+      - type: statistics-graph
+        title: Compressor hours per day
+        period: day
+        stat_types: [change]
+        chart_type: bar
+        days_to_show: 30
+        entities:
+          - sensor.sherpa_compressor_hours
+      - type: history-graph
+        title: Mode
+        hours_to_show: 48
+        entities:
+          - sensor.sherpa_mode
+          - binary_sensor.sherpa_compressor_running
+          - binary_sensor.sherpa_defrost
