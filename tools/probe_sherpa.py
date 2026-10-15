@@ -249,12 +249,29 @@ class SerialLink:
             termios.tcsetattr(fd, termios.TCSANOW, [0, 0, cflag, 0, speed, speed, cc])
             termios.tcflush(fd, termios.TCIOFLUSH)
         except BaseException:
+            self._release(fd)
             os.close(fd)
             raise
         self.fd = fd
 
+    def _release(self, fd: int) -> None:
+        """Give exclusive mode back before closing.
+
+        macOS clears it on close, but Linux keeps it on the tty while anything
+        else holds it open -- a pty's other end, say -- so the next open() of
+        the same port, even by this tool, fails with EBUSY.
+        """
+        if self.exclusive:
+            import fcntl
+            import termios
+
+            with contextlib.suppress(OSError, AttributeError):
+                fcntl.ioctl(fd, termios.TIOCNXCL)
+            self.exclusive = False
+
     def close(self) -> None:
         if self.fd is not None:
+            self._release(self.fd)
             with contextlib.suppress(OSError):
                 os.close(self.fd)
             self.fd = None
