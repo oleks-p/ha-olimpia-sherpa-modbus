@@ -180,7 +180,7 @@ always starts HA again.
 
 ```bash
 uv venv --python 3.14 .venv && uv pip install --python .venv/bin/python -r requirements_test.txt
-.venv/bin/python -m pytest          # 253 tests: integration (HA 2026.8.2) + probe + fixtures
+.venv/bin/python -m pytest          # 255 tests: integration (HA 2026.8.2) + probe + fixtures
 .venv/bin/ruff check custom_components tools tests
 docker compose up -d                # a dev Home Assistant against a simulated unit
 .venv/bin/python tools/gen_translations.py   # strings.json + en/uk from one table

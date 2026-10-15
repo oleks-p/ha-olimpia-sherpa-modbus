@@ -1,6 +1,6 @@
 {
  "domain": "olimpia_sherpa_modbus",
- "version": "0.5.0",
+ "version": "0.5.1",
  "default_entity_prefix": "sherpa",
  "writes": "opt_in",
  "entity_id": "<domain>.<entity_prefix>_<key>",
