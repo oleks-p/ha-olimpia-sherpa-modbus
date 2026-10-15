@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.1 — 2026-10-15
+
+- The integration ships its icon, Olimpia Splendid's "OS" mark, in `brand/`
+  (256 px and 512 px). Home Assistant 2026.x serves a custom integration's icon
+  from there. The integrations page, Repairs and HACS showed "icon not
+  available" without it.
+
 ## 0.5.0 — 2026-10-13
 
 Lovelace cards, built in (P7).
