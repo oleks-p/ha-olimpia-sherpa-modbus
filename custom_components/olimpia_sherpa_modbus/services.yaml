@@ -56,3 +56,17 @@ read_registers:
           min: 1
           max: 125
           mode: box
+
+write_mode_command:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: olimpia_sherpa_modbus
+    value:
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 31
+          mode: box

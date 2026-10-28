@@ -8,23 +8,29 @@ hardware actually does, not against what the code assumes.
 
 from __future__ import annotations
 
+from datetime import timedelta
 from pathlib import Path
 from unittest.mock import AsyncMock, patch
 
 import pytest
+from homeassistant.config_entries import ConfigEntryState
+from homeassistant.util import dt as dt_util
 from pymodbus.exceptions import ConnectionException, ModbusIOException
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed
 
 from custom_components.olimpia_sherpa_modbus.const import (
+    CONF_ALLOW_WRITES,
     CONF_BAUDRATE,
     CONF_ENTITY_PREFIX,
+    CONF_MODE_CONTROL,
     CONF_SERIAL_PORT,
     CONF_SLAVE,
     CONF_TRANSPORT,
     DOMAIN,
     TRANSPORT_SERIAL,
 )
-from tests.sim import FakeSherpa
+from custom_components.olimpia_sherpa_modbus.registers import FORBIDDEN_WRITES
+from tests.sim import FakeSherpa, ModeModel
 
 CAPTURE = Path(__file__).parents[1] / "fixtures" / "sherpa_s2_big_14t_fw057.json"
 TRANSPORT = "custom_components.olimpia_sherpa_modbus.transport"
@@ -95,7 +101,11 @@ class FakeModbusClient:
 
 @pytest.fixture
 def fake() -> FakeSherpa:
-    return FakeSherpa.from_capture(CAPTURE)
+    fake = FakeSherpa.from_capture(CAPTURE)
+    yield fake
+    # No test may ever make the integration write a forbidden register -- ADDR220
+    # above all: only a person sets it, on the panel.
+    assert not {a for a, _ in fake.writes} & FORBIDDEN_WRITES, fake.writes
 
 
 @pytest.fixture
@@ -138,3 +148,44 @@ async def setup_integration(hass, config_entry, modbus_clients, freezer):
     assert await hass.config_entries.async_setup(config_entry.entry_id)
     await hass.async_block_till_done()
     return config_entry
+
+
+@pytest.fixture
+def advance(hass, freezer):
+    """Move time forward in 10 s steps, letting each poll and mode tick complete."""
+
+    async def run(seconds: float) -> None:
+        remaining = seconds
+        while remaining > 0:
+            step = min(10, remaining)
+            freezer.tick(timedelta(seconds=step))
+            async_fire_time_changed(hass, dt_util.utcnow())
+            await hass.async_block_till_done()
+            remaining -= step
+
+    return run
+
+
+@pytest.fixture
+def mode_unit(fake):
+    """The fake with the P6 behaviour: 106 and ADDR220 move status, E09 comes at 255 s.
+    The clock is looked up at call time, so the tests' frozen clock is the one used."""
+    import time
+
+    fake.mode_model = ModeModel(lambda: time.monotonic())
+    return fake
+
+
+@pytest.fixture
+async def with_mode_control(hass, config_entry, modbus_clients, freezer):
+    """Allow writes + Mode control on, set before the integration is.
+
+    Unloads the entry at the end, while the fake link is still patched in: the
+    controller's last write (at unload and at Home Assistant stop) would otherwise
+    go to a real serial port and wait out its timeout.
+    """
+    hass.config_entries.async_update_entry(
+        config_entry, options={CONF_ALLOW_WRITES: True, CONF_MODE_CONTROL: True})
+    yield config_entry
+    if config_entry.state is ConfigEntryState.LOADED:
+        await hass.config_entries.async_unload(config_entry.entry_id)

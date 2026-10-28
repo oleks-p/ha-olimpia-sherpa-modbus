@@ -1,9 +1,9 @@
 """Sensor entities.
 
-Every legacy entity keeps its key, unit, device class and state class exactly:
-twenty of them carry long-term statistics, which break if any of those change
-at the cutover. tests/fixtures/legacy_entities.json is the reference, and a
-golden test holds this file to it.
+Keys, units, device classes and state classes match a YAML modbus setup that
+used the same names, so its history and long-term statistics carry over when
+the integration replaces it; twenty carry statistics, which break if any of
+those change. entities.json pins them, and a test holds this file to it.
 """
 
 from __future__ import annotations

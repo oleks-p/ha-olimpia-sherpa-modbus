@@ -4,7 +4,7 @@ The cards are built from cards/ into www/sherpa-cards.js and shipped inside the
 integration, so a pinned release carries cards that match its entities.
 
 Registration goes through Lovelace *resources* rather than
-``frontend.add_extra_js_url``, for the reason the another integration integration found: an
+``frontend.add_extra_js_url``, because an
 extra module URL runs before the frontend has finished booting, and Home
 Assistant then replaces ``window.customElements`` with a scoped registry,
 silently discarding what was defined. Resources load after the frontend is up.

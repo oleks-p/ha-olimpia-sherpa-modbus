@@ -1,10 +1,9 @@
 /**
  * The one place a colour, radius or stroke weight is decided.
  *
- * The surfaces, status colours, radii and type are one set of design tokens,
- * unchanged, so the two product lines read as one family on a dashboard. What
- * is new is WATER: which circuit a pipe belongs to, the Sherpa's equivalent of
- * duct colours elsewhere.
+ * The surfaces, status colours, radii and type follow one design system, so
+ * the cards read as one family on a dashboard. WATER says which circuit a pipe
+ * belongs to.
  *
  * Semantic groups are kept apart:
  *

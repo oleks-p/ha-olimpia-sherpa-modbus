@@ -64,7 +64,7 @@ def test_the_plan_stays_inside_runs_and_never_splits_a_counter():
 def test_the_plan_is_small():
     blocks = plan_blocks(REGISTERS)
     per_tier = {tier: sum(1 for b in blocks if b.tier is tier) for tier in Tier}
-    assert per_tier[Tier.CONTROL] == 5
+    assert per_tier[Tier.CONTROL] == 6      # 8, 12, 100-102, 105-106, 220, 388
     assert per_tier[Tier.PROCESS] == 1      # 0-7 in one read
     assert per_tier[Tier.SETPOINT] <= 5     # 206-212 + 217-249 + 341 + 369 + 380-387
 
@@ -123,7 +123,7 @@ def test_enum_values_are_snake_case_keys():
 def test_manifest_and_version():
     manifest = json.loads((PACKAGE / "manifest.json").read_text())
     assert manifest["domain"] == "olimpia_sherpa_modbus"
-    assert manifest["version"] == "0.5.1"
+    assert manifest["version"] == "0.6.0"
     assert manifest["iot_class"] == "local_polling" and manifest["config_flow"] is True
 
 
@@ -220,3 +220,36 @@ def test_the_live_check_tool_covers_every_candidate_once():
     assert sorted(verify_writes.ORDER) == sorted(WRITE_SPECS)
     assert len(set(verify_writes.ORDER)) == len(verify_writes.ORDER)
     assert verify_writes.ORDER[-1] == "heating_curve_enabled"    # the one that matters most, last
+
+
+@pytest.mark.parametrize("language", ["en", "uk"])
+def test_mode_control_is_translated(language):
+    strings = json.loads((PACKAGE / "translations" / f"{language}.json").read_text())
+    for key in ("mode_control_inactive", "mode_control_active"):
+        assert strings["exceptions"][key]["message"], key
+    for key in ("serial_control_unmanaged", "mode_keepalive_lost", "mode_not_applied"):
+        assert strings["issues"][key]["title"] and strings["issues"][key]["description"], key
+    assert "{seconds}" in strings["issues"]["mode_keepalive_lost"]["description"]
+    init = strings["options"]["step"]["init"]
+    assert init["data"]["mode_control"] and init["data_description"]["mode_control"]
+    assert strings["options"]["error"]["mode_control_needs_writes"]
+    entity = strings["entity"]
+    assert set(entity["select"]["operating_mode"]["state"]) == {
+        "standby", "dhw_only", "heating", "cooling"}
+    assert entity["switch"]["eco"]["name"] and entity["switch"]["night"]["name"]
+    assert entity["water_heater"]["hot_water"]["name"]
+    attrs = entity["climate"]["heat_pump"]["state_attributes"]
+    assert attrs["operating_mode"]["name"] and attrs["mode_control"]["name"]
+
+
+def test_every_translation_key_the_code_raises_exists():
+    """Each translation_key in the package must be a key in strings.json."""
+    import re
+
+    strings = json.loads((PACKAGE / "strings.json").read_text())
+    known = set(strings["exceptions"]) | set(strings["issues"])
+    for path in PACKAGE.glob("*.py"):
+        if path.name == "config_flow.py":       # its keys are selectors, not exceptions
+            continue
+        for key in re.findall(r'translation_key="([a-z_0-9]+)"', path.read_text()):
+            assert key in known, f"{path.name}: {key}"

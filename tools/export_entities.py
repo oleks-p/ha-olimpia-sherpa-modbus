@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Write entities.json: every entity this release can create, and what it is.
 
-Dashboard tooling can vendor this file per release and
-check what it binds against it, so what a dashboard draws and binds can
-only name entities the pinned release really provides. A test fails if the
-committed file falls behind the code.
+Dashboard tooling can vendor this file per release and check what it binds
+against it, so a dashboard only names entities the pinned release really
+provides. A test fails if the committed file falls behind the code.
 
     .venv/bin/python tools/export_entities.py            # rewrite entities.json
     .venv/bin/python tools/export_entities.py --check    # exit 1 if it is stale
@@ -28,8 +27,10 @@ def build() -> dict:
     from custom_components.olimpia_sherpa_modbus.const import DEFAULT_ENTITY_PREFIX, DOMAIN
     from custom_components.olimpia_sherpa_modbus.number import NUMBERS
     from custom_components.olimpia_sherpa_modbus.registers import WRITE_SPECS
+    from custom_components.olimpia_sherpa_modbus.select import OPERATING_MODE
     from custom_components.olimpia_sherpa_modbus.sensor import SENSORS
-    from custom_components.olimpia_sherpa_modbus.switch import SWITCHES
+    from custom_components.olimpia_sherpa_modbus.switch import MODE_SWITCHES, SWITCHES
+    from custom_components.olimpia_sherpa_modbus.water_heater import HOT_WATER
 
     manifest = json.loads(
         (ROOT / "custom_components" / DOMAIN / "manifest.json").read_text())
@@ -45,7 +46,7 @@ def build() -> dict:
             rec["options"] = list(d.options)
         if not d.entity_registry_enabled_default:
             rec["enabled_default"] = False
-        if domain in ("number", "switch"):
+        if domain in ("number", "switch") and d.key in WRITE_SPECS:
             # Created only with "allow writes" on and the write check passed on
             # the unit: never something a customer dashboard can count on.
             spec = WRITE_SPECS[d.key]
@@ -53,7 +54,9 @@ def build() -> dict:
             if domain == "number":
                 rec.update(min=spec.minimum, max=spec.maximum, step=spec.step)
         elif d.present_fn is not None:
-            rec["conditional"] = True   # created only when the hardware reports it
+            # Created only when the hardware reports it -- or, for the mode
+            # control entities, only with that option on.
+            rec["conditional"] = True
         return rec
 
     return {
@@ -67,7 +70,11 @@ def build() -> dict:
         + [record("binary_sensor", d) for d in BINARY_SENSORS]
         + [record("climate", HEAT_PUMP)]
         + [record("number", d) for d in NUMBERS]
-        + [record("switch", d) for d in SWITCHES],
+        + [record("switch", d) for d in SWITCHES]
+        # Mode control (opt-in; needs Allow writes): usable only with ADDR220 = 1.
+        + [record("select", OPERATING_MODE)]
+        + [record("switch", d) for d in MODE_SWITCHES]
+        + [record("water_heater", HOT_WATER)],
     }
 
 

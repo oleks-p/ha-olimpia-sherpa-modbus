@@ -34,11 +34,13 @@ from .const import (
     PLATFORMS,
     SERVICE_READ_REGISTERS,
     SERVICE_VERIFY_WRITE,
+    SERVICE_WRITE_MODE_COMMAND,
 )
 from .coordinator import SherpaCoordinator
+from .mode_control import MODE_STORE, ModeStore
 from .model import NotASherpa, UnsupportedModel, async_identify
 from .raw_read import async_read
-from .registers import MAX_READ, WRITE_SPECS
+from .registers import MAX_READ, MODE_COMMAND_MAX, WRITE_SPECS
 from .transport import BusRegistry, Endpoint, SherpaBus, SherpaTransientError
 from .writes import CHECKS, WriteChecks
 
@@ -57,6 +59,11 @@ READ_REGISTERS_SCHEMA = vol.Schema({
     vol.Optional("config_entry_id"): cv.string,
     vol.Optional("address"): vol.All(vol.Coerce(int), vol.Range(min=0, max=0xFFFF)),
     vol.Optional("count", default=1): vol.All(vol.Coerce(int), vol.Range(min=1, max=MAX_READ)),
+})
+
+WRITE_MODE_COMMAND_SCHEMA = vol.Schema({
+    vol.Optional("config_entry_id"): cv.string,
+    vol.Required("value"): vol.All(vol.Coerce(int), vol.Range(min=0, max=MODE_COMMAND_MAX)),
 })
 
 #: One bus per physical link, shared by every entry and config flow using it.
@@ -90,6 +97,11 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         return await async_read(entry.runtime_data.coordinator, call.data.get("address"),
                                 call.data["count"])
 
+    async def write_mode_command(call: ServiceCall) -> ServiceResponse:
+        entry = _target_entry(hass, call.data.get("config_entry_id"))
+        return await entry.runtime_data.coordinator.writes.async_mode_command(
+            call.data["value"], call.context)
+
     # Admin only: it writes to the unit, however briefly and however carefully.
     async_register_admin_service(hass, DOMAIN, SERVICE_VERIFY_WRITE, verify_write,
                                  schema=VERIFY_WRITE_SCHEMA,
@@ -97,6 +109,10 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     # Admin only too: it only reads, but at any address and without the map.
     async_register_admin_service(hass, DOMAIN, SERVICE_READ_REGISTERS, read_registers,
                                  schema=READ_REGISTERS_SCHEMA,
+                                 supports_response=SupportsResponse.ONLY)
+    # Admin only: it can change what the unit does (with ADDR220 = 1). P6 test.
+    async_register_admin_service(hass, DOMAIN, SERVICE_WRITE_MODE_COMMAND, write_mode_command,
+                                 schema=WRITE_MODE_COMMAND_SCHEMA,
                                  supports_response=SupportsResponse.ONLY)
     return True
 
@@ -156,8 +172,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: SherpaConfigEntry) -> bo
         # Not a reason to stop reading the unit: the repair issue says what is left.
         _LOGGER.error("Could not finish an interrupted write check: %s", err)
 
+    # After the first refresh (it needs ADDR220 and 106) and before the entities.
+    mode_store = hass.data.setdefault(MODE_STORE, ModeStore(hass))
+    await mode_store.async_load()
+    await coordinator.mode.async_start(mode_store)
+    # The controller has a timer and listeners of its own: whatever goes wrong from
+    # here on, they must not outlive the entry (async_stop is idempotent; the normal
+    # unload stops it earlier, while the bus is still ours).
+    entry.async_on_unload(coordinator.mode.async_stop)
+
     entry.runtime_data = SherpaRuntime(endpoint, bus, coordinator)
-    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    try:
+        await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    except BaseException:
+        await coordinator.mode.async_stop()
+        raise
     try:
         await async_register_cards(hass, _integration_version(hass))
     except Exception:  # noqa: BLE001 - the entities matter more than the cards
@@ -179,10 +208,13 @@ async def async_unload_entry(hass: HomeAssistant, entry: SherpaConfigEntry) -> b
     """Stop polling and let the bus go if nothing else uses it."""
     unloaded = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unloaded:
+        # The controller's last write goes out while the bus is still ours.
+        await entry.runtime_data.coordinator.mode.async_stop()
         await bus_registry(hass).release(entry.runtime_data.endpoint)
     return unloaded
 
 
 async def async_remove_entry(hass: HomeAssistant, entry: SherpaConfigEntry) -> None:
-    """A removed unit's write checks go with it: a re-added one is checked afresh."""
+    """A removed unit's write checks and desired mode go with it: a re-added one starts afresh."""
     await hass.data.setdefault(CHECKS, WriteChecks(hass)).async_forget(entry.entry_id)
+    await hass.data.setdefault(MODE_STORE, ModeStore(hass)).async_forget(entry.entry_id)

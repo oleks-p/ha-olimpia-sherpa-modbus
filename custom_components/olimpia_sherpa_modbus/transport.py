@@ -42,6 +42,7 @@ from .const import (
     TRANSPORT_SERIAL,
     TRANSPORT_TCP,
 )
+from .registers import FORBIDDEN_WRITES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -179,6 +180,10 @@ class SherpaBus:
         """
         if not 0 <= value <= 0xFFFF:
             raise ValueError(f"register value {value} does not fit 16 bits")
+        if address in FORBIDDEN_WRITES:
+            # Defense in depth: no path may ever write these (ADDR220 above all:
+            # only a person sets it, on the panel), whatever a caller got wrong.
+            raise ValueError(f"register {address} is never written")
         async with self._lock:
             delay = self._quiet_until - time.monotonic()
             if delay > 0:

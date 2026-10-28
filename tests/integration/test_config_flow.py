@@ -141,7 +141,8 @@ async def test_options_set_the_outage_tolerance(hass, config_entry):
         result["flow_id"], {CONF_UNAVAILABLE_AFTER: 300})
     assert result["type"] is FlowResultType.CREATE_ENTRY
     # writes stay off unless asked for
-    assert config_entry.options == {CONF_UNAVAILABLE_AFTER: 300, "allow_writes": False}
+    assert config_entry.options == {CONF_UNAVAILABLE_AFTER: 300, "allow_writes": False,
+                                    "mode_control": False}
 
 
 async def test_options_can_allow_writes(hass, config_entry):
@@ -149,3 +150,18 @@ async def test_options_can_allow_writes(hass, config_entry):
     result = await hass.config_entries.options.async_configure(
         result["flow_id"], {CONF_UNAVAILABLE_AFTER: 120, "allow_writes": True})
     assert config_entry.options["allow_writes"] is True
+
+
+async def test_mode_control_needs_allow_writes(hass, config_entry):
+    result = await hass.config_entries.options.async_init(config_entry.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {CONF_UNAVAILABLE_AFTER: 120, "mode_control": True})
+    assert result["type"] is FlowResultType.FORM
+    assert result["errors"] == {"base": "mode_control_needs_writes"}
+    assert "mode_control" not in config_entry.options
+
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"],
+        {CONF_UNAVAILABLE_AFTER: 120, "allow_writes": True, "mode_control": True})
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert config_entry.options["mode_control"] is True

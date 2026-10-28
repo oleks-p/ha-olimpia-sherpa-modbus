@@ -3,7 +3,7 @@
 **Question.** Can Home Assistant see, and set, the operating mode (standby,
 heating, cooling, ECO, night, DHW) over Modbus?
 
-**Method.** 2026-10-13, 16:55-17:12 local time, on the reference unit (SHERPA S2 BIG
+**Method.** 2026-10-13, 13:55-14:12 UTC, on the reference unit (SHERPA S2 BIG
 + SHERPA S2 14T, identify code 1134, firmware 0.57). Integration 0.3.0.
 
 - A person at the panel changed one thing at a time in the modes menu and

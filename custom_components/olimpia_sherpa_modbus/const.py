@@ -11,7 +11,7 @@ MANUFACTURER: Final = "Olimpia Splendid"
 DEFAULT_NAME: Final = "Sherpa"
 
 PLATFORMS: Final = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.CLIMATE, Platform.NUMBER,
-                     Platform.SWITCH]
+                     Platform.SWITCH, Platform.SELECT, Platform.WATER_HEATER]
 
 # -- connection ---------------------------------------------------------------
 
@@ -71,3 +71,35 @@ CHECK_HOLD_MAX: Final = 30
 EVENT_PARAMETER_WRITTEN: Final = f"{DOMAIN}_parameter_written"
 SERVICE_VERIFY_WRITE: Final = "verify_write"
 SERVICE_READ_REGISTERS: Final = "read_registers"
+SERVICE_WRITE_MODE_COMMAND: Final = "write_mode_command"
+
+# -- mode control (opt-in, P6; Olimpia RDE448) -----------------------------------
+
+#: Needs CONF_ALLOW_WRITES. Active only while the panel has handed control to
+#: RS-485 (ADDR220 = 1); the integration then keeps the unit fed.
+CONF_MODE_CONTROL: Final = "mode_control"
+#: The controller's own timer, apart from the 10 s poll (which stops on an outage,
+#: when the keep-alive matters most).
+MODE_TICK: Final = 10
+#: With ADDR220 = 1 the unit raises E09 255 s after the last write of 106 (RDE448);
+#: measured on the reference unit: 253.6-254.4 s, then every 254 s. Written every
+#: 60 s, three writes can fail in a row and it is still in time.
+KEEPALIVE_INTERVAL: Final = 60
+E09_PERIOD: Final = 254
+#: A gap longer than this is a miss: E09 is on its way or has happened. A little
+#: under the measured period, so a late tick cannot hide one.
+E09_DETECT: Final = 250
+#: A panel snapshot older than this is not used at a hand-over.
+PANEL_MAX_AGE: Final = 60
+#: Polls with ADDR220 != 1 in a row before a later 1 counts as a hand-over: one
+#: glitched read must not look like the panel handing control over.
+HANDOVER_CONFIRM_POLLS: Final = 2
+#: No fresh read for this long: the controller reports "stalled" (and still tries).
+STALLED_AFTER: Final = 60
+#: ADDR220 = 1 without a controller for this long raises the "unmanaged" repair.
+UNMANAGED_AFTER: Final = 60
+#: Consecutive writes whose read-back is not the word written: "not applied".
+NOT_APPLIED_TICKS: Final = 3
+#: The last write at unload or at Home Assistant stop, so the unit starts the
+#: outage with a full 255 s.
+FINAL_WRITE_TIMEOUT: Final = 5

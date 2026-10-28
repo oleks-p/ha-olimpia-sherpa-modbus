@@ -587,14 +587,14 @@ REFUSE_UNCONFIRMED = """\
 refusing to start: this link reaches the RS-485 bus directly.
 
 RS-485 allows one master. If Home Assistant is still polling the heat pump, the
-two masters collide and the unit raises E09. Stop it first, e.g. on the host:
+two masters collide and the unit raises E09. Stop it first, e.g. with Docker:
 
     sudo docker compose -f /path/to/docker-compose.yml stop homeassistant
 
 then re-run with --i-stopped-home-assistant, and start it again afterwards with
 the same -f ... start homeassistant. Always name the compose file: run from the
 wrong directory, compose can pick another project and report success while
-starting nothing. tools/pi_probe_run.sh does all of this and checks the result."""
+starting nothing, so check afterwards that the container is running."""
 
 
 def preflight(args, link_kind: str, out: dict, log=print) -> int:

@@ -15,6 +15,7 @@ from homeassistant.util import dt as dt_util
 from . import derive
 from .block_planner import Block, plan_blocks, split
 from .const import CONF_UNAVAILABLE_AFTER, DEFAULT_UNAVAILABLE_AFTER, DOMAIN
+from .mode_control import ModeController
 from .model import ModelInfo
 from .registers import (
     ALARM_1_CODES,
@@ -116,6 +117,7 @@ class SherpaCoordinator(DataUpdateCoordinator[SherpaData]):
         self.split_blocks: list[str] = []
         self.data = SherpaData()
         self.writes = WriteGate(self, write_checks if write_checks is not None else {})
+        self.mode = ModeController(self)
 
     # -- polling ---------------------------------------------------------
 
@@ -233,9 +235,19 @@ class SherpaCoordinator(DataUpdateCoordinator[SherpaData]):
         values["defrost"] = derive.bit(override, DEFROST_BIT)
         values["mode"] = derive.mode(status)
         values["power"] = derive.power(status, outputs)
-        values["selected_mode"] = derive.selected_mode(status, self._selected)
-        if status is not None and not status & 0x0C:
-            self._selected = values["selected_mode"]
+        # ADDR220 = 1: the panel is out of the loop and the status word follows 106
+        # (a DHW cycle even hides heating in it), so 106 is the truth about the
+        # mode. Otherwise the status word is, as before.
+        command, remote = values.get("mode_command"), values.get("remote_controls")
+        values["serial_control"] = remote == 1
+        values["mode_operating"] = derive.commanded_mode(command)
+        values["hot_water_on"] = derive.hot_water_on(status, command, remote == 1)
+        if remote == 1 and command is not None:
+            values["selected_mode"] = derive.selected_from_command(command)
+        else:
+            values["selected_mode"] = derive.selected_mode(status, self._selected)
+            if status is not None and not status & 0x0C:
+                self._selected = values["selected_mode"]
 
         alarm_1, alarm_2 = values.get("alarm_1"), values.get("alarm_2")
         values["error"] = derive.any_set(alarm_1, alarm_2)

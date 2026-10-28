@@ -1,5 +1,61 @@
 # Changelog
 
+## 0.6.0 — 2026-10-28
+
+Mode control (P6), from Olimpia's RDE448: register 106 sets the operating mode
+while ADDR220 = 1. Design: `docs/p6_mode_control.md`; the unit's behaviour:
+`docs/p6_mode_command_test.md`. Opt-in, and off unless both *Allow writes* and
+the new *Mode control* option are on.
+
+- **Mode control** (new option, needs *Allow writes*). Active only while the
+  panel has handed control to RS-485 (ADDR220 = 1); the integration never
+  writes ADDR220.
+  - It writes the mode every 60 s and reads it back. With ADDR220 = 1 the unit
+    raises E09 after 255 s without a write: the alarm relay closes and the
+    pump stops for about 3 s, every 255 s.
+  - The desired mode is kept in Home Assistant's storage and restored after a
+    restart. A change on the panel is taken over when ADDR220 turns to 1.
+  - With ADDR220 = 0 or 2 nothing is written.
+- New entities with the option on: **select** `operating_mode` (standby, DHW
+  only, heating, cooling), and **switches** ECO and night.
+- **Climate** can set OFF, HEAT and COOL while active. OFF is heating and
+  cooling both off, so hot water carries on. HEAT and COOL clear standby. New
+  attributes `operating_mode` and `mode_control`.
+- New **water heater** `hot_water`, always present: tank temperature (T3) and
+  the DHW setpoint. The setpoint is settable once its write check has passed.
+  Off is standby, on is standby cleared; both only while mode control is
+  active. Otherwise it is read-only.
+- With ADDR220 = 1 the mode shown comes from register 106, not the status word
+  (a DHW cycle sets the heating bit and hid the real selection).
+- Three repair issues: ADDR220 = 1 with nothing keeping the unit fed; no write
+  for over 255 s; the unit not holding the word written.
+- Register 106 and ADDR220 are now read every 10 s for every entry (one more
+  request per cycle: 6 instead of 5).
+- Diagnostics have a `mode_control` section. Each gap over 255 s is recorded
+  with the compressor counter before and after, which answers whether E09
+  stops a running compressor.
+- The research action **Write mode command** is refused while mode control is
+  active, so two writers never fight over 106. It stays for the test.
+- `tools/mode_command_test.py watchdog --need-compressor` starts the silence
+  only once the compressor runs, and says whether its runtime counter kept
+  rising through each E09. Run it when space heating really runs.
+- `tools/mode_command_test.py` and the action stay as the P6 evidence trail:
+  `status`, `panel`, `serial`, `watchdog` and `restore`, each saving its samples
+  under `research/mode_command/`.
+- Safety: every write of 106 re-reads ADDR220 from the unit first and writes
+  nothing unless it reads 1 (the cache can be stale in a link stall). The bus
+  refuses any write to a register in `FORBIDDEN_WRITES`.
+- A hand-over needs two polls at ADDR220 = 0 before the flip to 1, and a panel
+  snapshot under a minute old; a single glitched read is not one.
+- Unload waits for a write in flight, refuses new commands, and nothing writes
+  after it. The controller is also stopped if setup fails.
+- A write the unit acknowledged counts as sent even if the read-back fails
+  (retried once). A user command's rollback leaves a hand-over alone.
+- E09 thresholds follow the measured 253.6–254.4 s: a gap over 250 s is a miss.
+- `watchdog --need-compressor` requires the counter to rise across two samples
+  right before the silence, and records them.
+- The repository no longer carries any site-specific material.
+
 ## 0.5.1 — 2026-10-15
 
 - The integration ships its icon, Olimpia Splendid's "OS" mark, in `brand/`
@@ -36,8 +92,7 @@ Lovelace cards, built in (P7).
   never affects the entities.
 - The climate entity now carries both climatic curves as attributes, for the
   cards; their sensors are disabled by default.
-- The cards follow the another integration cards' design tokens. The schematic always draws
-  on the dark ground, and its readouts scale with
+- The schematic always draws on the dark ground, and its readouts scale with
   the card width.
 
 ## 0.4.0 — 2026-10-13
@@ -121,9 +176,9 @@ First release. Read-only.
 - Entities for the temperatures, the mode (enum, translated), status, output and
   fault bits, error and override codes, runtime counters, setpoints, service
   parameters and link health. English and Ukrainian.
-- Entity ids, units and state classes match a YAML modbus setup with the same names, so
-  history and long-term statistics carry over at the cutover. Deliberate
-  changes from that setup:
+- Entity ids, units and state classes match a YAML modbus setup that used the
+  same names, so its history and long-term statistics carry over when the
+  integration replaces it. Deliberate changes from such a setup:
   - `sensor.sherpa_mode` states are now translation keys: `domestic hot water`
     is now `domestic_hot_water`, and `anti-legionella` is now `anti_legionella`.
   - `pump_duty`, `water_delta` and `error` are unknown rather than 0 or false

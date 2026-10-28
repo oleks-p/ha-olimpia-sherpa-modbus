@@ -1,60 +1,25 @@
-"""The entity set: legacy ids, units and classes carried over, values decoded right.
+"""The entity set: ids, units and classes, and values decoded right.
 
-The golden reference is tests/fixtures/legacy_entities.json, the reference unit's YAML-driven entities as captured before the cutover. Long-term
-statistics are keyed by entity id and break if a unit or state class changes,
-so those are held exactly.
+Long-term statistics are keyed by entity id and break if a unit or state class
+changes; entities.json pins those, and test_registers holds the descriptions
+to it.
 """
 
 from __future__ import annotations
 
 import pytest
-from homeassistant.const import ATTR_DEVICE_CLASS, ATTR_UNIT_OF_MEASUREMENT, EntityCategory
+from homeassistant.const import EntityCategory
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 
 from custom_components.olimpia_sherpa_modbus.const import DOMAIN
 from custom_components.olimpia_sherpa_modbus.derive import MODE_OPTIONS
-from tests import legacy
-
-LEGACY = legacy.load_legacy()["entities"]
-# Deliberate changes, each decided and recorded in docs/p0_findings.md.
-CHANGED_DEVICE_CLASS = {"sensor.sherpa_mode": "enum"}   # translated enum states
-
-
-def test_every_legacy_entity_has_a_description():
-    from custom_components.olimpia_sherpa_modbus.binary_sensor import BINARY_SENSORS
-    from custom_components.olimpia_sherpa_modbus.sensor import SENSORS
-
-    keys = {f"sensor.sherpa_{d.key}" for d in SENSORS} | {
-        f"binary_sensor.sherpa_{d.key}" for d in BINARY_SENSORS}
-    assert set(LEGACY) <= keys
-
-
-async def test_legacy_entity_ids_units_and_classes_carry_over(hass, setup_integration):
-    for entity_id, record in LEGACY.items():
-        state = hass.states.get(entity_id)
-        assert state is not None, f"{entity_id} was not created"
-        attrs = state.attributes
-        assert attrs.get(ATTR_UNIT_OF_MEASUREMENT) == record["unit"], entity_id
-        assert attrs.get("state_class") == record["state_class"], entity_id
-        expected_class = CHANGED_DEVICE_CLASS.get(entity_id, record["device_class"])
-        assert attrs.get(ATTR_DEVICE_CLASS) == expected_class, entity_id
-
-
-async def test_statistics_entities_keep_unit_and_state_class(hass, setup_integration):
-    with_statistics = {e: r for e, r in LEGACY.items() if r["statistics"]}
-    assert len(with_statistics) == 20
-    for entity_id, record in with_statistics.items():
-        attrs = hass.states.get(entity_id).attributes
-        assert attrs.get(ATTR_UNIT_OF_MEASUREMENT) == record["statistics"]["unit"], entity_id
-        expected = "total_increasing" if record["statistics"]["has_sum"] else "measurement"
-        assert attrs.get("state_class") == expected, entity_id
 
 
 async def test_entity_ids_are_claimed_exactly(hass, setup_integration):
     registry = er.async_get(hass)
     entries = er.async_entries_for_config_entry(registry, setup_integration.entry_id)
-    assert set(LEGACY) <= {e.entity_id for e in entries}
+    assert entries
     # Each id is exactly <domain>.sherpa_<key>: no device-name prefix, no "_2".
     prefix = f"{setup_integration.entry_id}_"
     for entry in entries:

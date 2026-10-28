@@ -105,16 +105,19 @@ def add_present_entities(
         coordinator.config_entry.async_on_unload(coordinator.async_add_listener(sync))
 
 
-def remove_stale(hass, entry, domain: str) -> None:
+def remove_stale(hass, entry, domain: str, keys: Iterable[str] | None = None) -> None:
     """Drop this entry's leftover entities of one domain from the registry.
 
     Used for the writable platforms when writes are switched off: their
     entities are not created, and a number or switch has no history worth
     keeping, so a left-over registry entry would only sit there unavailable.
+    ``keys``: only the entities with these description keys (mode control's
+    switches share a platform with the writable parameters').
     """
     from homeassistant.helpers import entity_registry as er
 
+    unique_ids = None if keys is None else {f"{entry.entry_id}_{key}" for key in keys}
     registry = er.async_get(hass)
     for item in er.async_entries_for_config_entry(registry, entry.entry_id):
-        if item.domain == domain:
+        if item.domain == domain and (unique_ids is None or item.unique_id in unique_ids):
             registry.async_remove(item.entity_id)

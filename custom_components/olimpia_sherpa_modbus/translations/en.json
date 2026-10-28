@@ -69,16 +69,21 @@
   "options": {
     "step": {
       "init": {
-        "title": "Link and writes",
+        "title": "Link, writes and mode control",
         "description": "The RS-485 link stalls for 10-30 s now and then; that is normal. Entities keep their last values until a failure has lasted as long as set here.",
         "data": {
           "unavailable_after": "Unavailable after",
-          "allow_writes": "Allow writes to verified parameters"
+          "allow_writes": "Allow writes to verified parameters",
+          "mode_control": "Mode control"
         },
         "data_description": {
-          "allow_writes": "Off by default. When on, a setpoint becomes writable only after the write check (the Verify write action) has passed for it on this unit. The unit's own controller still runs the plant."
+          "allow_writes": "Off by default. When on, a setpoint becomes writable only after the write check (the Verify write action) has passed for it on this unit. The unit's own controller still runs the plant.",
+          "mode_control": "Set the unit's mode from Home Assistant (select, ECO and night switches, climate, hot water), through register 106. Needs Allow writes. Works only while the panel has handed control to RS-485 (ADDR220 = 1): the integration then writes the mode every 60 s, because the unit raises E09 after 255 s without a write. It never writes ADDR220. To hand control back, set ADDR220 = 0 on the panel."
         }
       }
+    },
+    "error": {
+      "mode_control_needs_writes": "Mode control needs Allow writes. Turn that on too."
     }
   },
   "services": {
@@ -115,6 +120,20 @@
         "count": {
           "name": "Count",
           "description": "How many registers from the address (at most 125)."
+        }
+      }
+    },
+    "write_mode_command": {
+      "name": "Write mode command",
+      "description": "Research: writes the mode command (register 106), then reads it back with the unit's status, outputs and alarms. The unit acts on it only with ADDR220 = 1, and then raises E09 unless it is written at least every 255 s. Needs 'Allow writes'. Refused while Mode control is on and ADDR220 = 1: turn Mode control off first. Admin only.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Sherpa",
+          "description": "Which unit, if more than one is configured."
+        },
+        "value": {
+          "name": "Value",
+          "description": "Bits: 1 standby, 2 ECO, 4 cooling, 8 heating, 16 night. 0 is DHW only. Heating and cooling together are refused."
         }
       }
     }
@@ -484,6 +503,12 @@
           },
           "cooling_curve": {
             "name": "Cooling curve"
+          },
+          "operating_mode": {
+            "name": "Operating mode"
+          },
+          "mode_control": {
+            "name": "Mode control"
           }
         }
       }
@@ -547,6 +572,28 @@
       },
       "heating_curve_enabled": {
         "name": "Heating climatic curve"
+      },
+      "eco": {
+        "name": "ECO"
+      },
+      "night": {
+        "name": "Night mode"
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Operating mode",
+        "state": {
+          "standby": "Standby",
+          "dhw_only": "DHW only",
+          "heating": "Heating",
+          "cooling": "Cooling"
+        }
+      }
+    },
+    "water_heater": {
+      "hot_water": {
+        "name": "Hot water"
       }
     }
   },
@@ -584,6 +631,15 @@
     "read_failed": {
       "message": "No answer from the Sherpa while reading: {error}"
     },
+    "invalid_mode_command": {
+      "message": "Mode command {value} sets heating and cooling at once."
+    },
+    "mode_control_inactive": {
+      "message": "Mode control is not active: set ADDR220 to 1 on the panel first, with Mode control on."
+    },
+    "mode_control_active": {
+      "message": "Mode control is running and writes register 106 itself. Turn Mode control off in the options before using this action."
+    },
     "unsupported_model": {
       "message": "The Sherpa reports identify code {code} ({model}), a register layout this integration does not know."
     },
@@ -602,6 +658,18 @@
     "restore_failed": {
       "title": "A Sherpa parameter was left changed",
       "description": "The write check could not put {key} (register {address}) back to {value}. Set it on the unit's SERVICE screen, then dismiss this."
+    },
+    "serial_control_unmanaged": {
+      "title": "The Sherpa takes commands over RS-485, but nothing keeps it fed",
+      "description": "The unit has ADDR220 = 1 (serial control), and Home Assistant is not writing its mode: Mode control or Allow writes is off. The unit raises E09 every 255 s and stops the pump for about 3 s each time. Set ADDR220 = 0 on the panel, or turn on Allow writes and Mode control in the options."
+    },
+    "mode_keepalive_lost": {
+      "title": "Home Assistant is not writing the Sherpa's mode",
+      "description": "The mode has not been written for {seconds} s. The unit pulses its alarm relay (E09) and stops the pump for about 3 s every 255 s. Check the RS-485 link. If it lasts, set ADDR220 = 0 on the panel."
+    },
+    "mode_not_applied": {
+      "title": "The Sherpa does not hold the mode we write",
+      "description": "Register 106 reads back something other than what Home Assistant wrote, several times in a row. Another master may be writing it, or the unit refuses it. Check the bus; if it lasts, set ADDR220 = 0 on the panel."
     }
   }
 }

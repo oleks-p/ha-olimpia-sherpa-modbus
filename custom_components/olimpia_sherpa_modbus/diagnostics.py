@@ -48,6 +48,7 @@ async def async_get_config_entry_diagnostics(
             "checks": dict(sorted(coordinator.writes.checks.items())),
             "recent_writes": list(coordinator.writes.log),
         },
+        "mode_control": coordinator.mode.diagnostics(),
         "block_plan": describe(coordinator.blocks),
         "stale": data.stale,
         "values": {k: v for k, v in sorted(data.values.items())},

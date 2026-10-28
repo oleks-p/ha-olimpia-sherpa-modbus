@@ -1,0 +1,28 @@
+{
+ "step": "status",
+ "started": "2026-10-28T08:54:21+00:00",
+ "args": {
+  "entry": null,
+  "interval": 5,
+  "step": "status"
+ },
+ "events": [
+  {
+   "t": 0.6,
+   "at": "2026-10-28T08:54:21+00:00",
+   "kind": "sample",
+   "inputs": 895,
+   "status": 0,
+   "alarm_1": 0,
+   "alarm_2": 0,
+   "override": 0,
+   "outputs": 0,
+   "mode_command": 0,
+   "remote_controls": 0
+  }
+ ],
+ "identity": {
+  "identify": 1134,
+  "firmware": "0.57"
+ }
+}

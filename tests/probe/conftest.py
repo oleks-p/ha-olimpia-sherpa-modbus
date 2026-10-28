@@ -10,7 +10,7 @@ import pytest
 
 try:
     import pytest_socket
-except ImportError:  # plain pytest, as on the host's Python
+except ImportError:  # plain pytest, as on a host with only Python 3.11
     pytest_socket = None
 
 

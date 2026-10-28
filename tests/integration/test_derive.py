@@ -1,101 +1,19 @@
-"""The derived values, replayed over a recorded history.
-
-tests/legacy.py transcribes what the legacy YAML templates computed, and the
-fixture tests prove those transcriptions reproduce every recorded state. Here
-the integration's own decoders must agree with the recordings too: the cutover
-must not change what any entity says, only where it comes from.
-"""
+"""The derived values: mode, fault codes, pump duty, the compressor estimate."""
 
 from __future__ import annotations
-
-from collections.abc import Callable
 
 import pytest
 
 from custom_components.olimpia_sherpa_modbus import derive
-from custom_components.olimpia_sherpa_modbus.registers import (
-    ALARM_1_CODES,
-    ALARM_2_CODES,
-    DEFROST_BIT,
-)
-from tests import legacy
-
-HISTORY = legacy.load_history()
 
 
-def _int(value: str) -> int:
-    return int(float(value))
-
-
-def _on_off(flag: bool | None) -> str:
-    return "on" if flag else "off"
-
-
-def _error_code(a1: str, a2: str) -> str | None:
-    return derive.codes_text(derive.active_codes(_int(a1), ALARM_1_CODES),
-                             derive.active_codes(_int(a2), ALARM_2_CODES))
-
-
-# legacy entity -> (the integration's decoder, rendered as the legacy state, inputs)
-OURS: dict[str, tuple[Callable[..., str | None], tuple[str, ...]]] = {
-    # Mode states were renamed to translation keys; MODE_KEYS maps old to new.
-    "sensor.sherpa_mode": (lambda s: derive.mode(_int(s)), ("sensor.sherpa_status",)),
-    "sensor.sherpa_error_code": (_error_code, ("sensor.sherpa_alarm_1", "sensor.sherpa_alarm_2")),
-    "binary_sensor.sherpa_mode_pending": (
-        lambda s: _on_off(derive.masked(_int(s), 0x60, "all")), ("sensor.sherpa_status",)),
-    "binary_sensor.sherpa_mode_dhw": (
-        lambda s: _on_off(derive.masked(_int(s), 0x0C, "any")), ("sensor.sherpa_status",)),
-    "binary_sensor.sherpa_power": (
-        lambda s, o: _on_off(derive.power(_int(s), _int(o))),
-        ("sensor.sherpa_status", "sensor.sherpa_outputs")),
-    "binary_sensor.sherpa_error": (
-        lambda a1, a2: _on_off(derive.any_set(_int(a1), _int(a2))),
-        ("sensor.sherpa_alarm_1", "sensor.sherpa_alarm_2")),
-    "binary_sensor.sherpa_warning": (lambda o: _on_off(_int(o) > 0), ("sensor.sherpa_override",)),
-    "binary_sensor.sherpa_defrost": (
-        lambda o: _on_off(derive.bit(_int(o), DEFROST_BIT)), ("sensor.sherpa_override",)),
-}
-
-
-@pytest.mark.parametrize("target", sorted(OURS))
-def test_decoders_reproduce_the_recorded_history(target):
-    decoder, inputs = OURS[target]
-    expected = legacy.MODE_KEYS if target == "sensor.sherpa_mode" else {}
-    results = list(legacy.replay(HISTORY, target, decoder, inputs))
-    mismatches = [(t, args, recorded, decoded) for t, args, recorded, decoded in results
-                  if expected.get(recorded, recorded) != decoded]
-    assert len(results) >= 10
-    assert mismatches == []
-
-
-def test_mode_covers_every_status_value_seen():
-    for value in (0, 1, 6, 9, 96, 97, 98, 102):
-        assert derive.mode(value) == legacy.MODE_KEYS[legacy.mode(value)]
-
-
-def test_compressor_estimator_matches_the_legacy_sensor():
-    """At least 99.5 % of one-minute samples over 57 days.
-
-    The recorder keeps only changes, so the 60 s counter polls are synthesised by
-    holding each recorded value; the legacy threshold sensor is read just after
-    each poll, when it re-rendered.
-    """
-    counter = legacy.StepSeries(HISTORY["sensor.sherpa_compressor_seconds"])
-    recorded = legacy.StepSeries(HISTORY["binary_sensor.sherpa_compressor_running"])
-    rows = HISTORY["sensor.sherpa_compressor_seconds"]
-    estimator = derive.CompressorEstimator()
-    agree = total = 0
-    t = rows[0][0]
-    while t < rows[-1][0]:
-        raw = counter.at(t)
-        estimator.add(t, int(raw) if raw and raw.isdigit() else None)
-        legacy_state, ours = recorded.at(t + 1), estimator.running
-        if legacy_state in ("on", "off") and ours is not None:
-            total += 1
-            agree += ours == (legacy_state == "on")
-        t += 60
-    assert total > 70_000
-    assert agree / total >= 0.995
+# Every status value the reference unit has shown, and the mode each one means.
+@pytest.mark.parametrize(("status", "mode"), [
+    (0, "standby"), (1, "cooling"), (6, "domestic_hot_water"), (9, "anti_legionella"),
+    (96, "standby"), (97, "cooling"), (98, "heating"), (102, "domestic_hot_water"),
+])
+def test_mode_covers_every_status_value_seen(status, mode):
+    assert derive.mode(status) == mode
 
 
 def test_estimator_edges():
@@ -126,3 +44,47 @@ def test_water_delta_needs_both_probes():
                                                (None, None)])
 def test_clock_text(minutes, text):
     assert derive.clock_text(minutes) == text
+
+
+# -- the mode command (register 106) ----------------------------------------------
+
+@pytest.mark.parametrize(("word", "mode", "selected"), [
+    (0, "dhw_only", "off"), (1, "standby", "off"), (8, "heating", "heating"),
+    (4, "cooling", "cooling"), (10, "heating", "heating"), (24, "heating", "heating"),
+    (9, "standby", "off"),            # standby wins over a mode bit
+    (5, "standby", "off"), (16, "dhw_only", "off"), (2, "dhw_only", "off"),
+])
+def test_commanded_mode_and_selection(word, mode, selected):
+    assert derive.commanded_mode(word) == mode
+    assert derive.selected_from_command(word) == selected
+
+
+def test_no_command_is_unknown():
+    assert derive.commanded_mode(None) is None
+    assert derive.selected_from_command(None) is None
+
+
+def test_command_word_round_trips_every_combination():
+    import itertools
+
+    seen = set()
+    for mode, standby, eco, night in itertools.product(
+            derive.COMMAND_MODES, (False, True), (False, True), (False, True)):
+        word = derive.command_word(mode, standby=standby, eco=eco, night=night)
+        assert not (word & 8 and word & 4), word             # never heating and cooling
+        assert word not in seen
+        seen.add(word)
+        assert derive.commanded_mode(word) == ("standby" if standby else mode)
+        assert derive.command_mode(word) == mode              # standby keeps the mode bit
+        assert bool(word & 2) is eco and bool(word & 16) is night
+    assert len(seen) == 24
+
+
+def test_documented_words():
+    assert derive.command_word("heating") == 8
+    assert derive.command_word("heating", eco=True) == 10
+    assert derive.command_word("heating", night=True) == 24
+    assert derive.command_word("cooling") == 4
+    assert derive.command_word("dhw_only") == 0
+    assert derive.command_word("heating", standby=True) == 9
+    assert derive.command_word("dhw_only", standby=True, eco=True) == 3

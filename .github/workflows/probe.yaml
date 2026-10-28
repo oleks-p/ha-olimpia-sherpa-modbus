@@ -17,5 +17,5 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install pytest "ruff>=0.6"
-      - run: ruff check tools tests/probe tests/test_fixtures.py tests/legacy.py
+      - run: ruff check tools tests/probe tests/test_fixtures.py
       - run: pytest -q tests/probe tests/test_fixtures.py

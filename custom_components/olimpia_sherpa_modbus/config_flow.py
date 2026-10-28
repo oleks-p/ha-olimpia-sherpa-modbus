@@ -22,6 +22,7 @@ from .const import (
     CONF_ALLOW_WRITES,
     CONF_BAUDRATE,
     CONF_ENTITY_PREFIX,
+    CONF_MODE_CONTROL,
     CONF_SERIAL_PORT,
     CONF_SLAVE,
     CONF_TRANSPORT,
@@ -205,23 +206,34 @@ class SherpaConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class SherpaOptionsFlow(OptionsFlowWithReload):
-    """Link tolerance, and whether verified parameters may be written."""
+    """Link tolerance, whether verified parameters may be written, and mode control."""
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None
                               ) -> ConfigFlowResult:
-        if user_input is not None:
-            return self.async_create_entry(data={
-                CONF_UNAVAILABLE_AFTER: int(user_input[CONF_UNAVAILABLE_AFTER]),
-                CONF_ALLOW_WRITES: bool(user_input.get(CONF_ALLOW_WRITES, False)),
-            })
+        errors: dict[str, str] = {}
         options = self.config_entry.options
+        if user_input is not None:
+            writes = bool(user_input.get(CONF_ALLOW_WRITES, False))
+            mode = bool(user_input.get(CONF_MODE_CONTROL, False))
+            if mode and not writes:
+                # Mode control writes register 106: it cannot be on with writes off.
+                errors["base"] = "mode_control_needs_writes"
+            else:
+                return self.async_create_entry(data={
+                    CONF_UNAVAILABLE_AFTER: int(user_input[CONF_UNAVAILABLE_AFTER]),
+                    CONF_ALLOW_WRITES: writes,
+                    CONF_MODE_CONTROL: mode,
+                })
+        current = {**options, **(user_input or {})}
         schema = vol.Schema({
             vol.Required(CONF_UNAVAILABLE_AFTER,
-                         default=options.get(CONF_UNAVAILABLE_AFTER, DEFAULT_UNAVAILABLE_AFTER)):
+                         default=current.get(CONF_UNAVAILABLE_AFTER, DEFAULT_UNAVAILABLE_AFTER)):
                 selector.NumberSelector(selector.NumberSelectorConfig(
                     min=MIN_UNAVAILABLE_AFTER, max=MAX_UNAVAILABLE_AFTER, step=10,
                     unit_of_measurement="s", mode=selector.NumberSelectorMode.BOX)),
-            vol.Required(CONF_ALLOW_WRITES, default=options.get(CONF_ALLOW_WRITES, False)):
+            vol.Required(CONF_ALLOW_WRITES, default=current.get(CONF_ALLOW_WRITES, False)):
+                selector.BooleanSelector(),
+            vol.Required(CONF_MODE_CONTROL, default=current.get(CONF_MODE_CONTROL, False)):
                 selector.BooleanSelector(),
         })
-        return self.async_show_form(step_id="init", data_schema=schema)
+        return self.async_show_form(step_id="init", data_schema=schema, errors=errors)

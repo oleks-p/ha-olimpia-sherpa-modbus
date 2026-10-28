@@ -1,0 +1,25 @@
+{
+ "step": "restore",
+ "started": "2026-10-28T09:13:01+00:00",
+ "args": {
+  "entry": null,
+  "interval": 5,
+  "step": "restore",
+  "value": null
+ },
+ "events": [
+  {
+   "t": 0.5,
+   "at": "2026-10-28T09:13:01+00:00",
+   "kind": "sample",
+   "inputs": 894,
+   "status": 6,
+   "alarm_1": 0,
+   "alarm_2": 0,
+   "override": 0,
+   "outputs": 17,
+   "mode_command": 8,
+   "remote_controls": 1
+  }
+ ]
+}

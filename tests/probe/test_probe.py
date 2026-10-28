@@ -1,7 +1,7 @@
 """The probe against simulated units: framing, fault handling, guards, stages.
 
 Most tests drive the real ``SerialLink`` through a pseudo-terminal, so the
-termios setup, select loop and CRC handling run exactly as on the host.
+termios setup, select loop and CRC handling run exactly as on a real host.
 """
 from __future__ import annotations
 

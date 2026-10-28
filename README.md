@@ -17,17 +17,23 @@ own controller still runs the plant.
   hot water / anti-legionella, translated) plus one binary sensor per status
   bit: night, pending, DHW cycle, legionella.
 - **Compressor running:** the unit has no bit for this. It is derived from the
-  runtime counter, and over 57 days of recorded history it agrees with the
-  reference unit's previous setup in 99.9 % of samples.
+  rate of the runtime counter.
 - **Outputs:** circulation pump and duty, 3-way valve, electric heaters EH1/EH2,
   external boiler call, alarm relay.
 - **Faults:** error codes E01–E27 and override codes OR01–OR13, with their
   descriptions from the manual. Defrost is reported separately.
 - **Runtime counters:** compressor, pump and filter, in seconds and hours.
-- **Heat pump (climate, read-only):** the mode selected on the panel (heating,
-  cooling, off), what the unit is doing, the supply water temperature, and a
-  calculated water target from the climatic curve. The mode itself is set on
-  the panel: Modbus has no mode command while the panel is in control.
+- **Heat pump (climate):** the mode selected on the panel (heating, cooling,
+  off), what the unit is doing, the supply water temperature, and a calculated
+  water target from the climatic curve. Read-only while the panel is in control:
+  Modbus has no mode command then. With [mode control](#mode-control-opt-in) on
+  and the panel handed over, it sets off, heat and cool.
+- **Hot water (water heater):** the tank temperature and the DHW setpoint. The
+  setpoint is settable once its write check has passed. On and off need mode
+  control.
+- **Mode control (opt-in):** set standby, DHW only, heating, cooling, ECO and
+  night from Home Assistant, through register 106. See
+  [below](#mode-control-opt-in).
 - **Setpoints and service parameters** as sensors. The less common parameters
   are diagnostic entities and disabled by default.
 - **Writable setpoints (opt-in):** heating, cooling and their ECO values, DHW,
@@ -65,8 +71,8 @@ Copy `custom_components/olimpia_sherpa_modbus` into your Home Assistant
 repository. Then restart.
 
 **Only one master on the bus.** Stop anything else that polls the Sherpa first,
-such as an old `modbus:` YAML configuration or another controller on terminal AB. Two masters
-collide and the unit raises E09.
+such as an old `modbus:` YAML configuration or another controller on terminal
+AB. Two masters collide and the unit raises E09.
 
 ## Configure
 
@@ -91,6 +97,7 @@ Options:
 
 - How long the link may fail before entities go unavailable (default 120 s).
 - **Allow writes** (default off).
+- **Mode control** (default off; needs *Allow writes*).
 
 The connection can be changed later with *Reconfigure*; entity ids and history
 are kept.
@@ -143,6 +150,55 @@ could hurt the installation or cut communication are never writable, for
 example ADDR220, 229, 247 and 401, the model, the cascade, the protections and
 the pump PWM. Details: [docs/write_check.md](docs/write_check.md).
 
+## Mode control (opt-in)
+
+Home Assistant can set the unit's operating mode through register 106. The
+register facts come from Olimpia's *RDE448, Modbus communication* (not in this
+repository); how the unit behaved is in
+[docs/p6_mode_command_test.md](docs/p6_mode_command_test.md), and the design in
+[docs/p6_mode_control.md](docs/p6_mode_control.md).
+
+**Turn it on:** *Allow writes* and *Mode control* in the options. Then, on the
+panel, set **ADDR220 = 1**. Only a person changes ADDR220; the integration never
+writes it.
+
+- **While ADDR220 = 1** the unit takes the mode from 106, and Home Assistant
+  writes it every 60 s and reads it back. Every write first reads ADDR220 from
+  the unit, and stops if it is not 1. Without a write the unit raises E09
+  after 255 s: the alarm relay closes and the pump stops for about 3 s, every
+  255 s.
+- **While ADDR220 is 0 or 2** the panel is in charge. Nothing is written. The
+  select, the ECO and night switches and the water heater's on/off are
+  unavailable, and the climate is read-only, as without the option.
+- **Hand-over to Home Assistant** (ADDR220 0 to 1, after two polls at 0): the
+  mode the panel had carries over (heating, cooling or off, and night). ECO can't be seen at
+  ADDR220 = 0, so it stays as last set. DHW only is never inferred.
+- **Hand-back** (ADDR220 to 0): the panel takes over at once. Do this before a
+  long absence, or if the link is down for longer than a few minutes.
+- **The mode** is kept across restarts. If Home Assistant restarts, the unit
+  keeps its last command, and the first write goes out at once.
+
+What sets what:
+
+| Control | Effect on register 106 |
+|---|---|
+| Select *Operating mode* | standby sets the standby bit and keeps the rest; DHW only, heating and cooling clear standby |
+| Switches *ECO*, *Night mode* | their bit |
+| Climate off | heating and cooling both off (DHW only: hot water carries on) |
+| Climate heat, cool | that mode, standby cleared |
+| Water heater off, on | standby set, standby cleared |
+
+Standby stops hot water too. The climate has no DHW-only mode: DHW only shows
+as off, with the attribute `operating_mode: dhw_only`.
+
+Three repair issues say when something is wrong: ADDR220 = 1 with nothing
+keeping the unit fed (set ADDR220 = 0, or turn on mode control); no write for
+over 255 s; the unit not holding the word written. Each says to set ADDR220 = 0
+on the panel if it lasts.
+
+The **Write mode command** action stays for research, and is refused while mode
+control is active.
+
 ## How it talks to the unit
 
 Measured on the reference unit, and enforced by the tests:
@@ -152,7 +208,7 @@ Measured on the reference unit, and enforced by the tests:
 - A read that spans an address the unit does not have is **refused**. Inside a
   run of answering registers any length works, up to the longest run (65
   registers). The integration reads whole runs, polls on five tiers (10 s to
-  1 h), and makes 5 requests per 10 s cycle.
+  1 h), and makes 6 requests per 10 s cycle.
 - Counters are 32-bit, **high word first**.
 - The unit needs **60 ms** between frames. After a failed exchange the link is
   reset and left quiet for a second, because RTU has no transaction id and a
@@ -173,14 +229,12 @@ changing one thing on the panel at a time.
 tests are built on. It never writes to the unit, and it will not talk while
 another master is active. (Writes are verified through the integration instead,
 see [Writes](#writes).) See [docs/probe_runbook.md](docs/probe_runbook.md).
-`tools/pi_probe_run.sh` runs it on a Home Assistant host with HA stopped and
-always starts HA again.
 
 ## Development
 
 ```bash
 uv venv --python 3.14 .venv && uv pip install --python .venv/bin/python -r requirements_test.txt
-.venv/bin/python -m pytest          # 255 tests: integration (HA 2026.8.2) + probe + fixtures
+.venv/bin/python -m pytest          # integration (HA 2026.8.2) + probe + fixtures
 .venv/bin/ruff check custom_components tools tests
 docker compose up -d                # a dev Home Assistant against a simulated unit
 .venv/bin/python tools/gen_translations.py   # strings.json + en/uk from one table
@@ -188,8 +242,7 @@ docker compose up -d                # a dev Home Assistant against a simulated u
 ```
 
 - `tests/integration`: the integration against a fake built from the reference
-  unit's capture. It includes a golden test against the legacy entities, and a
-  replay of 57 days of recorded history through the decoders.
+  unit's capture.
 - `tests/probe`: the probe, against a simulated unit on a pseudo-terminal and
   on TCP.
 - `docs/p0_findings.md`: what the evidence showed, and the decisions taken from

@@ -117,6 +117,9 @@ def _state_words() -> list[Reg]:
         Reg("alarm_2", 101, **control),
         Reg("override", 102, **control),
         Reg("outputs", 105, **control),
+        # The mode command (Olimpia RDE448). Read always: with ADDR220 = 1 it is
+        # the truth about the mode, and 105-106 is one run, so one request.
+        Reg("mode_command", 106, **control),
         Reg("pump_step", 388, **control),
     ]
 
@@ -147,7 +150,9 @@ def _parameters() -> list[Reg]:
         Reg("cooling_curve_enabled", 211, **plain),
         Reg("heating_curve_enabled", 212, **plain),
         Reg("aux_heaters", 217, **plain),
-        Reg("remote_controls", 220, **plain),
+        # CONTROL tier: a flip to serial control (1) must be seen within one poll,
+        # and the "unmanaged" repair has to work with mode control off.
+        Reg("remote_controls", 220, tier=Tier.CONTROL),
         Reg("external_boiler_enabled", 226, **plain),
         Reg("boiler_threshold", 227, **temp),
         Reg("dhw_source", 228, **plain),
@@ -350,3 +355,21 @@ WRITE_SPECS: dict[str, WriteSpec] = {spec.key: spec for spec in (
 # A forbidden register can never acquire a write spec, whatever is edited above.
 assert not {BY_KEY[key].address for key in WRITE_SPECS} & FORBIDDEN_WRITES
 assert all(key in BY_KEY for key in WRITE_SPECS)
+
+# -- the mode command (phase P6, Olimpia RDE448) -------------------------------------
+
+#: Register 106, "working mode setting". A command, not a setting: the unit acts
+#: on it only while ADDR220 = 1 (serial control), and then raises E09 unless it
+#: is written at least every 255 s. It sits below 200, so it is RAM, not EEPROM,
+#: and the EEPROM write limits do not apply to it. Polled with the other control
+#: words; no WriteSpec: only the mode controller (mode_control.py) and the admin
+#: action write_mode_command write it.
+MODE_COMMAND = BY_KEY["mode_command"]
+#: Bit -> name. Heating and cooling both clear means DHW only.
+MODE_COMMAND_BITS: dict[int, str] = {0: "standby", 1: "eco", 2: "cooling", 3: "heating",
+                                     4: "night"}
+MODE_COMMAND_MAX = (1 << len(MODE_COMMAND_BITS)) - 1
+#: Alarm word 1 bit 8: E09, RS485 communication error -- the keep-alive's alarm.
+E09_BIT = 8
+
+assert MODE_COMMAND.address not in FORBIDDEN_WRITES and MODE_COMMAND.address < 200

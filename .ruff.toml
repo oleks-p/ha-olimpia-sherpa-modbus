@@ -5,8 +5,8 @@
 # (SIM). Style beyond that is left to the comments, not a formatter.
 #
 # py311, not the Home Assistant runtime's version: tools/probe_sherpa.py runs on
-# the Home Assistant host (Python 3.11 at least), so nothing here may rely on
-# newer syntax.
+# the Home Assistant host itself, which may have only Python 3.11, so nothing
+# here may rely on newer syntax.
 target-version = "py311"
 line-length = 100
 src = [".", "tools"]

@@ -3,7 +3,7 @@
 Everything else in the suite uses a fake pymodbus client. These tests use the
 real one: over TCP (MBAP and raw RTU) against the simulator's socket server,
 and over a pseudo-terminal with pymodbus's serial client -- the code path that
-talks to the USB adapter on the host.
+talks to a USB adapter on the Home Assistant host.
 """
 
 from __future__ import annotations
@@ -137,6 +137,20 @@ async def test_writes_over_a_serial_port(pty_server, unit):
     try:
         await bus.write(201, 210, 505)
         assert unit.registers[210] == 505 and await bus.read(201, 210, 1) == [505]
+    finally:
+        await bus.close()
+
+
+@pytest.mark.parametrize("tcp_server", ["rtu"], indirect=True)
+@pytest.mark.parametrize("address", [220, 229, 247, 401, 300, 280])
+async def test_a_forbidden_register_is_never_written_whatever_the_caller(
+        tcp_server, unit, address):
+    """Defense in depth: ADDR220 above all. Refused before any request is sent."""
+    bus = SherpaBus(_tcp_endpoint(tcp_server), timeout=1.0, gap=0, resync=0)
+    try:
+        with pytest.raises(ValueError, match="never written"):
+            await bus.write(201, address, 1)
+        assert bus.requests == 0 and unit.writes == [] and unit.write_requests == []
     finally:
         await bus.close()
 

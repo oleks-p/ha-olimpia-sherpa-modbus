@@ -9,3 +9,7 @@ dev-config/
 # --sanitize'd copy under tests/fixtures/.
 sherpa_observed_*.json
 registers_observed.json
+# Olimpia's RDE448 (Modbus register description) is theirs: cite it, never commit it.
+RDE448*
+*.pdf
+.idea/

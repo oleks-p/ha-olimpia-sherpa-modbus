@@ -28,7 +28,7 @@ def _reads_since(fake, mark: int) -> set[int]:
 async def test_tiers_poll_at_their_own_rates(hass, setup_integration, fake, freezer):
     mark = len(fake.requests)
     await _advance(hass, freezer, 10)
-    assert _reads_since(fake, mark) == {8, 12, 100, 105, 388}   # control tier only
+    assert _reads_since(fake, mark) == {8, 12, 100, 105, 220, 388}   # control tier only
 
     mark = len(fake.requests)
     await _advance(hass, freezer, 20)                 # t = 30 s
@@ -39,12 +39,12 @@ async def test_tiers_poll_at_their_own_rates(hass, setup_integration, fake, free
     assert 206 not in _reads_since(fake, mark)        # setpoints: every 10 minutes
 
 
-async def test_control_tier_is_five_requests(hass, setup_integration, fake, freezer):
+async def test_control_tier_is_six_requests(hass, setup_integration, fake, freezer):
     mark = len(fake.requests)
     await _advance(hass, freezer, 10)
-    # 8 / 12 / 100-102 / 105 / 388: five runs, so five requests -- the unit
-    # refuses any read that spans a gap.
-    assert len(fake.requests) - mark == 5
+    # 8 / 12 / 100-102 / 105-106 / 220 / 388: six runs, so six requests -- the
+    # unit refuses any read that spans a gap.
+    assert len(fake.requests) - mark == 6
 
 
 async def test_slow_values_survive_fast_polls(hass, setup_integration, freezer):
@@ -119,3 +119,47 @@ async def test_compressor_running_follows_the_counter(hass, setup_integration, f
 
     await _advance(hass, freezer, 180)  # compressor off: the counter stands still
     assert hass.states.get("binary_sensor.sherpa_compressor_running").state == "off"
+
+
+async def test_with_serial_control_106_is_the_truth_about_the_mode(
+        hass, setup_integration, fake, freezer):
+    values = setup_integration.runtime_data.coordinator.data
+    assert values.get("serial_control") is False
+
+    fake.registers[220] = 1
+    fake.registers[106] = 8
+    fake.registers[12] = 6                       # a DHW cycle sets the heating bit
+    await _advance(hass, freezer, 10)
+    assert values.get("serial_control") is False                  # the old snapshot
+    data = setup_integration.runtime_data.coordinator.data
+    assert data.get("serial_control") is True
+    assert data.get("selected_mode") == "heating" and data.get("mode_operating") == "heating"
+
+    for word, selected, operating in ((0, "off", "dhw_only"), (1, "off", "standby"),
+                                      (4, "cooling", "cooling"), (9, "off", "standby")):
+        fake.registers[106] = word
+        await _advance(hass, freezer, 10)
+        data = setup_integration.runtime_data.coordinator.data
+        assert (data.get("selected_mode"), data.get("mode_operating")) == (selected, operating)
+
+
+async def test_with_the_panel_in_charge_the_status_word_decides(
+        hass, setup_integration, fake, freezer):
+    fake.registers[106] = 8                      # stale: the unit ignores it at 220 = 0
+    fake.registers[12] = 0
+    await _advance(hass, freezer, 10)
+    data = setup_integration.runtime_data.coordinator.data
+    assert data.get("selected_mode") == "off" and data.get("mode_command") == 8
+
+
+def test_hot_water_on_from_106_or_the_status_word():
+    from custom_components.olimpia_sherpa_modbus import derive
+
+    assert derive.hot_water_on(0, 1, True) is False           # standby bit
+    assert derive.hot_water_on(0, 9, True) is False
+    assert derive.hot_water_on(0, 0, True) is True            # DHW only: hot water carries on
+    assert derive.hot_water_on(2, 8, True) is True
+    assert derive.hot_water_on(2, 1, False) is True           # panel: heating runs
+    assert derive.hot_water_on(6, 0, False) is True           # panel: DHW cycle
+    assert derive.hot_water_on(0, 0, False) is None           # standby or DHW only: unknown
+    assert derive.hot_water_on(None, None, False) is None

@@ -1,0 +1,10 @@
+{
+ "step": "status",
+ "started": "2026-10-28T09:25:35+00:00",
+ "args": {
+  "entry": null,
+  "step": "status"
+ },
+ "events": [],
+ "stopped": "read_registers: HTTP 400: 400: Bad Request"
+}

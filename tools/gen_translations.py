@@ -167,7 +167,23 @@ CLIMATE = {"heat_pump": ("Heat pump", "Тепловий насос", {
     "remote_controls": ("Remote control", "Дистанційне керування"),
     "heating_curve": ("Heating curve", "Крива опалення"),
     "cooling_curve": ("Cooling curve", "Крива охолодження"),
+    "operating_mode": ("Operating mode", "Режим роботи"),
+    "mode_control": ("Mode control", "Керування режимом"),
 })}
+
+#: Mode control's entities (opt-in): the select, the ECO and night switches, and
+#: the hot water (always there; its on/off needs mode control).
+OPERATING_MODE = {"name": ("Operating mode", "Режим роботи"), "state": {
+    "standby": ("Standby", "Очікування"),
+    "dhw_only": ("DHW only", "Лише ГВП"),
+    "heating": ("Heating", "Опалення"),
+    "cooling": ("Cooling", "Охолодження"),
+}}
+MODE_SWITCHES = {
+    "eco": ("ECO", "ECO"),
+    "night": ("Night mode", "Нічний режим"),
+}
+HOT_WATER = ("Hot water", "Гаряча вода")
 
 
 def entities(lang):
@@ -177,6 +193,11 @@ def entities(lang):
         attr: {"name": names[i]} for attr, names in spec[2].items()}} for key, spec in CLIMATE.items()}
     out["number"] = {k: {"name": writable_name(k, i)} for k in NUMBER_KEYS}
     out["switch"] = {k: {"name": writable_name(k, i)} for k in SWITCH_KEYS}
+    out["switch"].update({k: {"name": names[i]} for k, names in MODE_SWITCHES.items()})
+    out["select"] = {"operating_mode": {
+        "name": OPERATING_MODE["name"][i],
+        "state": {k: names[i] for k, names in OPERATING_MODE["state"].items()}}}
+    out["water_heater"] = {"hot_water": {"name": HOT_WATER[i]}}
     for key, spec in SENSOR.items():
         item = {"name": spec[i]}
         if len(spec) > 2:
@@ -205,6 +226,15 @@ T = {  # (en, uk)
  "rr_address_desc": ("First register to read. Leave empty for a snapshot of every answering register.", "Перший регістр для читання. Залиште порожнім для знімка всіх регістрів, що відповідають."),
  "rr_count": ("Count", "Кількість"),
  "rr_count_desc": ("How many registers from the address (at most 125).", "Скільки регістрів від адреси (не більше 125)."),
+ "mc_name": ("Write mode command", "Записати команду режиму"),
+ "mc_desc": ("Research: writes the mode command (register 106), then reads it back with the unit's status, outputs and alarms. The unit acts on it only with ADDR220 = 1, and then raises E09 unless it is written at least every 255 s. Needs 'Allow writes'. Refused while Mode control is on and ADDR220 = 1: turn Mode control off first. Admin only.",
+             "Дослідження: записує команду режиму (регістр 106), потім читає її назад разом зі статусом, виходами й аваріями агрегату. Агрегат виконує її лише за ADDR220 = 1, і тоді видає E09, якщо її не записувати щонайменше раз на 255 с. Потрібно увімкнути «Дозволити запис». Відхиляється, поки увімкнено «Керування режимом» і ADDR220 = 1: спершу вимкніть «Керування режимом». Лише для адміністратора."),
+ "mc_value": ("Value", "Значення"),
+ "mc_value_desc": ("Bits: 1 standby, 2 ECO, 4 cooling, 8 heating, 16 night. 0 is DHW only. Heating and cooling together are refused.",
+                   "Біти: 1 очікування, 2 ECO, 4 охолодження, 8 опалення, 16 нічний режим. 0 — лише ГВП. Опалення й охолодження разом не приймаються."),
+ "x_invalid_mode_command": ("Mode command {value} sets heating and cooling at once.", "Команда режиму {value} задає опалення й охолодження одночасно."),
+ "x_mode_control_inactive": ("Mode control is not active: set ADDR220 to 1 on the panel first, with Mode control on.", "Керування режимом неактивне: спершу встановіть на панелі ADDR220 = 1 і ввімкніть «Керування режимом»."),
+ "x_mode_control_active": ("Mode control is running and writes register 106 itself. Turn Mode control off in the options before using this action.", "Керування режимом працює й саме записує регістр 106. Вимкніть «Керування режимом» у параметрах, перш ніж користуватися цією дією."),
  "x_read_failed": ("No answer from the Sherpa while reading: {error}", "Немає відповіді від Sherpa під час читання: {error}"),
  "svc_hold_desc": ("Seconds to hold the test value before reading it again.", "Скільки секунд тримати тестове значення перед повторним читанням."),
  "x_writes_disabled": ("Writes are off for this Sherpa. Turn on 'Allow writes' in its options first.", "Запис для цього Sherpa вимкнено. Спершу увімкніть «Дозволити запис» у його параметрах."),
@@ -220,6 +250,15 @@ T = {  # (en, uk)
  "i_restore_title": ("A Sherpa parameter was left changed", "Параметр Sherpa залишився зміненим"),
  "i_restore_desc": ("The write check could not put {key} (register {address}) back to {value}. Set it on the unit's SERVICE screen, then dismiss this.",
                     "Перевірка запису не змогла повернути {key} (регістр {address}) до {value}. Встановіть його на екрані SERVICE агрегату, потім закрийте це повідомлення."),
+ "i_unmanaged_title": ("The Sherpa takes commands over RS-485, but nothing keeps it fed", "Sherpa приймає команди через RS-485, але ніхто його не «годує»"),
+ "i_unmanaged_desc": ("The unit has ADDR220 = 1 (serial control), and Home Assistant is not writing its mode: Mode control or Allow writes is off. The unit raises E09 every 255 s and stops the pump for about 3 s each time. Set ADDR220 = 0 on the panel, or turn on Allow writes and Mode control in the options.",
+                      "В агрегаті ADDR220 = 1 (керування через послідовний порт), а Home Assistant не записує його режим: вимкнено «Керування режимом» або «Дозволити запис». Агрегат видає E09 кожні 255 с і щоразу зупиняє насос приблизно на 3 с. Встановіть на панелі ADDR220 = 0 або ввімкніть у параметрах «Дозволити запис» і «Керування режимом»."),
+ "i_keepalive_title": ("Home Assistant is not writing the Sherpa's mode", "Home Assistant не записує режим Sherpa"),
+ "i_keepalive_desc": ("The mode has not been written for {seconds} s. The unit pulses its alarm relay (E09) and stops the pump for about 3 s every 255 s. Check the RS-485 link. If it lasts, set ADDR220 = 0 on the panel.",
+                      "Режим не записувався {seconds} с. Агрегат кожні 255 с спрацьовує реле аварії (E09) і зупиняє насос приблизно на 3 с. Перевірте з'єднання RS-485. Якщо це триває, встановіть на панелі ADDR220 = 0."),
+ "i_not_applied_title": ("The Sherpa does not hold the mode we write", "Sherpa не тримає режим, який ми записуємо"),
+ "i_not_applied_desc": ("Register 106 reads back something other than what Home Assistant wrote, several times in a row. Another master may be writing it, or the unit refuses it. Check the bus; if it lasts, set ADDR220 = 0 on the panel.",
+                        "Регістр 106 читається не таким, як його записав Home Assistant, кілька разів поспіль. Його може записувати інший ведучий, або агрегат його відхиляє. Перевірте шину; якщо це триває, встановіть на панелі ADDR220 = 0."),
  "menu_title": ("How is the Sherpa connected?", "Як підключено Sherpa?"),
  "menu_desc": ("The integration reads the unit. Writes stay off unless you turn them on in its options, and even then only parameters the write check has verified on this unit can be changed. RS-485 allows one master, so stop anything else that polls the Sherpa (an old `modbus:` configuration, another controller) before adding it.",
                "Інтеграція читає агрегат. Запис вимкнено, доки ви не увімкнете його в параметрах, і навіть тоді змінювати можна лише параметри, які пройшли перевірку запису на цьому агрегаті. RS-485 допускає лише одного ведучого, тож перед додаванням зупиніть усе інше, що опитує Sherpa (стару конфігурацію `modbus:`, інший контролер)."),
@@ -252,9 +291,13 @@ T = {  # (en, uk)
  "a_reconf": ("Connection updated.", "Підключення оновлено."),
  "rtu_over_tcp": ("Transparent serial server (RTU over TCP)", "Прозорий серійний сервер (RTU over TCP)"),
  "tcp": ("Modbus TCP gateway", "Шлюз Modbus TCP"),
- "opt_title": ("Link and writes", "Зв'язок і запис"),
+ "opt_title": ("Link, writes and mode control", "Зв'язок, запис і керування режимом"),
  "opt_desc": ("The RS-485 link stalls for 10-30 s now and then; that is normal. Entities keep their last values until a failure has lasted as long as set here.",
               "Зв'язок RS-485 час від часу зависає на 10-30 с; це нормально. Сутності зберігають останні значення, доки збій не триває довше, ніж задано тут."),
+ "opt_mode_control": ("Mode control", "Керування режимом"),
+ "opt_mode_control_desc": ("Set the unit's mode from Home Assistant (select, ECO and night switches, climate, hot water), through register 106. Needs Allow writes. Works only while the panel has handed control to RS-485 (ADDR220 = 1): the integration then writes the mode every 60 s, because the unit raises E09 after 255 s without a write. It never writes ADDR220. To hand control back, set ADDR220 = 0 on the panel.",
+                          "Встановлювати режим агрегату з Home Assistant (вибір режиму, перемикачі ECO і нічного режиму, клімат, гаряча вода) через регістр 106. Потрібно «Дозволити запис». Працює лише поки панель передала керування RS-485 (ADDR220 = 1): тоді інтеграція записує режим кожні 60 с, бо без запису 255 с агрегат видає E09. ADDR220 вона ніколи не записує. Щоб повернути керування, встановіть на панелі ADDR220 = 0."),
+ "e_mode_control_needs_writes": ("Mode control needs Allow writes. Turn that on too.", "«Керування режимом» потребує «Дозволити запис». Увімкніть і його."),
  "unavailable_after": ("Unavailable after", "Недоступно через"),
  "x_unsup": ("The Sherpa reports identify code {code} ({model}), a register layout this integration does not know.", "Sherpa повідомляє код ідентифікації {code} ({model}) — розкладку регістрів, яку ця інтеграція не знає."),
  "x_not": ("No Sherpa answered at Modbus address {slave}.", "За адресою Modbus {slave} не відповів жоден Sherpa."),
@@ -286,8 +329,11 @@ def doc(lang):
         },
         "options": {"step": {"init": {"title": t["opt_title"], "description": t["opt_desc"],
                                       "data": {"unavailable_after": t["unavailable_after"],
-                                               "allow_writes": t["allow_writes"]},
-                                      "data_description": {"allow_writes": t["allow_writes_desc"]}}}},
+                                               "allow_writes": t["allow_writes"],
+                                               "mode_control": t["opt_mode_control"]},
+                                      "data_description": {"allow_writes": t["allow_writes_desc"],
+                                                           "mode_control": t["opt_mode_control_desc"]}}},
+                    "error": {"mode_control_needs_writes": t["e_mode_control_needs_writes"]}},
         "services": {"verify_write": {"name": t["svc_name"], "description": t["svc_desc"], "fields": {
             "config_entry_id": {"name": t["svc_entry"], "description": t["svc_entry_desc"]},
             "register": {"name": t["svc_register"], "description": t["svc_register_desc"]},
@@ -295,7 +341,10 @@ def doc(lang):
             "read_registers": {"name": t["rr_name"], "description": t["rr_desc"], "fields": {
                 "config_entry_id": {"name": t["svc_entry"], "description": t["svc_entry_desc"]},
                 "address": {"name": t["rr_address"], "description": t["rr_address_desc"]},
-                "count": {"name": t["rr_count"], "description": t["rr_count_desc"]}}}},
+                "count": {"name": t["rr_count"], "description": t["rr_count_desc"]}}},
+            "write_mode_command": {"name": t["mc_name"], "description": t["mc_desc"], "fields": {
+                "config_entry_id": {"name": t["svc_entry"], "description": t["svc_entry_desc"]},
+                "value": {"name": t["mc_value"], "description": t["mc_value_desc"]}}}},
         "selector": {"framing": {"options": {"rtu_over_tcp": t["rtu_over_tcp"], "tcp": t["tcp"]}},
                      "write_register": {"options": {k: writable_name(k, i) for k in sorted(NUMBER_KEYS + SWITCH_KEYS)}}},
         "entity": entities(lang),
@@ -305,11 +354,16 @@ def doc(lang):
             ("rate_limited", "rate_limited"), ("write_not_applied", "not_applied"),
             ("write_failed", "write_failed"), ("write_refused", "write_refused"),
             ("restore_failed", "restore_failed"), ("choose_entry", "choose_entry"),
-            ("read_failed", "read_failed"))},
+            ("read_failed", "read_failed"), ("invalid_mode_command", "invalid_mode_command"),
+            ("mode_control_inactive", "mode_control_inactive"),
+            ("mode_control_active", "mode_control_active"))},
                        "unsupported_model": {"message": t["x_unsup"]}, "not_a_sherpa": {"message": t["x_not"]},
                        "cannot_connect": {"message": t["x_cannot"]}},
         "issues": {"unsupported_model": {"title": t["i_title"], "description": t["i_desc"]},
-                   "restore_failed": {"title": t["i_restore_title"], "description": t["i_restore_desc"]}},
+                   "restore_failed": {"title": t["i_restore_title"], "description": t["i_restore_desc"]},
+                   "serial_control_unmanaged": {"title": t["i_unmanaged_title"], "description": t["i_unmanaged_desc"]},
+                   "mode_keepalive_lost": {"title": t["i_keepalive_title"], "description": t["i_keepalive_desc"]},
+                   "mode_not_applied": {"title": t["i_not_applied_title"], "description": t["i_not_applied_desc"]}},
     }
 
 OUTPUTS = (("strings.json", "en"), ("translations/en.json", "en"), ("translations/uk.json", "uk"))

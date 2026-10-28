@@ -41,6 +41,7 @@ from homeassistant.helpers.storage import Store
 from homeassistant.util import dt as dt_util
 from homeassistant.util.hass_dict import HassKey
 
+from . import derive
 from .const import (
     CONF_ALLOW_WRITES,
     DOMAIN,
@@ -48,7 +49,15 @@ from .const import (
     WRITE_DAILY_LIMIT,
     WRITE_MIN_INTERVAL,
 )
-from .registers import BY_KEY, FORBIDDEN_WRITES, WRITE_SPECS, Kind, Reg, WriteSpec
+from .registers import (
+    BY_KEY,
+    FORBIDDEN_WRITES,
+    MODE_COMMAND,
+    WRITE_SPECS,
+    Kind,
+    Reg,
+    WriteSpec,
+)
 from .transport import SherpaIllegalError, SherpaTransientError
 
 if TYPE_CHECKING:
@@ -151,6 +160,8 @@ class WriteGate:
         self.allowed = bool(coordinator.config_entry.options.get(CONF_ALLOW_WRITES, False))
         self.log: deque[dict[str, Any]] = deque(maxlen=20)
         self._last_write: dict[str, float] = {}
+        #: Monotonic time of the last acknowledged FC6 to 106 from the mode controller.
+        self.last_mode_sent: float | None = None
         self._recent: deque[float] = deque()
         # A write and a check are each several bus exchanges; the bus lock
         # keeps the exchanges apart, this keeps the sequences apart -- or a
@@ -221,12 +232,15 @@ class WriteGate:
         self._recent.append(now)
 
     async def _read(self, reg: Reg) -> int:
+        (raw,) = await self._words(reg.address, 1)
+        return raw
+
+    async def _words(self, address: int, count: int) -> list[int]:
         try:
-            (raw,) = await self.coordinator.bus.read(self.coordinator.slave, reg.address, 1)
+            return await self.coordinator.bus.read(self.coordinator.slave, address, count)
         except (SherpaTransientError, SherpaIllegalError) as err:
             raise HomeAssistantError(translation_domain=DOMAIN, translation_key="write_failed",
                                      translation_placeholders={"error": str(err)}) from err
-        return raw
 
     async def _send(self, reg: Reg, raw: int) -> None:
         try:
@@ -252,6 +266,99 @@ class WriteGate:
             {"entry_id": coordinator.config_entry.entry_id, **record}, context=context)
         _LOGGER.info("Wrote %s (register %s): %s -> %s, read back %s", key, reg.address,
                      record["old"], record["new"], record["read_back"])
+
+    # -- the mode command ---------------------------------------------------------
+
+    def _check_mode_word(self, word: int) -> None:
+        if not derive.word_valid(word):
+            raise ServiceValidationError(translation_domain=DOMAIN,
+                                         translation_key="invalid_mode_command",
+                                         translation_placeholders={"value": str(word)})
+
+    async def async_mode_write(self, word: int, *, keepalive: bool, before: int | None = None,
+                               context: Context | None = None,
+                               expect_serial: bool = False) -> int:
+        """The mode controller's write: FC6 to 106, then FC3 of 106, in one sequence.
+
+        Returns the word read back. Always sent, even if 106 holds it already --
+        the rewrite is the keep-alive. ``keepalive=True`` is silent: no event, no
+        log entry, no publish, so a write every 60 s does not churn the entities
+        or the logbook. Otherwise it is a change: folded into the cache,
+        logged and announced like a parameter write. ``before`` is the word it
+        replaces, for that record (read first if not given). 106 is RAM, so the
+        rate limits that protect EEPROM do not apply.
+
+        ``expect_serial``: read ADDR220 from the unit itself, inside the lock and
+        right before the FC6, and write nothing unless it reads 1. The cache may be
+        hours old during a link stall, and a person who set ADDR220 = 0 (the
+        documented fallback) must never have 106 written under them. If it reads
+        anything else the cache is told, and ``mode_control_inactive`` is raised.
+        ``last_mode_sent`` is stamped as soon as the FC6 is acknowledged, whether or
+        not the read-back then succeeds: the unit got the word, so its E09 clock restarted.
+        """
+        if not self.allowed:
+            raise ServiceValidationError(translation_domain=DOMAIN,
+                                         translation_key="writes_disabled")
+        self._check_mode_word(word)
+        reg = MODE_COMMAND
+        async with self._lock:
+            if expect_serial:
+                remote_reg = BY_KEY["remote_controls"]
+                remote = await self._read(remote_reg)
+                if remote != 1:
+                    self.coordinator.patch_register(remote_reg.address, remote)
+                    raise ServiceValidationError(translation_domain=DOMAIN,
+                                                 translation_key="mode_control_inactive")
+            if before is None and not keepalive:
+                before = await self._read(reg)
+            await self._send(reg, word)
+            self.last_mode_sent = time.monotonic()
+            try:
+                after = await self._read(reg)
+            except HomeAssistantError:
+                after = await self._read(reg)       # once more: the write itself landed
+            if not keepalive:
+                self._note(reg.key, reg, before, word, after, context)
+        return after
+
+    # -- the mode command (P6 test) ---------------------------------------------
+
+    async def async_mode_command(self, value: int,
+                                 context: Context | None = None) -> dict[str, Any]:
+        """Write register 106, read it back, and report what the unit is doing.
+
+        For the P6 test (docs/p6_mode_command_test.md), which has to see
+        whether the unit follows 106 and when E09 comes. So, unlike a parameter
+        write, it is sent even when 106 already holds the value -- a rewrite is
+        the keep-alive -- and a read-back that differs is a result, not an
+        error. The rate limits protect EEPROM; 106 is RAM, so they do not apply.
+        """
+        if not self.allowed:
+            raise ServiceValidationError(translation_domain=DOMAIN,
+                                         translation_key="writes_disabled")
+        self._check_mode_word(value)
+        if self.coordinator.mode.state in ("active", "stalled"):
+            # Two writers of one register fight, and the controller's keep-alive
+            # would undo this at once. Turn Mode control off to run the test.
+            raise ServiceValidationError(translation_domain=DOMAIN,
+                                         translation_key="mode_control_active")
+        reg = MODE_COMMAND
+        async with self._lock:
+            before = await self._read(reg)
+            await self._send(reg, value)
+            # 105-106 and 100-102 are runs the unit answers whole (ANSWERING_RUNS).
+            outputs, after = await self._words(BY_KEY["outputs"].address, 2)
+            self._note(reg.key, reg, before, value, after, context)
+            (status,) = await self._words(BY_KEY["status"].address, 1)
+            alarm_1, alarm_2, override = await self._words(BY_KEY["alarm_1"].address, 3)
+            (inputs,) = await self._words(BY_KEY["inputs"].address, 1)
+            (remote_controls,) = await self._words(BY_KEY["remote_controls"].address, 1)
+        return {
+            "at": dt_util.utcnow().isoformat(),
+            "written": value, "before": before, "read_back": after,
+            "remote_controls": remote_controls, "status": status, "outputs": outputs,
+            "alarm_1": alarm_1, "alarm_2": alarm_2, "override": override, "inputs": inputs,
+        }
 
     # -- the write check ----------------------------------------------------------
 

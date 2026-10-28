@@ -1,9 +1,8 @@
 """Values computed from the raw words: mode, fault codes, pump duty, runtime.
 
-Pure functions, no Home Assistant. They replace the legacy YAML templates, and
-tests/legacy.py keeps what those templates computed: the tests replay 57 days
-of recorded history through both and require the same
-answers (the mode states aside, which were renamed to translation keys).
+Pure functions, no Home Assistant. They replace the YAML templates of a modbus
+setup and give the same answers, except the mode states, which are
+translation keys.
 """
 
 from __future__ import annotations
@@ -11,8 +10,11 @@ from __future__ import annotations
 from collections import deque
 from collections.abc import Sequence
 
-#: sensor.<prefix>_mode states. Translated in strings.json; the legacy
-#: free-text states map onto these one-to-one (tests/legacy.py::MODE_KEYS).
+from .registers import MODE_COMMAND_BITS
+
+#: sensor.<prefix>_mode states. Translated in strings.json; the YAML templates'
+#: free-text states map onto these one-to-one ("domestic hot water" ->
+#: domestic_hot_water, "anti-legionella" -> anti_legionella).
 MODE_OPTIONS: tuple[str, ...] = (
     "standby", "cooling", "heating", "domestic_hot_water", "anti_legionella",
 )
@@ -132,6 +134,70 @@ def selected_mode(status: int | None, last: str | None) -> str | None:
     if status & 0x01:
         return "cooling"
     return "off"
+
+
+# -- the mode command, register 106 (Olimpia RDE448) ------------------------------
+
+_BIT = {name: 1 << bit for bit, name in MODE_COMMAND_BITS.items()}
+#: What 106 can hold besides standby: DHW only is heating and cooling both clear.
+COMMAND_MODES: tuple[str, ...] = ("dhw_only", "heating", "cooling")
+#: The select's options: standby is a flag of its own (STB), kept beside the mode.
+OPERATING_MODES: tuple[str, ...] = ("standby", *COMMAND_MODES)
+
+
+def commanded_mode(word: int | None) -> str | None:
+    """standby | dhw_only | heating | cooling, from 106. The standby bit wins:
+    the unit is in standby whatever the other bits say."""
+    if word is None:
+        return None
+    if word & _BIT["standby"]:
+        return "standby"
+    return command_mode(word)
+
+
+def command_mode(word: int) -> str:
+    """The mode bits alone, standby ignored: dhw_only | heating | cooling."""
+    if word & _BIT["heating"]:
+        return "heating"
+    return "cooling" if word & _BIT["cooling"] else "dhw_only"
+
+
+def command_word(mode: str, *, standby: bool = False, eco: bool = False,
+                 night: bool = False) -> int:
+    """106 for a mode (dhw_only | heating | cooling), plus the standby, ECO and
+    night bits. Heating and cooling are never both set. Standby keeps the mode
+    bit, so leaving it restores the mode."""
+    word = 0 if mode == "dhw_only" else _BIT[mode]
+    return (word | _BIT["standby"] * standby | _BIT["eco"] * eco | _BIT["night"] * night)
+
+
+def word_valid(word: int) -> bool:
+    """A word 106 may be given: only the documented bits, and never heating and
+    cooling together (the unit's own rule, and nothing here ever builds one)."""
+    both = _BIT["heating"] | _BIT["cooling"]
+    return 0 <= word < 1 << len(MODE_COMMAND_BITS) and word & both != both
+
+
+def selected_from_command(word: int | None) -> str | None:
+    """off | heating | cooling, as the climate shows it: off when standby is set
+    or neither heating nor cooling is (DHW only)."""
+    mode = commanded_mode(word)
+    return None if mode is None else mode if mode in ("heating", "cooling") else "off"
+
+
+def hot_water_on(status: int | None, word: int | None, serial: bool) -> bool | None:
+    """Is the unit out of standby, i.e. may it make hot water?
+
+    With ADDR220 = 1, 106 says: the standby bit. Otherwise only the panel knows,
+    and the status word shows it for one case: heating, cooling or a DHW cycle
+    running means not in standby. Status 0 is standby and DHW only alike
+    (P6, docs/p6_mode_command_test.md), so it reads unknown, not off.
+    """
+    if serial and word is not None:
+        return not word & _BIT["standby"]
+    if status is not None and status & 0x0F:
+        return True
+    return None
 
 
 def curve(outdoor: float | None, outdoor_at_max: float | None, max_water: float | None,

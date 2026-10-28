@@ -211,11 +211,33 @@
       },
       "heating_curve_enabled": {
         "default": "mdi:chart-bell-curve-cumulative"
+      },
+      "eco": {
+        "default": "mdi:leaf"
+      },
+      "night": {
+        "default": "mdi:weather-night"
       }
     },
     "climate": {
       "heat_pump": {
         "default": "mdi:heat-pump"
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "default": "mdi:heat-pump",
+        "state": {
+          "standby": "mdi:power-sleep",
+          "dhw_only": "mdi:water-boiler",
+          "heating": "mdi:radiator",
+          "cooling": "mdi:snowflake"
+        }
+      }
+    },
+    "water_heater": {
+      "hot_water": {
+        "default": "mdi:water-boiler"
       }
     }
   },

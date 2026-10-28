@@ -76,6 +76,72 @@ def reference_registers() -> dict[int, int]:
     return regs
 
 
+class ModeModel:
+    """What the unit does with register 106 and ADDR220 (Olimpia RDE448, and the
+    P6 test of 2026-10-28, docs/p6_mode_command_test.md).
+
+    Attach as ``fake.mode_model``; None keeps the plain register file.
+
+    * 106 is always stored and read back as written.
+    * ADDR220 != 1: the unit ignores 106. Status, outputs and alarms stay as the
+      fixture holds them (the panel's state).
+    * ADDR220 = 1: status and outputs follow 106 (standby -> 0; heating -> 2;
+      cooling -> 1; night -> |128; ``dhw_cycle`` sets bits 2 and 1, as a DHW
+      cycle does, and the pump and 3-way valve outputs).
+    * E09: ``e09_period`` s after the last 106 write (or after the flip to
+      ADDR220 = 1, where the clock starts), and every period after that, status,
+      outputs and alarm show the pulse for ``pulse_s`` s of the clock: bit 8 in
+      register 100, outputs 256, status 0. Then it clears by itself. As on the
+      unit (253.6-254.4 s, up for under 1.6 s), a 10 s poll can miss it.
+      ``e09_episodes`` records each by its clock time, whether anything read it or not.
+
+    The clock is injected so tests drive it with the frozen one.
+    """
+
+    E09 = 1 << 8
+
+    def __init__(self, clock=time.monotonic, e09_period: float = 253.6, pulse_s: float = 1.0):
+        self.clock, self.e09_period, self.pulse_s = clock, e09_period, pulse_s
+        self.dhw_cycle = False
+        self.e09_episodes: list[float] = []
+        self._last_write: float | None = None
+        self._pulse_until = 0.0
+        self._panel: dict[int, int] | None = None   # the panel's words, while ADDR220 = 1
+
+    def on_write(self, regs: dict[int, int], address: int, value: int) -> None:
+        if address == 106 and regs.get(220) == 1:
+            self._last_write = self.clock()
+
+    def on_read(self, regs: dict[int, int], span: range) -> None:
+        if regs.get(220) != 1:
+            if self._panel is not None:             # handed back: the panel's state again
+                regs.update(self._panel)
+                self._panel = None
+            self._last_write, self._pulse_until = None, 0.0
+            return
+        if self._panel is None:
+            self._panel = {a: regs[a] for a in (12, 100, 105) if a in regs}
+            self._last_write = self.clock()         # the watchdog starts at the flip
+        command = regs.get(106, 0)
+        standby = bool(command & 1)
+        status = 0 if standby else (2 if command & 8 else 1 if command & 4 else 0)
+        outputs = 0 if standby or not (status or self.dhw_cycle) else 1
+        if not standby and self.dhw_cycle:
+            status |= 0x06
+            outputs = 0x11
+        if not standby and command & 16:
+            status |= 0x80
+        alarm = regs.get(100, 0) & ~self.E09
+        now = self.clock()
+        while self._last_write is not None and now - self._last_write >= self.e09_period:
+            self._last_write += self.e09_period      # the episode's start, and the next one's clock
+            self.e09_episodes.append(self._last_write)
+            self._pulse_until = self._last_write + self.pulse_s
+        if now < self._pulse_until:
+            alarm, outputs, status = alarm | self.E09, self.E09, 0
+        regs.update({12: status, 105: outputs, 100: alarm})
+
+
 class FakeSherpa:
     """A Modbus slave with the Sherpa's register map and configurable quirks."""
 
@@ -101,6 +167,8 @@ class FakeSherpa:
         #: value back after one more read).
         self.write_mode: dict[int, str] = {}
         self.writes: list[tuple[int, int]] = []
+        #: ModeModel, or None for the plain register file.
+        self.mode_model: ModeModel | None = None
         self._revert: dict[int, tuple[int, int]] = {}
 
     # -- fault injection ----------------------------------------------------
@@ -140,6 +208,10 @@ class FakeSherpa:
         return cls(answering, **kwargs)
 
     @property
+    def e09_episodes(self) -> list[float]:
+        return self.mode_model.e09_episodes if self.mode_model else []
+
+    @property
     def write_requests(self) -> list[tuple[int, int, int, int]]:
         return [r for r in self.requests if r[1] not in probe.ALLOWED_FUNCTION_CODES]
 
@@ -171,6 +243,8 @@ class FakeSherpa:
         if any(a in self.silent for a in span):
             return None
         self._settle(span)
+        if self.mode_model:
+            self.mode_model.on_read(self.registers, span)
         for first in self.atomic_u32:
             if (first in span) != (first + 1 in span):
                 return 2
@@ -204,6 +278,8 @@ class FakeSherpa:
         elif mode == "revert":
             self._revert[address] = (self.registers[address], 1)
             self.registers[address] = value
+        if self.mode_model:
+            self.mode_model.on_write(self.registers, address, value)
         return True
 
     def _settle(self, span: range) -> None:

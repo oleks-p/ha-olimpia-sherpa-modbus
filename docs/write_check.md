@@ -99,8 +99,8 @@ verified register before the next power outage, and check it afterwards.
 
 ## Results on the reference unit
 
-Unit: SHERPA S2 BIG + SHERPA S2 14T, identify code 1134, firmware 0.57, site
-the reference unit. Integration 0.2.0, ADDR220 = 0 (display only), both climatic curves on,
+Unit: SHERPA S2 BIG + SHERPA S2 14T, identify code 1134, firmware 0.57.
+Integration 0.2.0, ADDR220 = 0 (display only), both climatic curves on,
 the unit in standby.
 
 | Date (local time) | Register | Steps (write -> read) | Hold | Result |

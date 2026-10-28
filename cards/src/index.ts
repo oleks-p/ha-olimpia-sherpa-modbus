@@ -2,7 +2,7 @@
  * Entry point: registers the elements and their Lovelace picker entries.
  *
  * Registration is explicit rather than via Lit's `@customElement` decorator, for
- * the reason the another integration cards found: esbuild's minifier can tree-shake the
+ * a known reason: esbuild's minifier can tree-shake the
  * decorator calls, leaving a module that loads cleanly and defines nothing.
  */
 import { SherpaControlCard } from './control-card';
