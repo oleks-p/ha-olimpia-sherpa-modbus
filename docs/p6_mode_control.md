@@ -39,7 +39,8 @@ never written. 106 is RAM, so there is no write limit on it.
 **Standby is a flag beside the mode.** Setting it keeps the mode bit, ECO and
 night. Leaving it restores them, and the ECO and night switches stay truthful
 meanwhile. A word such as 9 (STB + HTG) has not been tried on the unit; it must
-behave as standby (status 0, outputs 0). That is acceptance step 3.
+behave as standby (status 0, outputs 0). That is step D of
+`docs/p6_mode_control_acceptance.md`.
 
 | Control | Change |
 |---|---|
