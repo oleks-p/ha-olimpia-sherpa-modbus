@@ -41,9 +41,27 @@
       "reconfigure": {
         "title": "Змінити підключення",
         "description": "Той самий агрегат, інше підключення. ID сутностей та історія зберігаються.",
+        "menu_options": {
+          "reconfigure_serial": "USB / RS-485 адаптер",
+          "reconfigure_network": "Мережевий шлюз"
+        }
+      },
+      "reconfigure_serial": {
+        "title": "Адаптер RS-485",
+        "description": "Клеми AB внутрішнього блока, 8N1. Обирайте шлях /dev/serial/by-id: він не змінюється після перезавантаження чи перепідключення.",
         "data": {
           "serial_port": "Послідовний порт",
           "baudrate": "Швидкість",
+          "slave": "Адреса Modbus"
+        },
+        "data_description": {
+          "slave": "Параметр ADDR247 на екрані SERVICE агрегату (заводське значення 1)."
+        }
+      },
+      "reconfigure_network": {
+        "title": "Мережевий шлюз",
+        "description": "Шлюз, підключений до клем AB внутрішнього блока. Оберіть це, коли портом володіє шлюз Modbus, бо шину ділять інші пристрої.",
+        "data": {
           "host": "Хост",
           "port": "Порт",
           "transport": "Тип шлюзу",

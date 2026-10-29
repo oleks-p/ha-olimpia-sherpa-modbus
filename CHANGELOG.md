@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.1 — 2026-10-29
+
+Reconfigure can now change the *kind* of link, not just its settings. Moving a
+unit behind a Modbus gateway — needed as soon as another device shares the
+RS-485 bus — turns a serial entry into a TCP one, and that has to happen in
+place: every entity's unique_id is derived from the config entry id, so
+removing and re-adding the integration would orphan all of them along with
+their history.
+
+- **Reconfigure** now opens a menu of the two link types, like initial setup.
+  Switching links clears the abandoned link's settings from the entry.
+
 ## 0.6.0 — 2026-10-28
 
 Mode control (P6), from Olimpia's RDE448: register 106 sets the operating mode

@@ -174,12 +174,41 @@ class SherpaConfigFlow(ConfigFlow, domain=DOMAIN):
 
     async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None
                                      ) -> ConfigFlowResult:
-        entry = self._get_reconfigure_entry()
-        serial = entry.data[CONF_TRANSPORT] == TRANSPORT_SERIAL
+        """Offer both link types, not only the one currently in use.
+
+        Putting a Modbus gateway in front of the bus turns a serial entry into a
+        TCP one, and the entry has to survive that: every entity's unique_id is
+        derived from the entry_id, so removing and re-adding the integration
+        orphans all of them along with their history.
+        """
         self._errors, self._placeholders = {}, {}
+        return self.async_show_menu(
+            step_id="reconfigure",
+            menu_options=["reconfigure_serial", "reconfigure_network"])
+
+    async def async_step_reconfigure_serial(
+            self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        return await self._async_relink(user_input, serial=True)
+
+    async def async_step_reconfigure_network(
+            self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        return await self._async_relink(user_input, serial=False)
+
+    async def _async_relink(self, user_input: dict[str, Any] | None, *,
+                            serial: bool) -> ConfigFlowResult:
+        """Rewrite one entry's link, keeping the entry itself."""
+        entry = self._get_reconfigure_entry()
+        step = "reconfigure_serial" if serial else "reconfigure_network"
         if user_input is not None:
-            data = {**entry.data, **user_input}
+            # Drop the other link's keys. Endpoint and the options flow both read
+            # the transport first, so a leftover serial_port on a TCP entry would
+            # not be used - but it would be read as truth by the next person
+            # looking at the stored data, which is how a stale port gets probed.
+            kept = {k: v for k, v in entry.data.items()
+                    if k not in (CONF_SERIAL_PORT, CONF_BAUDRATE, CONF_HOST, CONF_PORT)}
+            data = {**kept, **user_input}
             if serial:
+                data[CONF_TRANSPORT] = TRANSPORT_SERIAL
                 data[CONF_BAUDRATE] = int(user_input[CONF_BAUDRATE])
             unique_id = _unique_id(data)
             if unique_id != entry.unique_id and any(
@@ -195,7 +224,7 @@ class SherpaConfigFlow(ConfigFlow, domain=DOMAIN):
             schema = _serial_schema(defaults, ports, with_prefix=False)
         else:
             schema = _network_schema(defaults, with_prefix=False)
-        return self.async_show_form(step_id="reconfigure", data_schema=schema,
+        return self.async_show_form(step_id=step, data_schema=schema,
                                     errors=self._errors,
                                     description_placeholders=self._placeholders)
 

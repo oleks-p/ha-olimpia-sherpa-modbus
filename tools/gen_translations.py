@@ -281,6 +281,7 @@ T = {  # (en, uk)
  "transport": ("Gateway type", "Тип шлюзу"),
  "reconf_title": ("Change the connection", "Змінити підключення"),
  "reconf_desc": ("Same unit, different link. Entity ids and history are kept.", "Той самий агрегат, інше підключення. ID сутностей та історія зберігаються."),
+ "reconf_network_desc": ("A gateway wired to terminal AB on the indoor unit. Use this when a Modbus gateway owns the port because other devices share the bus.", "Шлюз, підключений до клем AB внутрішнього блока. Оберіть це, коли портом володіє шлюз Modbus, бо шину ділять інші пристрої."),
  "e_cannot": ("No answer. Check the port or address, the wiring on terminals AB, and that nothing else is polling the bus.", "Немає відповіді. Перевірте порт або адресу, підключення клем AB і те, що шину більше ніхто не опитує."),
  "e_not": ("Something answered, but not with a Sherpa's identity registers. Check the Modbus address.", "Пристрій відповів, але не регістрами ідентифікації Sherpa. Перевірте адресу Modbus."),
  "e_unsup": ("This unit reports identify code {code}. Only 1134 (Sherpa S2, firmware 0.57) is supported so far; run tools/probe_sherpa.py and open an issue with the capture.",
@@ -313,7 +314,8 @@ def doc(lang):
     serial_data = {"serial_port": t["serial_port"], "baudrate": t["baudrate"], "slave": t["slave"], "entity_prefix": t["prefix"]}
     serial_desc = {"slave": t["slave_desc"], "entity_prefix": t["prefix_desc"]}
     network_data = {"host": t["host"], "port": t["port"], "transport": t["transport"], "slave": t["slave"], "entity_prefix": t["prefix"]}
-    reconf_data = {"serial_port": t["serial_port"], "baudrate": t["baudrate"], "host": t["host"], "port": t["port"], "transport": t["transport"], "slave": t["slave"]}
+    reconf_serial_data = {"serial_port": t["serial_port"], "baudrate": t["baudrate"], "slave": t["slave"]}
+    reconf_network_data = {"host": t["host"], "port": t["port"], "transport": t["transport"], "slave": t["slave"]}
     return {
         "config": {
             "step": {
@@ -321,7 +323,10 @@ def doc(lang):
                          "menu_options": {"serial": t["serial"], "network": t["network"]}},
                 "serial": {"title": t["serial_title"], "description": t["serial_desc"], "data": serial_data, "data_description": serial_desc},
                 "network": {"title": t["network_title"], "description": t["network_desc"], "data": network_data, "data_description": serial_desc},
-                "reconfigure": {"title": t["reconf_title"], "description": t["reconf_desc"], "data": reconf_data, "data_description": {"slave": t["slave_desc"]}},
+                "reconfigure": {"title": t["reconf_title"], "description": t["reconf_desc"],
+                                "menu_options": {"reconfigure_serial": t["serial"], "reconfigure_network": t["network"]}},
+                "reconfigure_serial": {"title": t["serial_title"], "description": t["serial_desc"], "data": reconf_serial_data, "data_description": {"slave": t["slave_desc"]}},
+                "reconfigure_network": {"title": t["network_title"], "description": t["reconf_network_desc"], "data": reconf_network_data, "data_description": {"slave": t["slave_desc"]}},
             },
             "error": {"cannot_connect": t["e_cannot"], "not_a_sherpa": t["e_not"], "unsupported_model": t["e_unsup"],
                       "invalid_prefix": t["e_invalid_prefix"], "prefix_in_use": t["e_prefix_in_use"]},

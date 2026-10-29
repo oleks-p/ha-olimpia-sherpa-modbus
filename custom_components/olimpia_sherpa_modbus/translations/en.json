@@ -41,9 +41,27 @@
       "reconfigure": {
         "title": "Change the connection",
         "description": "Same unit, different link. Entity ids and history are kept.",
+        "menu_options": {
+          "reconfigure_serial": "USB / RS-485 adapter",
+          "reconfigure_network": "Network gateway"
+        }
+      },
+      "reconfigure_serial": {
+        "title": "RS-485 adapter",
+        "description": "Terminal AB on the indoor unit, 8N1. Prefer a /dev/serial/by-id path: it survives reboots and replugging.",
         "data": {
           "serial_port": "Serial port",
           "baudrate": "Baud rate",
+          "slave": "Modbus address"
+        },
+        "data_description": {
+          "slave": "Parameter ADDR247 on the unit's SERVICE screen (factory default 1)."
+        }
+      },
+      "reconfigure_network": {
+        "title": "Network gateway",
+        "description": "A gateway wired to terminal AB on the indoor unit. Use this when a Modbus gateway owns the port because other devices share the bus.",
+        "data": {
           "host": "Host",
           "port": "Port",
           "transport": "Gateway type",

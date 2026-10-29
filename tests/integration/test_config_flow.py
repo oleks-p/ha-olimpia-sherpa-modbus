@@ -116,6 +116,9 @@ async def test_reconfigure_moves_the_unit_to_another_port(hass, modbus_clients, 
     result = await config_entry.start_reconfigure_flow(hass)
     assert result["step_id"] == "reconfigure"
     result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {"next_step_id": "reconfigure_serial"})
+    assert result["step_id"] == "reconfigure_serial"
+    result = await hass.config_entries.flow.async_configure(
         result["flow_id"], {CONF_SERIAL_PORT: "/dev/rs485-host", CONF_BAUDRATE: "9600",
                             CONF_SLAVE: 201})
     assert result["type"] is FlowResultType.ABORT and result["reason"] == "reconfigure_successful"
@@ -128,10 +131,41 @@ async def test_reconfigure_reports_a_dead_link(hass, modbus_clients, config_entr
     fake.offline = True
     result = await config_entry.start_reconfigure_flow(hass)
     result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {"next_step_id": "reconfigure_serial"})
+    result = await hass.config_entries.flow.async_configure(
         result["flow_id"], {CONF_SERIAL_PORT: "/dev/ttyUSB1", CONF_BAUDRATE: "9600",
                             CONF_SLAVE: 201})
     assert result["errors"] == {"base": "cannot_connect"}
     assert config_entry.data[CONF_SERIAL_PORT] == "/dev/ttyUSB0"
+
+
+async def test_reconfigure_switches_a_serial_entry_to_a_gateway(
+        hass, modbus_clients, config_entry):
+    """A Modbus gateway in front of the bus is the same unit on a different link.
+
+    The entry itself has to survive the switch: every entity's unique_id is
+    built from the entry_id, so removing and re-adding the integration would
+    orphan all of them along with their history.
+    """
+    entry_id = config_entry.entry_id
+    result = await config_entry.start_reconfigure_flow(hass)
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {"next_step_id": "reconfigure_network"})
+    assert result["step_id"] == "reconfigure_network"
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {CONF_HOST: "127.0.0.1", CONF_PORT: 10502,
+                            CONF_TRANSPORT: "tcp", CONF_SLAVE: 201})
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "reconfigure_successful"
+    assert config_entry.entry_id == entry_id
+    assert config_entry.data[CONF_TRANSPORT] == "tcp"
+    assert config_entry.data[CONF_HOST] == "127.0.0.1"
+    assert config_entry.data[CONF_PORT] == 10502
+    # the abandoned link must not linger in the stored data
+    assert CONF_SERIAL_PORT not in config_entry.data
+    assert CONF_BAUDRATE not in config_entry.data
+    assert config_entry.data[CONF_ENTITY_PREFIX] == "sherpa"
+    assert config_entry.unique_id == "tcp:127.0.0.1:10502#201"
 
 
 async def test_options_set_the_outage_tolerance(hass, config_entry):
