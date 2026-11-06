@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.2 — 2026-11-06
+
+- **Home Assistant 2026.11:** the climate and water heater entities provide
+  the native temperature API (`native_current_temperature`,
+  `native_target_temperature`, `_attr_native_temperature_unit`), so 2026.11
+  no longer warns that they stop working in 2027.11. The old names stay as
+  aliases for the releases before 2026.11.
+
 ## 0.6.1 — 2026-10-29
 
 Reconfigure can now change the *kind* of link, not just its settings. Moving a

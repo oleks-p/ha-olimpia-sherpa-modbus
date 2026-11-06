@@ -70,7 +70,11 @@ def _curve(values: dict[str, Any], kind: str) -> dict[str, Any]:
 
 class SherpaClimate(SherpaEntity, ClimateEntity):
     entity_description: SherpaClimateDescription
-    _attr_temperature_unit = UnitOfTemperature.CELSIUS
+    # Home Assistant 2026.11 reads the `native_` names and deprecates the
+    # others; the older releases this still supports read only those. With
+    # both on the class, 2026.11 uses the native ones and warns of nothing.
+    _attr_native_temperature_unit = UnitOfTemperature.CELSIUS
+    _attr_temperature_unit = _attr_native_temperature_unit
     _attr_precision = 0.1
 
     @property
@@ -119,8 +123,9 @@ class SherpaClimate(SherpaEntity, ClimateEntity):
         return HVACAction.IDLE
 
     @property
-    def current_temperature(self) -> float | None:
+    def native_current_temperature(self) -> float | None:
         return self._values.get("water_out")
+    current_temperature = native_current_temperature
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:

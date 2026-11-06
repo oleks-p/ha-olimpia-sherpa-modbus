@@ -54,7 +54,11 @@ async def async_setup_entry(
 
 class SherpaWaterHeater(SherpaEntity, WaterHeaterEntity):
     entity_description: SherpaWaterHeaterDescription
-    _attr_temperature_unit = UnitOfTemperature.CELSIUS
+    # Home Assistant 2026.11 reads the `native_` names and deprecates the
+    # others; the older releases this still supports read only those. With
+    # both on the class, 2026.11 uses the native ones and warns of nothing.
+    _attr_native_temperature_unit = UnitOfTemperature.CELSIUS
+    _attr_temperature_unit = _attr_native_temperature_unit
     _attr_precision = 0.1
     _attr_target_temperature_step = _SPEC.step
     _attr_min_temp = _SPEC.minimum
@@ -71,12 +75,14 @@ class SherpaWaterHeater(SherpaEntity, WaterHeaterEntity):
         return features
 
     @property
-    def current_temperature(self) -> float | None:
+    def native_current_temperature(self) -> float | None:
         return self.entity_description.value_fn(self.coordinator)
+    current_temperature = native_current_temperature
 
     @property
-    def target_temperature(self) -> float | None:
+    def native_target_temperature(self) -> float | None:
         return self.coordinator.data.values.get("dhw_setpoint")
+    target_temperature = native_target_temperature
 
     @property
     def current_operation(self) -> str | None:
